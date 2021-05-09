@@ -1,8 +1,8 @@
 module github.com/CalebDepatie/CustomHomePage
 
-go 1.13
+go 1.14
 
 require (
-	github.com/jackc/pgx/v4 v4.11.0
 	github.com/jmoiron/sqlx v1.3.3
+	github.com/lib/pq v1.10.1
 )

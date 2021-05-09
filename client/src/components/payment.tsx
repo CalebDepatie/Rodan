@@ -1,34 +1,47 @@
 import React from 'react';
-import {newOnePayment, newRecurPayment} from '../database'
 
 class Recurring extends React.Component<{}, {cat: number, com: number, name: string, price: number, start_date: Date, end_date: Date}> {
 	constructor(props: any) {
 		super(props)
-		
+
 		this.handleChange = this.handleChange.bind(this)
 		this.handleSubmit = this.handleSubmit.bind(this)
 	}
-	
+
 	handleChange(evt: any) {
 		const target = evt.target
 		const value  = target.type === 'checkbox' ? target.checked : target.value
 		const name = target.name
-		
+
 		this.setState<never>({[name]: value}, this.render)
 	}
-	
-	handleSubmit(evt: any) {
+
+	async handleSubmit(evt: any) {
 		evt.preventDefault();
-		newRecurPayment(this.state.cat, this.state.com, this.state.name, this.state.price, this.state.start_date, this.state.end_date).catch((err) => {
-			console.error(err);
-		});
+
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Origin': 'home' },
+        body: JSON.stringify(this.state)
+    };
+
+    await fetch('localhost:8081/newrecur', requestOptions)
+      .then(async res => {
+        const data = await res.json();
+        if (!res.ok) {
+          return Promise.reject(res.status);
+        }
+      })
+      .catch(error => {
+        console.error('Error Sending Payment', error);
+      });
 	}
-	
+
 	render() {
 		return (
 			<form onSubmit={this.handleSubmit}>
 				<label>
-					Category: 
+					Category:
 					<input
 						name='cat'
 						type='number'
@@ -36,7 +49,7 @@ class Recurring extends React.Component<{}, {cat: number, com: number, name: str
 					/>
 				</label>
 				<label>
-					Company: 
+					Company:
 					<input
 						name='com'
 						type='number'
@@ -44,7 +57,7 @@ class Recurring extends React.Component<{}, {cat: number, com: number, name: str
 					/>
 				</label>
 				<label>
-					Item Name: 
+					Item Name:
 					<input
 						name='name'
 						type='text'
@@ -52,7 +65,7 @@ class Recurring extends React.Component<{}, {cat: number, com: number, name: str
 					/>
 				</label>
 				<label>
-					Price: 
+					Price:
 					<input
 						name='price'
 						type='number'
@@ -60,7 +73,7 @@ class Recurring extends React.Component<{}, {cat: number, com: number, name: str
 					/>
 				</label>
 				<label>
-					Start Date: 
+					Start Date:
 					<input
 						name='start_date'
 						type='date'
@@ -68,7 +81,7 @@ class Recurring extends React.Component<{}, {cat: number, com: number, name: str
 					/>
 				</label>
 				<label>
-					End Date (If Applicable): 
+					End Date (If Applicable):
 					<input
 						name='end_date'
 						type='date'
@@ -85,31 +98,29 @@ class Recurring extends React.Component<{}, {cat: number, com: number, name: str
 class OneTime extends React.Component<{}, {cat: number, com: number, name: string, price: number, date: Date}> {
 	constructor(props: any) {
 		super(props)
-		
+
 		this.handleChange = this.handleChange.bind(this)
 		this.handleSubmit = this.handleSubmit.bind(this)
 	}
-	
+
 	handleChange(evt: any) {
 		const target = evt.target
 		const value  = target.type === 'checkbox' ? target.checked : target.value
 		const name = target.name
-		
+
 		this.setState<never>({[name]: value}, this.render)
 	}
-	
+
 	handleSubmit(evt: any) {
 		evt.preventDefault();
-		newOnePayment(this.state.cat, this.state.com, this.state.name, this.state.price, this.state.date).catch((err) => {
-			console.error(err);
-		});
+
 	}
-	
+
 	render() {
 		return (
 			<form onSubmit={this.handleSubmit}>
 				<label>
-					Category: 
+					Category:
 					<input
 						name='cat'
 						type='number'
@@ -117,7 +128,7 @@ class OneTime extends React.Component<{}, {cat: number, com: number, name: strin
 					/>
 				</label>
 				<label>
-					Company: 
+					Company:
 					<input
 						name='com'
 						type='number'
@@ -125,7 +136,7 @@ class OneTime extends React.Component<{}, {cat: number, com: number, name: strin
 					/>
 				</label>
 				<label>
-					Item Name: 
+					Item Name:
 					<input
 						name='name'
 						type='text'
@@ -133,7 +144,7 @@ class OneTime extends React.Component<{}, {cat: number, com: number, name: strin
 					/>
 				</label>
 				<label>
-					Price: 
+					Price:
 					<input
 						name='price'
 						type='number'
@@ -141,7 +152,7 @@ class OneTime extends React.Component<{}, {cat: number, com: number, name: strin
 					/>
 				</label>
 				<label>
-					Date: 
+					Date:
 					<input
 						name='date'
 						type='date'
@@ -158,21 +169,21 @@ class Payment extends React.Component<{}, {type: string}> {
 	constructor(props: any) {
 		super(props)
 		this.state = {type: 'oneTime'};
-		
+
 		this.handleChange = this.handleChange.bind(this)
 	}
-	
-	handleChange(evt: any) {		
+
+	handleChange(evt: any) {
 		this.setState({type: evt.target.value}, this.render)
 	}
-	
+
 	pickPayment() {
 		switch(this.state.type) {
 			case 'oneTime': {return (<OneTime />)}
 			case 'recurring': {return (<Recurring />)}
 		}
 	}
-	
+
 	render() {
 		return (
 		<div className="home">

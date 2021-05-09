@@ -1,4 +1,6 @@
 
+server/CustomHomePage
+
 # -- Client items -- 
 # dependencies
 client/node_modules
