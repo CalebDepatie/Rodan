@@ -28,7 +28,7 @@ function Header(props: any) {
                 }`}
               >
                 <Link className="nav-link" to="/payment">
-                  Finance Data
+                  Add Finance Data
                 </Link>
               </li>
             </ul>

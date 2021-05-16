@@ -1,37 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
-import Form from 'react-bootstrap/Form'
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 type catcomData = [number, string, string];
 
-class Recurring extends React.Component<{}, {cat: number, com: number, name: string, price: number, start_date: Date, end_date: Date}> {
-	constructor(props: any) {
-		super(props)
+interface MetaData {
+  cats: catcomData[];
+  coms: catcomData[];
+}
 
-		this.handleChange = this.handleChange.bind(this)
-		this.handleSubmit = this.handleSubmit.bind(this)
-	}
+function Recurring(props: MetaData) {
+  const [ form, setForm ] = useState({});
 
-	handleChange(evt: any) {
-		const target = evt.target
-		const value  = target.type === 'checkbox' ? target.checked : target.value
-		const name = target.name
+  const setField = async (field:string, value:any) => {
+    setForm({
+      ...form, [field]: value
+    });
+  }
 
-		this.setState<never>({[name]: value}, this.render)
-	}
-
-	async handleSubmit(evt: any) {
+	const handleSubmit = async (evt: any) => {
 		evt.preventDefault();
 
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Origin': 'home' },
-        body: JSON.stringify(this.state)
+        body: JSON.stringify(form)
     };
 
-    await fetch('localhost:8081/newrecur', requestOptions)
+    await fetch('/api/newrecur', requestOptions)
       .then(async res => {
-        const data = await res.json();
         if (!res.ok) {
           return Promise.reject(res.status);
         }
@@ -41,139 +40,163 @@ class Recurring extends React.Component<{}, {cat: number, com: number, name: str
       });
 	}
 
-	render() {
-		return (
-			<form onSubmit={this.handleSubmit}>
-				<label>
-					Category:
-					<input
-						name='cat'
-						type='number'
-						onChange={this.handleChange}
-					/>
-				</label>
-				<label>
-					Company:
-					<input
-						name='com'
-						type='number'
-						onChange={this.handleChange}
-					/>
-				</label>
-				<label>
-					Item Name:
-					<input
-						name='name'
-						type='text'
-						onChange={this.handleChange}
-					/>
-				</label>
-				<label>
-					Price:
-					<input
-						name='price'
-						type='number'
-						onChange={this.handleChange}
-					/>
-				</label>
-				<label>
-					Start Date:
-					<input
-						name='start_date'
-						type='date'
-						onChange={this.handleChange}
-					/>
-				</label>
-				<label>
-					End Date (If Applicable):
-					<input
-						name='end_date'
-						type='date'
-						onChange={this.handleChange}
-					/>
-				</label>
-				<input type='submit' value='Submit' />
-			</form>
-		);
-	}
+	return (
+		<Form onSubmit={handleSubmit}>
+      <Form.Row>
+        <Col>
+          <Form.Group controlId="recur.name">
+            <Form.Label>Name</Form.Label>
+            <Form.Control onChange={e => setField('name', e.target.value) }/>
+          </Form.Group>
+        </Col>
+        <Col>
+        <Form.Group controlId="recur.price">
+          <Form.Label>Price</Form.Label>
+          <InputGroup>
+            <InputGroup.Prepend>
+              <InputGroup.Text>$</InputGroup.Text>
+            </InputGroup.Prepend>
+            <Form.Control type='number' onChange={e => setField('price', +e.target.value) }/>
+          </InputGroup>
+        </Form.Group>
+        </Col>
+      </Form.Row>
+
+      <Form.Row>
+        <Col>
+          <Form.Group controlId="recur.catSelect">
+            <Form.Label>Category</Form.Label>
+            <Form.Control as="select" onChange={e => setField('cat', +e.target.value) }>
+              {props.cats.map((itm, i) =>
+              <option key={itm[1]} value={i+1}>{itm[1]}</option>)}
+            </Form.Control>
+          </Form.Group>
+        </Col>
+        <Col>
+        <Form.Group controlId="recur.comSelect">
+          <Form.Label>Company</Form.Label>
+          <Form.Control as="select" onChange={e => setField('com', +e.target.value) }>
+            {props.coms.map((itm, i) =>
+            <option key={itm[1]} value={i+1}>{itm[1]}</option>)}
+          </Form.Control>
+        </Form.Group>
+        </Col>
+      </Form.Row>
+
+      <Form.Row>
+        <Col>
+        <Form.Group controlId="recur.start">
+          <Form.Label>Start Date</Form.Label>
+          <Form.Control type='date' onChange={e => setField('start_date', e.target.value) }/>
+        </Form.Group>
+        </Col>
+        <Col>
+        <Form.Group controlId="recur.end">
+          <Form.Label>End Date</Form.Label>
+          <Form.Control type='date' onChange={e => setField('end_date', e.target.value) }/>
+        </Form.Group>
+        </Col>
+      </Form.Row>
+
+      <Form.Row>
+        <Form.Control type='submit' value='Submit'/>
+      </Form.Row>
+    </Form>
+	);
 }
 
 
-class OneTime extends React.Component<{}, {cat: number, com: number, name: string, price: number, date: Date}> {
-	constructor(props: any) {
-		super(props)
+function OneTime(props: MetaData) {
+  const [ form, setForm ] = useState({});
 
-		this.handleChange = this.handleChange.bind(this)
-		this.handleSubmit = this.handleSubmit.bind(this)
-	}
+  const setField = async (field:string, value:any) => {
+    setForm({
+      ...form, [field]: value
+    });
+  }
 
-	handleChange(evt: any) {
-		const target = evt.target
-		const value  = target.type === 'checkbox' ? target.checked : target.value
-		const name = target.name
-
-		this.setState<never>({[name]: value}, this.render)
-	}
-
-	handleSubmit(evt: any) {
+	const handleSubmit = async (evt: any) => {
 		evt.preventDefault();
 
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Origin': 'home' },
+        body: JSON.stringify(form)
+    };
+
+    await fetch('/api/newrecur', requestOptions)
+      .then(async res => {
+        if (!res.ok) {
+          return Promise.reject(res.status);
+        }
+      })
+      .catch(error => {
+        console.error('Error Sending Payment', error);
+      });
 	}
 
-	render() {
-		return (
-			<form onSubmit={this.handleSubmit}>
-				<label>
-					Category:
-					<input
-						name='cat'
-						type='number'
-						onChange={this.handleChange}
-					/>
-				</label>
-				<label>
-					Company:
-					<input
-						name='com'
-						type='number'
-						onChange={this.handleChange}
-					/>
-				</label>
-				<label>
-					Item Name:
-					<input
-						name='name'
-						type='text'
-						onChange={this.handleChange}
-					/>
-				</label>
-				<label>
-					Price:
-					<input
-						name='price'
-						type='number'
-						onChange={this.handleChange}
-					/>
-				</label>
-				<label>
-					Date:
-					<input
-						name='date'
-						type='date'
-						onChange={this.handleChange}
-					/>
-				</label>
-				<input type='submit' value='Submit' />
-			</form>
-		);
-	}
+	return (
+		<Form onSubmit={handleSubmit}>
+      <Form.Row>
+        <Col>
+          <Form.Group controlId="one.name">
+            <Form.Label>Name</Form.Label>
+            <Form.Control onChange={e => setField('name', e.target.value) }/>
+          </Form.Group>
+        </Col>
+        <Col>
+        <Form.Group controlId="one.price">
+          <Form.Label>Price</Form.Label>
+          <InputGroup>
+            <InputGroup.Prepend>
+              <InputGroup.Text>$</InputGroup.Text>
+            </InputGroup.Prepend>
+            <Form.Control type='number' onChange={e => setField('price', +e.target.value) }/>
+          </InputGroup>
+        </Form.Group>
+        </Col>
+      </Form.Row>
+
+      <Form.Row>
+        <Col>
+          <Form.Group controlId="one.catSelect">
+            <Form.Label>Category</Form.Label>
+            <Form.Control as="select" onChange={e => setField('cat', +e.target.value) }>
+              {props.cats.map((itm, i) =>
+              <option key={itm[1]} value={i+1}>{itm[1]}</option>)}
+            </Form.Control>
+          </Form.Group>
+        </Col>
+        <Col>
+        <Form.Group controlId="one.comSelect">
+          <Form.Label>Company</Form.Label>
+          <Form.Control as="select" onChange={e => setField('com', +e.target.value) }>
+            {props.coms.map((itm, i) =>
+            <option key={itm[1]} value={i+1}>{itm[1]}</option>)}
+          </Form.Control>
+        </Form.Group>
+        </Col>
+      </Form.Row>
+
+      <Form.Row>
+        <Col>
+        <Form.Group controlId="one.date">
+          <Form.Label>Date</Form.Label>
+          <Form.Control type='date' onChange={e => setField('date', e.target.value) }/>
+        </Form.Group>
+        </Col>
+      </Form.Row>
+
+      <Form.Row>
+        <Form.Control type='submit' value='Submit'/>
+      </Form.Row>
+    </Form>
+	);
 }
 
 class Payment extends React.Component<{}, {type: string, cats: catcomData[], coms: catcomData[]}> {
 	constructor(props: any) {
 		super(props)
-
-		this.handleChange = this.handleChange.bind(this)
 
     let cat: catcomData[] = []
     let com: catcomData[] = []
@@ -186,23 +209,37 @@ class Payment extends React.Component<{}, {type: string, cats: catcomData[], com
         if (!res.ok) {
           return Promise.reject(res.status);
         }
-        console.log(data)
+        data.forEach((itm: any) => {
+          cat.push([itm.id, itm.name, itm.descrip])
+        })
       })
       .catch(error => {
         console.error('Error Getting Data', error);
       });
 
-    this.state = {type: 'oneTime', cats: cat, coms: com}
-	}
+    fetch('/api/getcom', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json'}
+      }).then(async res => {
+          const data = await res.json();
+          if (!res.ok) {
+            return Promise.reject(res.status);
+          }
+          data.forEach((itm: any) => {
+            com.push([itm.id, itm.name, itm.descrip])
+          })
+        })
+        .catch(error => {
+          console.error('Error Getting Data', error);
+        });
 
-	handleChange(evt: any) {
-		this.setState<never>({type: evt.target.value}, this.render)
+    this.state = {type: 'oneTime', cats: cat, coms: com};
 	}
 
 	pickPayment() {
 		switch(this.state.type) {
-			case 'oneTime': {return (<OneTime />)}
-			case 'recurring': {return (<Recurring />)}
+			case 'oneTime': {return (<OneTime cats={this.state.cats} coms={this.state.coms}/>)}
+			case 'recurring': {return (<Recurring cats={this.state.cats} coms={this.state.coms}/>)}
 		}
 	}
 
@@ -213,13 +250,13 @@ class Payment extends React.Component<{}, {type: string, cats: catcomData[], com
 			<div className="row align-items-center my-5">
 			  <div className="col-lg-5">
 				<h1 className="font-weight-light">Add Finance Data</h1>
-				<Dropdown>
+				<Dropdown onSelect={e => this.setState<never>({type: e}, this.render)}>
           <Dropdown.Toggle variant="success" id="dropdown-basic">
 					  Record Type:
           </Dropdown.Toggle>
-          <Dropdown.Menu onSelect={this.handleChange}>
-            <Dropdown.Item eventKey='recurring'>Recurring</Dropdown.Item>
-            <Dropdown.Item eventKey='oneTime'>One Time</Dropdown.Item>
+          <Dropdown.Menu>
+            <Dropdown.Item active={this.state.type === 'recurring'} eventKey='recurring'>Recurring</Dropdown.Item>
+            <Dropdown.Item active={this.state.type === 'oneTime'} eventKey='oneTime'>One Time</Dropdown.Item>
           </Dropdown.Menu>
 				</Dropdown>
         <br />
