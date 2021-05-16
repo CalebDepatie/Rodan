@@ -8,8 +8,8 @@ function App(props: any) {
       <Router>
         <Header />
         <Switch>
-          <Route path="/" exact component={() => <Home />} />
-          <Route path="/payment" exact component={() => <Payment />} />
+          <Route exact path="/" component={() => <Home />} />
+          <Route exact path="/payment" component={() => <Payment />} />
         </Switch>
         <Footer />
       </Router>

@@ -1,4 +1,8 @@
 import React from 'react';
+import Dropdown from 'react-bootstrap/Dropdown';
+import Form from 'react-bootstrap/Form'
+
+type catcomData = [number, string, string];
 
 class Recurring extends React.Component<{}, {cat: number, com: number, name: string, price: number, start_date: Date, end_date: Date}> {
 	constructor(props: any) {
@@ -165,16 +169,34 @@ class OneTime extends React.Component<{}, {cat: number, com: number, name: strin
 	}
 }
 
-class Payment extends React.Component<{}, {type: string}> {
+class Payment extends React.Component<{}, {type: string, cats: catcomData[], coms: catcomData[]}> {
 	constructor(props: any) {
 		super(props)
-		this.state = {type: 'oneTime'};
 
 		this.handleChange = this.handleChange.bind(this)
+
+    let cat: catcomData[] = []
+    let com: catcomData[] = []
+
+    fetch('/api/getcat', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json'}
+    }).then(async res => {
+        const data = await res.json();
+        if (!res.ok) {
+          return Promise.reject(res.status);
+        }
+        console.log(data)
+      })
+      .catch(error => {
+        console.error('Error Getting Data', error);
+      });
+
+    this.state = {type: 'oneTime', cats: cat, coms: com}
 	}
 
 	handleChange(evt: any) {
-		this.setState({type: evt.target.value}, this.render)
+		this.setState<never>({type: evt.target.value}, this.render)
 	}
 
 	pickPayment() {
@@ -190,14 +212,17 @@ class Payment extends React.Component<{}, {type: string}> {
 		  <div className="container">
 			<div className="row align-items-center my-5">
 			  <div className="col-lg-5">
-				<h1 className="font-weight-light">Add Pay Records</h1>
-				<label>
-					Payment Type:
-					<select value={this.state.type} onChange={this.handleChange}>
-						<option value='recurring'>Recurring</option>
-						<option value='oneTime'>One Time</option>
-					</select>
-				</label>
+				<h1 className="font-weight-light">Add Finance Data</h1>
+				<Dropdown>
+          <Dropdown.Toggle variant="success" id="dropdown-basic">
+					  Record Type:
+          </Dropdown.Toggle>
+          <Dropdown.Menu onSelect={this.handleChange}>
+            <Dropdown.Item eventKey='recurring'>Recurring</Dropdown.Item>
+            <Dropdown.Item eventKey='oneTime'>One Time</Dropdown.Item>
+          </Dropdown.Menu>
+				</Dropdown>
+        <br />
 				<div>{this.pickPayment()}</div>
 			  </div>
 			</div>
