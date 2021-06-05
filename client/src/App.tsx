@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Header, Footer, Home, Payment } from './components';
+import { Header, Footer, Home, Payment } from './Components';
 
 function App(props: any) {
 	return (
