@@ -1,6 +1,20 @@
-I've wanted to make a custom home page for a little bit, and felt like it would be worthwhile to combine this with expense tracking. This is just supposed to be a small personal project.
-For now this only includes inputting new expenses, and the code is quick an dirty. I'll be adding to this as I feel like it.
+# Project Singular Point / Rodan Initiative
 
-This project used [this article](https://www.techomoro.com/how-to-create-a-multi-page-website-with-react-in-5-minutes/) to help understand the basis of creating a single-page-application.
+#### Introduction
 
-Code is a mess and absolutely needs refactoring, but at this point in time it works as I want it to so I'm not too bothered about the code.
+I've remodelled this to be an application rather than a webpage, leveraging [guark](https://github.com/guark/guark).
+
+I'm now calling this project "Singular Point" as a reference to the Godzilla show and as this is intended to be a singular point for all my records. This front-end / C&C app is under the Rodan Initiative.
+
+While this was first started for financial record keeping, I'm expanding it to various things like my personal projects.
+
+#### Running and building
+
+```bash
+ # dev server
+ guark run
+
+ # bundling
+ guark build
+ guark bundle
+```
