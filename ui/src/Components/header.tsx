@@ -1,41 +1,24 @@
 import React from 'react';
 import { Link, withRouter} from 'react-router-dom';
 
+import Navbar from 'react-bootstrap/Navbar'
+import Nav from 'react-bootstrap/Nav'
+import NavDropdown from 'react-bootstrap/NavDropdown'
+
 function Header(props: any) {
 	return (
-	<div className="navigation">
-      <nav className="navbar navbar-expand navbar-dark bg-dark">
-        <div className="container">
-          <Link className="navbar-brand" to="/">
-            Project Singular Point
-          </Link>
-
-          <div>
-            <ul className="navbar-nav ml-auto">
-              <li
-                className={`nav-item  ${
-                  props.location.pathname === "/" ? "active" : ""
-                }`}
-              >
-                <Link className="nav-link" to="/">
-                  Home
-                  <span className="sr-only">(current)</span>
-                </Link>
-              </li>
-              <li
-                className={`nav-item  ${
-                  props.location.pathname === "/payment" ? "active" : ""
-                }`}
-              >
-                <Link className="nav-link" to="/payment">
-                  Finances
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </div>
+    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+      <Navbar.Brand href="/">Project Singular Point</Navbar.Brand>
+      <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+      <Navbar.Collapse id="responsive-navbar-nav">
+        <Nav>
+          <NavDropdown title="Finances" id="collasible-nav-dropdown">
+            <NavDropdown.Item href="/finances/raw">Raw Data</NavDropdown.Item>
+            <NavDropdown.Item href="/finances/payments">Payments</NavDropdown.Item>
+          </NavDropdown>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
 	);
 }
 

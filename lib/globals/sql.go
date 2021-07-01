@@ -43,7 +43,7 @@ type (
   }
 
   // specifically used to aggregate recur and once for the front end
-  Expense struct {
+  FinanceRecord struct {
     Cat   int         `db:"category_id" json:"cat"`
   	Com   int         `db:"company_id" json:"com"`
   	Name  string      `db:"name" json:"name"`
@@ -62,6 +62,7 @@ type FinanceType int
 const (
   recur FinanceType = iota
   once
+  income
 )
 
 const (

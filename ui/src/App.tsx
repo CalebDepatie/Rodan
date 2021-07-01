@@ -1,16 +1,39 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Header, Footer} from './Components';
-import { Home, Payment } from './Modules';
+import { Header, Footer } from './Components';
+import { Home, Payment, RawData } from './Modules';
 
-function App(props: any) {
+import 'rsuite/dist/styles/rsuite-default.css';
+
+function App() {
+  const routes = useMemo(() => [
+      {
+        path: '/',
+        component: Home,
+        exact: true,
+      },
+      {
+        path:'/finances/raw',
+        component: RawData,
+        exact: true,
+      },
+      {
+        path:'/finances/payments',
+        component: Payment,
+        exact: true,
+      },
+  ], []);
+
+
 	return (
 	<div className="App">
       <Router>
         <Header />
+
         <Switch>
-          <Route exact path="/" component={() => <Home />} />
-          <Route exact path="/payment" component={() => <Payment />} />
+          {routes.map((route, i) => (
+            <Route key={i} {...route} />
+          ))}
         </Switch>
         <Footer />
       </Router>

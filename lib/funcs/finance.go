@@ -178,3 +178,33 @@ func NewIncome(c app.Context) (interface{}, error) {
 
 	return nil, nil
 }
+
+type time struct {
+  m int `json:"month"`
+  y int `json:"year"`
+}
+
+func GetMonthFinances(c app.Context) (interface{}, error) {
+  var (
+    r []globals.FinanceRecord
+  )
+
+  m := c.GetOr("month", "5").(string)
+  y := c.GetOr("year", "2021").(string)
+
+  stmt := `SELECT * FROM public.GetMonthExpenses($1, $2);`
+	err  := globals.DB.Select(&r, stmt, m, y)
+  if err != nil {
+    c.App.Log.Error("Error getting data: ", err.Error())
+  }
+
+  //c.App.Log.Debug("Len: ", len(r))
+
+  bytes, err := json.Marshal(r)
+
+  if err != nil {
+    c.App.Log.Error("Error: ", err.Error())
+  }
+
+  return string(bytes), nil
+}
