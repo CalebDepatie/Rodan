@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Header, Footer } from './Components';
-import { Home, Payment, RawData } from './Modules';
+import { Home, Payment, RawData, ProjectTable } from './Modules';
 
 import 'rsuite/dist/styles/rsuite-default.css';
 
@@ -10,6 +10,11 @@ function App() {
       {
         path: '/',
         component: Home,
+        exact: true,
+      },
+      {
+        path:'/projects/raw',
+        component: ProjectTable,
         exact: true,
       },
       {

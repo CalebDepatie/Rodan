@@ -2,12 +2,12 @@ id: {{ .ID }}
 name: {{ .Name }}
 version: {{ .Version }}
 publisher: ETT
-description: A C&C for my own projects.
+description: A CandC for my own projects.
 bundles:
   - type: msi
     source: dist/windows
     output: dist/{{ .ID }}.msi
     options:
-      guid: d8cb43ce-0225-429c-850e-77debcb0fe99 # put your own windows UpgradeCode UUID here.
+      guid: 409d9d5f-7da3-4ab0-8b18-28192907abf1 # put your own windows UpgradeCode UUID here.
       template: app.wxs
-      #bindir: "c:\\Program Files (x86)\\Wix Toolset v3.11\\bin\\"
+      bindir: "c:\\Program Files (x86)\\Wix Toolset v3.11\\bin\\"

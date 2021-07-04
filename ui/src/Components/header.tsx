@@ -12,6 +12,11 @@ function Header(props: any) {
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav>
+          <NavDropdown title="Projects" id="collasible-nav-dropdown">
+            <NavDropdown.Item href="/projects/raw">Overview</NavDropdown.Item>
+          </NavDropdown>
+        </Nav>
+        <Nav>
           <NavDropdown title="Finances" id="collasible-nav-dropdown">
             <NavDropdown.Item href="/finances/raw">Raw Data</NavDropdown.Item>
             <NavDropdown.Item href="/finances/payments">Payments</NavDropdown.Item>

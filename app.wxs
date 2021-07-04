@@ -20,6 +20,7 @@
 			Languages="1033"
 			Manufacturer="{{ .Publisher }}"
 			SummaryCodepage="1252"
+      Platform="x64"
 		/>
 		<MajorUpgrade DowngradeErrorMessage="A newer version of {{ .Name }} is already installed." />
 		<Media Cabinet="{{ .ID }}.cab" EmbedCab="yes" Id="1" />
