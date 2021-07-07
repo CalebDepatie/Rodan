@@ -52,9 +52,27 @@ type (
     Type  FinanceType `db"type" json:"type"`
   }
 
-  Response struct {
-    Ok    bool
-    error string
+  Status struct {
+  	Id      int    `db:"id" json:"id"`
+  	Name    string `db:"name" json:"name"`
+  	Descrip string `db:"description" json:"descrip"`
+  }
+
+  Project struct {
+    Id      int     `db:"id" json:"id"`
+    Name    string  `db:"name" json:"name"`
+    Descrip string  `db:"description" json:"descrip"`
+    Created string  `db:"created_date" json:"created"`
+    Status  int     `db:"status" json:"status"`
+  }
+
+  Initiative struct {
+    Id      int     `db:"id" json:"id"`
+    Name    string  `db:"name" json:"name"`
+    Descrip string  `db:"description" json:"descrip"`
+    Created string  `db:"created_date" json:"created"`
+    Status  int     `db:"status" json:"status"`
+    Parent  int     `db:"parent" json:"parent"`
   }
 )
 
@@ -70,14 +88,14 @@ const (
   CON_STRING_SCR = "postgres://howling:wolf@localhost:50000/scribe?sslmode=disable"
 )
 
-var finDB *sqlx.DB
-var scrDB *sqlx.DB
+var FinDB *sqlx.DB
+var ScrDB *sqlx.DB
 
 func init() {
-  finDB, _ = sqlx.Open("postgres", CON_STRING_FIN) // I need a hook to close this
-  scrDB, _ = sqlx.Open("postgres", CON_STRING_SCR)
+  FinDB, _ = sqlx.Open("postgres", CON_STRING_FIN) // I need a hook to close this
+  ScrDB, _ = sqlx.Open("postgres", CON_STRING_SCR)
 
-  err := finDB.Ping()
+  err := FinDB.Ping()
 	if err != nil {
 		//a.Log.Error("Could not connect to server: ", err)
 	}

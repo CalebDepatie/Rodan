@@ -3,7 +3,10 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Header, Footer } from './Components';
 import { Home, Payment, RawData, ProjectTable } from './Modules';
 
-import 'rsuite/dist/styles/rsuite-default.css';
+import 'primereact/resources/themes/saga-blue/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+
 
 function App() {
   const routes = useMemo(() => [

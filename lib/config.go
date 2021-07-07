@@ -19,6 +19,9 @@ var Funcs = app.Funcs{
   "new_cat": funcs.NewCat,
   "new_inc": funcs.NewIncome,
   "get_finances": funcs.GetMonthFinances,
+  "get_statuses": funcs.GetStatuses,
+  "get_projects": funcs.GetProjects,
+  "get_initiatives": funcs.GetInitiatives,
 }
 
 // App hooks.

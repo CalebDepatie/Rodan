@@ -24,7 +24,8 @@ func main() {
 
 	defer a.Quit()
 
-  defer globals.DB.Close()
+  defer globals.FinDB.Close()
+  defer globals.ScrDB.Close()
 
 	if err := a.Run(); err != nil {
 		a.Log.Fatal(err)
