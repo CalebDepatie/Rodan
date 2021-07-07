@@ -27,7 +27,7 @@
 		"react-scripts": "^4.0.3",
 		"react-transition-group": "^4.4.2",
 		"rsuite": "^4.10.2",
-		"typescript": "^4.3.4",
+		"typescript": "^4.3.5",
 		"vue": "^2.6.11",
 		"vuex": "^3.4.0"
 	},
