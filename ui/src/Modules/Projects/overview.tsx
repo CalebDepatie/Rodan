@@ -19,17 +19,14 @@ function ProjectTable(props: any) {
 
       setStatuses(statuses);
 
-      const projects = JSON.parse(await g.call("get_projects", {})
+      const projdata = JSON.parse(await g.call("get_projects", {})
         .catch(error => {
           console.error('Error Getting Data', error);
           return "";
         }));
 
-      const initiatives = JSON.parse(await g.call("get_initiatives", {})
-        .catch(error => {
-          console.error('Error Getting Data', error);
-          return "";
-        }));
+      const initiatives = projdata.filter((itm:any) => itm.parent !== 0);
+      const projects    = projdata.filter((itm:any) => itm.parent === 0);
 
       const ini = initiatives.map((itm: any) => {
         return {

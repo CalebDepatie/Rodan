@@ -64,14 +64,6 @@ type (
     Descrip string  `db:"description" json:"descrip"`
     Created string  `db:"created_date" json:"created"`
     Status  int     `db:"status" json:"status"`
-  }
-
-  Initiative struct {
-    Id      int     `db:"id" json:"id"`
-    Name    string  `db:"name" json:"name"`
-    Descrip string  `db:"description" json:"descrip"`
-    Created string  `db:"created_date" json:"created"`
-    Status  int     `db:"status" json:"status"`
     Parent  int     `db:"parent" json:"parent"`
   }
 )

@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import g from 'guark';
 
-import Table from 'react-bootstrap/Table';
-import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Calendar } from 'primereact/calendar';
 
 function RawData(props: any) {
   const [ tabledata, setTabledata ] = useState<any[]>([]);
-  const [ start, setStart ] = useState<string>('');
-  const [ end, setEnd ]     = useState<string>('');
+  const [ date, setDate ]   = useState<Date>(new Date());
   const [ cats, setCats ]   = useState([]);
   const [ coms, setComs ]   = useState([]);
 
   useEffect(() => {
     g.call("get_cat", {}).then(async res => {
-      //console.log(res);
       const data = await JSON.parse(res);
 
       data.map((itm: any) => {
@@ -27,7 +25,6 @@ function RawData(props: any) {
     });
 
     g.call("get_com", {}).then(async res => {
-      //console.log(res);
       const data = await JSON.parse(res);
 
       data.map((itm: any) => {
@@ -40,85 +37,35 @@ function RawData(props: any) {
     });
   }, []);
 
-  const addForTime = (year: number, month: number) => {
-    g.call("get_finances", {month: month.toString(), year: year.toString()}).then(async res => {
+  useEffect(() => {
+    g.call("get_finances", {month: date.getMonth() as unknown as string, year: date.getFullYear() as unknown as string}).then(async res => {
       const data = await JSON.parse(res);
 
-      setTabledata([...tabledata, ...data]);
+      setTabledata(data);
     }).catch(error => {
       console.error('Error Getting Data', error);
     });
+  }, [date]);
+
+  const catFormat = (row: any) => {
+    return cats.filter(itm2 => itm2["id"] === row.cat).length !== 0 ? cats.filter(itm2 => itm2["id"] === row.cat)[0]['name'] : ""
   };
 
-  const clear = () => {
-    setTabledata([]);
+  const comFormat = (row: any) => {
+    return coms.filter(itm2 => itm2["id"] === row.com)[0]['name']
   };
-
-  useEffect(() => {
-    clear();
-    if (start === "" && end === "") return;
-    const start_date = start.split("-");
-    const end_date   = end.split("-");
-
-    let cur_year: number  = +start_date[0];
-    let cur_month: number = +start_date[1];
-
-    do {
-      addForTime(cur_year, cur_month);
-      if (cur_month < 12) {
-        cur_month++;
-      } else {
-        cur_month = 1;
-        cur_year++;
-      }
-    } while ((cur_year <= +end_date[0]) && (cur_month <= +end_date[1]));
-
-  }, [start, end]);
 
   return (
     <>
-      <Form>
-        <Form.Row style={{margin:"auto", width:"30rem"}}>
-          <Col>
-            <Form.Group controlId="start">
-              <Form.Label>Start</Form.Label>
-              <Form.Control required type='month' onChange={e => setStart(e.target.value) }/>
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group controlId="end">
-              <Form.Label>End</Form.Label>
-              <Form.Control required type='month' onChange={e => setEnd(e.target.value) }/>
-            </Form.Group>
-          </Col>
-        </Form.Row>
-      </Form>
-      <Table striped bordered variant="dark">
-        <thead>
-          <tr>
-            <th>Category</th>
-            <th>Company</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Date</th>
-            <th>Type</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tabledata.map((itm: any, i: number) => {
-            return (
-              <tr key={"tr_" + i}>
-                <td key={"cat_" + i}>{cats.filter(itm2 => itm2["id"] === itm.cat).length !== 0 ? cats.filter(itm2 => itm2["id"] === itm.cat)[0]['name'] : ""}</td>
-                <td key={"com_" + i}>{coms.filter(itm2 => itm2["id"] === itm.com)[0]['name']}</td>
-                <td key={"name_" + i}>{itm.name}</td>
-                <td key={"price_" + i}>{itm.price}</td>
-                <td key={"date_" + i}>{itm.date}</td>
-                <td key={"type_" + i}>{itm.type}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+      <Calendar dateFormat="yy/mm" view="month" value={date} onChange={(e) => setDate(e.value as Date)}/>
+      <DataTable value={tabledata}>
+        <Column field="cat" header="Category" body={catFormat}/>
+        <Column field="com" header="Companies" body={comFormat} />
+        <Column field="name" header="Name" />
+        <Column field="price" header="Price" />
+        <Column field="date" header="Date" />
+        <Column field="type" header="Type" />
+      </DataTable>
     </>
   );
 };
