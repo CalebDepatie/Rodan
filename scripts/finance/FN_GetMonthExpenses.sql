@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION GetMonthExpenses (
+CREATE OR REPLACE FUNCTION FN_GetMonthExpenses (
     _month INT,
     _year  INT
 ) RETURNS TABLE (category_id integer, company_id integer, name varchar(128), price double precision, date DATE, type integer)

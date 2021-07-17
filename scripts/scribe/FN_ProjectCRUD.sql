@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION ProjectCRUD (
+CREATE OR REPLACE FUNCTION prj.FN_ProjectCRUD (
     _operation INT,
 
     _name        VARCHAR(128) = NULL,
@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION ProjectCRUD (
 
     _updateVal VARCHAR(256) = NULL,
     _updateCol VARCHAR(256) = NULL
-) RETURNS TABLE (id INTEGER, name VARCHAR(128), description VARCHAR(256), created_date DATE, status INTEGER, parent INTEGER)
+) RETURNS TABLE (id INTEGER, name VARCHAR(128), description VARCHAR(256), created_date FLOAT, status INTEGER, parent INTEGER)
 AS $$
 DECLARE _sql VARCHAR(512);
 BEGIN
@@ -25,11 +25,8 @@ BEGIN
     END IF;
   ELSIF _operation = 2 THEN
     RETURN QUERY
-    SELECT PRJ.id, PRJ.name, PRJ.description, PRJ.created_date, PRJ.status, 0 AS parent
-      FROM prj.projects AS PRJ
-    UNION
-    SELECT INI.id, INI.name, INI.description, INI.created_date, INI.status, INI.parent
-      FROM prj.initiatives AS INI;
+    SELECT PRJ.id, PRJ.name, PRJ.description, PRJ.created_date, PRJ.status, PRJ.parent
+      FROM prj.VV_Projects AS PRJ;
 
   ELSIF _operation = 3 THEN
     IF _projectID <> NULL THEN

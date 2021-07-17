@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react';
 import g from 'guark';
 
 import { TreeTable } from 'primereact/treetable';
+import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
 import TreeNode from 'primereact/treenode';
 import { Column } from 'primereact/column';
 
 function ProjectTable(props: any) {
   const [ projectData, setProjects ] = useState<TreeNode[]>();
-  const [ statuses, setStatuses ] = useState([]);
+  const [ statuses, setStatuses ]    = useState([]);
+  const [ show, setShow ]            = useState<boolean>(false);
+
+  const handleShow  = () => setShow(true);
+  const handleClose = () => setShow(false);
 
   useEffect(() => {
     const setupData = async () => {
@@ -54,23 +60,34 @@ function ProjectTable(props: any) {
   };
 
   const dateFormat = (node: TreeNode) => {
-    const f = new Intl.DateTimeFormat('en', node.data.date);
-		const a = f.formatToParts();
-    const d = new Date();
-    d.setMonth(a[0].value as unknown as number);
-		return a[2].value + '-' + d.toLocaleString("default", {month: "short"}) + '-' + a[4].value;
-
-
+    const d = new Date((node.data.created as unknown as number) * 1000);
+    d.setDate(d.getDate() + 1);
+    const a = d.toLocaleString('default', {day:'numeric', month:'short', year:'numeric'}).split(' ');
+    return a.join('-');
   };
+
+  const header = (
+    <>
+      <Button icon="pi pi-plus" label="Add Project" onClick={handleShow} className='p-button-secondary' />
+    </>
+  );
 
   return (
     <>
-      <TreeTable value={projectData}>
+      <TreeTable value={projectData} header={header}>
         <Column field="name" header="Name" expander/>
         <Column field="descrip" header="Description" />
         <Column field="status" header="Status" body={statusFormat} />
         <Column field="created" header="Created" body={dateFormat} />
       </TreeTable>
+
+      <Dialog header="Create a Project" visible={show} onHide={handleClose} position='center' style={{width: '60vw'}} footer={(
+        <>
+          <Button label='Submit' className='p-button-success' />
+        </>
+      )}>
+        Content
+      </Dialog>
     </>
   );
 };
