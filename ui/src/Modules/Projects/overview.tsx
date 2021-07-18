@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import g from 'guark';
 
 import { TreeTable } from 'primereact/treetable';
@@ -8,13 +8,16 @@ import TreeNode from 'primereact/treenode';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
+import { Toast } from 'primereact/toast';
 
 function ProjectTable(props: any) {
   const [ projectData, setProjectsdata ] = useState<TreeNode[]>();
   const [ statuses, setStatuses ]    = useState([]);
   const [ show, setShow ]            = useState<boolean>(false);
-  const [ form, setForm ]            = useState<{[key: string]: string}>({});
+  const [ form, setForm ]            = useState<{[key: string]: any}>({});
   const [ projects, setProjects]     = useState([]);
+
+  const toast = useRef<any>(null);
 
   const handleShow  = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -37,7 +40,7 @@ function ProjectTable(props: any) {
 
       const initiatives = projdata.filter((itm:any) => itm.parent !== 0);
       const projects    = projdata.filter((itm:any) => itm.parent === 0);
-      setProjects(projects.concat([{id: "", name:"None"}]));
+      setProjects(projects.concat([{id: 0, name:"None"}]));
 
       const ini = initiatives.map((itm: any) => {
         return {
@@ -74,14 +77,14 @@ function ProjectTable(props: any) {
   const formText = (field: string) => {
     return {
       value: form[field],
-      onChange: (e: any) => setForm({...form, [field]: e.target.value as string})
+      onChange: (e: any) => setForm({...form, [field]: e.target.value})
     };
   };
 
   const formDropdown = (field: string) => {
     return {
       value: form[field],
-      onChange: (e: any) => setForm({...form, [field]: e.value as string})
+      onChange: (e: any) => setForm({...form, [field]: e.value})
     };
   };
 
@@ -93,6 +96,7 @@ function ProjectTable(props: any) {
 
   return (
     <>
+      <Toast ref={toast} />
       <TreeTable value={projectData} header={header}>
         <Column field="name" header="Name" expander/>
         <Column field="descrip" header="Description" />
@@ -104,11 +108,12 @@ function ProjectTable(props: any) {
         <>
           <Button label='Submit' className='p-button-success' onClick={(e:any) => {
             const fn = async () => {
-              await g.call("create_project", {...form})
+              await g.call("create_project", {body: JSON.stringify(form)})
                 .catch(error => {
                   console.error('Error Getting Data', error);
                   return "";
                 });
+              toast!.current!.show({severity: 'success', summary: 'Project Created', detail: ''});
             };
             fn();
           }} />

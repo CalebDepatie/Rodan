@@ -4,8 +4,8 @@ import (
 	"github.com/guark/guark/app"
   "github.com/CalebDepatie/ProjectSingularPoint/lib/globals"
   "encoding/json"
-  _ "errors"
-  _ "strings"
+  "errors"
+  "strings"
 )
 
 func GetStatuses(c app.Context) (interface{}, error) {
@@ -45,22 +45,30 @@ func GetProjects(c app.Context) (interface{}, error) {
 }
 
 func CreateProject(c app.Context) (interface{}, error) {
-  name      := c.Get("name").(string)
-  descrip   := c.Get("descrip").(string)
-  status    := c.Get("status").(string)
-  parent    := c.GetOr("parent", "").(string)
-
   var (
     stmt string
     err  error
+    p globals.Project
+    unmarshalErr *json.UnmarshalTypeError
   )
 
-  if parent == "" {
+  dec := json.NewDecoder(strings.NewReader(c.GetOr("body", "").(string)))
+  err = dec.Decode(&p)
+
+  if err != nil {
+      if errors.As(err, &unmarshalErr) {
+        c.App.Log.Error("JSON Error: ", unmarshalErr.Field)
+      } else {
+        c.App.Log.Error("Request Error: ", err.Error())
+      }
+  }
+
+  if p.Parent == 0 {
     stmt   = `SELECT * FROM prj.FN_ProjectCRUD(_operation := 1, _name := $1, _description := $2, _status := $3);`
-    _, err = globals.ScrDB.Exec(stmt, name, descrip, status)
+    _, err = globals.ScrDB.Exec(stmt, p.Name, p.Descrip, p.Status)
   } else {
     stmt   = `SELECT * FROM prj.FN_ProjectCRUD(_operation := 1, _name := $1, _description := $2, _status := $3, _parent := $4);`
-    _, err = globals.ScrDB.Exec(stmt, name, descrip, status, parent)
+    _, err = globals.ScrDB.Exec(stmt, p.Name, p.Descrip, p.Status, p.Parent)
   }
 
   if err != nil {
