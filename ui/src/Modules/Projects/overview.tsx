@@ -6,11 +6,15 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import TreeNode from 'primereact/treenode';
 import { Column } from 'primereact/column';
+import { InputText } from 'primereact/inputtext';
+import { Dropdown } from 'primereact/dropdown';
 
 function ProjectTable(props: any) {
-  const [ projectData, setProjects ] = useState<TreeNode[]>();
+  const [ projectData, setProjectsdata ] = useState<TreeNode[]>();
   const [ statuses, setStatuses ]    = useState([]);
   const [ show, setShow ]            = useState<boolean>(false);
+  const [ form, setForm ]            = useState<{[key: string]: string}>({});
+  const [ projects, setProjects]     = useState([]);
 
   const handleShow  = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -33,6 +37,7 @@ function ProjectTable(props: any) {
 
       const initiatives = projdata.filter((itm:any) => itm.parent !== 0);
       const projects    = projdata.filter((itm:any) => itm.parent === 0);
+      setProjects(projects.concat([{id: "", name:"None"}]));
 
       const ini = initiatives.map((itm: any) => {
         return {
@@ -42,7 +47,7 @@ function ProjectTable(props: any) {
         };
       });
 
-      setProjects(projects.map((proj: any) => {
+      setProjectsdata(projects.map((proj: any) => {
         return {
           key: proj.id,
           data: proj,
@@ -62,8 +67,22 @@ function ProjectTable(props: any) {
   const dateFormat = (node: TreeNode) => {
     const d = new Date((node.data.created as unknown as number) * 1000);
     d.setDate(d.getDate() + 1);
-    const a = d.toLocaleString('default', {day:'numeric', month:'short', year:'numeric'}).split(' ');
+    const a = d.toLocaleString('default', {day:'numeric', month:'short', year:'2-digit'}).split(' ');
     return a.join('-');
+  };
+
+  const formText = (field: string) => {
+    return {
+      value: form[field],
+      onChange: (e: any) => setForm({...form, [field]: e.target.value as string})
+    };
+  };
+
+  const formDropdown = (field: string) => {
+    return {
+      value: form[field],
+      onChange: (e: any) => setForm({...form, [field]: e.value as string})
+    };
   };
 
   const header = (
@@ -81,12 +100,41 @@ function ProjectTable(props: any) {
         <Column field="created" header="Created" body={dateFormat} />
       </TreeTable>
 
-      <Dialog header="Create a Project" visible={show} onHide={handleClose} position='center' style={{width: '60vw'}} footer={(
+      <Dialog header="Create a Project" visible={show} onHide={handleClose} position='center' modal style={{width: '70vw'}} footer={(
         <>
-          <Button label='Submit' className='p-button-success' />
+          <Button label='Submit' className='p-button-success' onClick={(e:any) => {
+            const fn = async () => {
+              await g.call("create_project", {...form})
+                .catch(error => {
+                  console.error('Error Getting Data', error);
+                  return "";
+                });
+            };
+            fn();
+          }} />
         </>
       )}>
-        Content
+        <div className='p-fluid p-formgrid p-grid'>
+          <div className="p-field p-col-6">
+            <label htmlFor="name">Name</label>
+            <InputText id="name" type="text" {...formText('name')}/>
+          </div>
+
+          <div className="p-field p-col-6">
+            <label htmlFor="de">Description</label>
+            <InputText id="de" type="text" {...formText('descrip')}/>
+          </div>
+
+          <div className="p-field p-col-6">
+            <label htmlFor="status">Status</label>
+            <Dropdown id="status" options={statuses} optionValue='id' optionLabel='name' {...formDropdown('status')}/>
+          </div>
+
+          <div className="p-field p-col-6">
+            <label htmlFor="par">Parent</label>
+            <Dropdown id="par" options={projects} optionValue='id' optionLabel='name' {...formDropdown('parent')}/>
+          </div>
+        </div>
       </Dialog>
     </>
   );

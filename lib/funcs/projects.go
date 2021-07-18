@@ -45,8 +45,6 @@ func GetProjects(c app.Context) (interface{}, error) {
 }
 
 func CreateProject(c app.Context) (interface{}, error) {
-  comps := []globals.Project{}
-
   name      := c.Get("name").(string)
   descrip   := c.Get("descrip").(string)
   status    := c.Get("status").(string)
@@ -58,24 +56,18 @@ func CreateProject(c app.Context) (interface{}, error) {
   )
 
   if parent == "" {
-    stmt = `SELECT * FROM prj.FN_ProjectCRUD(_operation := 1, _name := $1, _description := $2, _status := $3);`
-    err  = globals.ScrDB.Select(&comps, stmt, name, descrip, status)
+    stmt   = `SELECT * FROM prj.FN_ProjectCRUD(_operation := 1, _name := $1, _description := $2, _status := $3);`
+    _, err = globals.ScrDB.Exec(stmt, name, descrip, status)
   } else {
-    stmt = `SELECT * FROM prj.FN_ProjectCRUD(_operation := 1, _name := $1, _description := $2, _status := $3, _parent := $4);`
-    err  = globals.ScrDB.Select(&comps, stmt, name, descrip, status, parent)
+    stmt   = `SELECT * FROM prj.FN_ProjectCRUD(_operation := 1, _name := $1, _description := $2, _status := $3, _parent := $4);`
+    _, err = globals.ScrDB.Exec(stmt, name, descrip, status, parent)
   }
 
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
   }
 
-  bytes, err := json.Marshal(comps)
-
-  if err != nil {
-    c.App.Log.Error("Error: ", err.Error())
-  }
-
-  return string(bytes), nil
+  return nil, nil
 }
 
 func DeleteProject(c app.Context) (interface{}, error) {
@@ -101,13 +93,7 @@ func DeleteProject(c app.Context) (interface{}, error) {
     c.App.Log.Error("Error getting data: ", err.Error())
   }
 
-  bytes, err := json.Marshal(comps)
-
-  if err != nil {
-    c.App.Log.Error("Error: ", err.Error())
-  }
-
-  return string(bytes), nil
+  return nil, nil
 }
 
 func UpdateProject(c app.Context) (interface{}, error) {
@@ -135,11 +121,5 @@ func UpdateProject(c app.Context) (interface{}, error) {
     c.App.Log.Error("Error getting data: ", err.Error())
   }
 
-  bytes, err := json.Marshal(comps)
-
-  if err != nil {
-    c.App.Log.Error("Error: ", err.Error())
-  }
-
-  return string(bytes), nil
+  return nil, nil
 }
