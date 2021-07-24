@@ -26,10 +26,20 @@ module.exports =
 					}
 				}
 			  },
+        {
+				test: /\.scss?$/,
+				loader: 'sass-loader',
+				exclude: /node_modules/,
+				options: {
+					compilerOptions: {
+						"noEmit": false
+					}
+				}
+			  },
 			],
 		},
 	  resolve: {
-			extensions: ['.tsx', '.ts', '.js'],
+			extensions: ['.tsx', '.ts', '.js', '.scss'],
 	  },
 	},
 }

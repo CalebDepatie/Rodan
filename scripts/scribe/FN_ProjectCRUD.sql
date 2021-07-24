@@ -4,7 +4,7 @@ CREATE OR REPLACE FUNCTION prj.FN_ProjectCRUD (
     _name        VARCHAR(128) = NULL,
     _description varchar(256) = NULL,
     _status      INT          = NULL,
-    _parent      INT          = NULL,
+    _parent      INT          = 0,
 
     _projectID    INT = NULL,
     _initiativeID INT = NULL,
@@ -16,7 +16,7 @@ AS $$
 DECLARE _sql VARCHAR(512);
 BEGIN
   IF    _operation = 1 THEN
-    IF _parent = NULL THEN
+    IF _parent = 0 THEN
       INSERT INTO prj.projects (name, description, created_date, status)
         VALUES (_name, _description, NOW()::DATE, _status);
     ELSE

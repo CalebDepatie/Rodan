@@ -1,0 +1,21 @@
+/* https://www.color-hex.com/color-palette/700 */
+
+@mixin status($colour) {
+  color: $colour;
+}
+
+.status-1 {
+  @include status(#00aedb);
+}
+
+.status-2 {
+  @include status(#d11141);
+}
+
+.status-3 {
+  @include status(#ffc425);
+}
+
+.status-4 {
+  @include status(#00b159);
+}

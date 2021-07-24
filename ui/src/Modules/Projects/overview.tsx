@@ -9,6 +9,9 @@ import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
+import { Tag } from 'primereact/tag';
+
+import './overview.scss';
 
 function ProjectTable(props: any) {
   const [ projectData, setProjectsdata ] = useState<TreeNode[]>();
@@ -64,7 +67,17 @@ function ProjectTable(props: any) {
 
   const statusFormat = (node: TreeNode) => {
     const status = statuses.filter((i:any) => i.id === node.data.status)[0]["name"];
-    return status;
+    return <Tag value={status} className={`status-${node.data.status}`} />
+  };
+
+  const statusValueTemplate = (option:any, props:any) => {
+    if (option) {
+      return <Tag value={option.name} className={`status-${option.id}`} />
+    }
+  };
+
+  const statusItemTemplate = (option:any) => {
+    return <Tag value={option.name} className={`status-${option.id}`} />
   };
 
   const dateFormat = (node: TreeNode) => {
@@ -88,6 +101,25 @@ function ProjectTable(props: any) {
     };
   };
 
+  const onEditorValueChange = (props: any, value: string, proj: boolean, id: number) => {
+    g.call("update_project", {body: JSON.stringify({updateCol: props.field, updateVal: value,
+                                      ...(proj ? {projID: id} : {iniID: id} )})})
+      .catch(error => {
+        console.error('Error Getting Data', error);
+      });
+  };
+
+  const statusEditor = (props: any) => {
+    const data = props.node.data.status;
+    const id   = props.node.data.id;
+    const proj = props.node.data.parent === 0;
+    return (
+      <Dropdown value={data} onChange={(e) => onEditorValueChange(props, e.value, proj, id)}
+                options={statuses} optionValue='id' optionLabel='name'
+                valueTemplate={statusValueTemplate} itemTemplate={statusItemTemplate}/>
+    );
+  };
+
   const header = (
     <>
       <Button icon="pi pi-plus" label="Add Project" onClick={handleShow} className='p-button-secondary' />
@@ -100,7 +132,7 @@ function ProjectTable(props: any) {
       <TreeTable value={projectData} header={header}>
         <Column field="name" header="Name" expander/>
         <Column field="descrip" header="Description" />
-        <Column field="status" header="Status" body={statusFormat} />
+        <Column field="status" header="Status" body={statusFormat} editor={statusEditor} />
         <Column field="created" header="Created" body={dateFormat} />
       </TreeTable>
 
@@ -132,7 +164,8 @@ function ProjectTable(props: any) {
 
           <div className="p-field p-col-6">
             <label htmlFor="status">Status</label>
-            <Dropdown id="status" options={statuses} optionValue='id' optionLabel='name' {...formDropdown('status')}/>
+            <Dropdown id="status" options={statuses} optionValue='id' optionLabel='name' {...formDropdown('status')}
+              valueTemplate={statusValueTemplate} itemTemplate={statusItemTemplate}/>
           </div>
 
           <div className="p-field p-col-6">

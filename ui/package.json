@@ -1,6 +1,6 @@
 {
 	"name": "Rodan",
-	"version": "0.2.4",
+	"version": "0.2.5",
 	"private": true,
 	"scripts": {
 		"serve": "vue-cli-service serve",
@@ -26,6 +26,7 @@
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "^4.0.3",
 		"react-transition-group": "^4.4.2",
+		"style-loader": "^3.2.1",
 		"typescript": "^4.3.5",
 		"vue": "^2.6.14",
 		"vuex": "^3.4.0"
@@ -39,7 +40,8 @@
 		"@vue/cli-service": "~4.4.0",
 		"loader-utils": "^2.0.0",
 		"sass": "^1.26.5",
-		"sass-loader": "^12.1.0",
+		"sass-loader": "10.1.1",
+    "css-loader": "^6.2.0",
 		"ts-loader": "8.2.0",
 		"vue-template-compiler": "^2.6.14"
 	}
