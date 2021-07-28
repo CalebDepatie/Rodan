@@ -9,7 +9,6 @@ import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
-import { Tag } from 'primereact/tag';
 
 import './overview.scss';
 
@@ -67,17 +66,17 @@ function ProjectTable(props: any) {
 
   const statusFormat = (node: TreeNode) => {
     const status = statuses.filter((i:any) => i.id === node.data.status)[0]["name"];
-    return <Tag value={status} className={`status-${node.data.status}`} />
+    return <div className={`status-${node.data.status}`}>{status}</div>
   };
 
   const statusValueTemplate = (option:any, props:any) => {
     if (option) {
-      return <Tag value={option.name} className={`status-${option.id}`} />
+      return <div className={`status-${option.id}`} >{option.name}</div>
     }
   };
 
   const statusItemTemplate = (option:any) => {
-    return <Tag value={option.name} className={`status-${option.id}`} />
+    return <div className={`status-${option.id}`} >{option.name}</div>
   };
 
   const dateFormat = (node: TreeNode) => {

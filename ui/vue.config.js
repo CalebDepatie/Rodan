@@ -3,39 +3,31 @@ const path = require('path');
 
 checkBeforeBuild()
 
-module.exports =
-{
+module.exports = {
 	outputDir: process.env.GUARK_BUILD_DIR,
 	productionSourceMap: process.env.NODE_ENV == 'production' ? false : true,
-	configureWebpack:
-	{
-		devServer:
-		{
+	configureWebpack: {
+		devServer: {
 			// After server started you should call useGuarkLockFile.
 			after: (app, server, compiler) => compiler.hooks.done.tap("Guark", useGuarkLockFile)
 		},
 		module: {
 			rules: [
 			  {
-				test: /\.tsx?$/,
-				loader: 'ts-loader',
-				exclude: /node_modules/,
-				options: {
-					compilerOptions: {
-						"noEmit": false
-					}
-				}
+  				test: /\.tsx?$/,
+  				loader: 'ts-loader',
+  				exclude: /node_modules/,
+  				options: {
+  					compilerOptions: {
+  						"noEmit": false
+  					}
+  				}
 			  },
         {
-				test: /\.scss?$/,
-				loader: 'sass-loader',
-				exclude: /node_modules/,
-				options: {
-					compilerOptions: {
-						"noEmit": false
-					}
-				}
-			  },
+          test: /\.scss?$/,
+          loader: 'sass-loader',
+          exclude: /node_modules/,
+        },
 			],
 		},
 	  resolve: {
