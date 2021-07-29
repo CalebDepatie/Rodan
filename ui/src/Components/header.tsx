@@ -14,10 +14,13 @@ function Header(props: any) {
         <Nav>
           <NavDropdown title="Projects" id="collasible-nav-dropdown">
             <NavDropdown.Item href="/projects/raw">Overview</NavDropdown.Item>
+            <NavDropdown.Item href="/projects/boards">Boards</NavDropdown.Item>
+            <NavDropdown.Item href="/projects/tasks">Tasks</NavDropdown.Item>
           </NavDropdown>
         </Nav>
         <Nav>
           <NavDropdown title="Finances" id="collasible-nav-dropdown">
+            <NavDropdown.Item href="/finances/overview">Overview</NavDropdown.Item>
             <NavDropdown.Item href="/finances/raw">Raw Data</NavDropdown.Item>
             <NavDropdown.Item href="/finances/payments">Payments</NavDropdown.Item>
           </NavDropdown>

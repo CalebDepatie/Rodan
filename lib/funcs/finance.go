@@ -179,21 +179,34 @@ func NewIncome(c app.Context) (interface{}, error) {
 	return nil, nil
 }
 
-type time struct {
-  m int `json:"month"`
-  y int `json:"year"`
-}
-
 func GetMonthFinances(c app.Context) (interface{}, error) {
   var (
     r []globals.FinanceRecord
+    unmarshalErr *json.UnmarshalTypeError
+    err error
   )
 
-  m := c.GetOr("month", "5").(string)
-  y := c.GetOr("year", "2021").(string)
+  time := struct {
+    m int `json:"month"`
+    y int `json:"year"`
+  }{
+    m: 0,
+    y: 0,
+  }
 
-  stmt := `SELECT * FROM public.GetMonthExpenses($1, $2);`
-	err  := globals.FinDB.Select(&r, stmt, m, y)
+  dec := json.NewDecoder(strings.NewReader(c.GetOr("body", "").(string)))
+  err = dec.Decode(&time)
+
+  if err != nil {
+      if errors.As(err, &unmarshalErr) {
+        c.App.Log.Error("JSON Error: ", unmarshalErr.Field)
+      } else {
+        c.App.Log.Error("Request Error: ", err.Error())
+      }
+  }
+
+  stmt := `SELECT * FROM public.FN_GetMonthExpenses($1, $2);`
+	err  = globals.FinDB.Select(&r, stmt, time.m, time.y)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
   }
