@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import g from 'guark';
 
 import { Chart } from 'primereact/chart';
@@ -9,14 +9,13 @@ function FinanceReview(props: any) {
   const [ coms, setComs ]   = useState([]);
 
   const [ monthOverallBreakdown, setMOB ] = useState<{[key: string]: any}>({});
+  const [ monthExpenseBreakdown, setMEB ] = useState<{[key: string]: any}>({});
+
+  const mobRef = useRef<any>(null);
 
   useEffect(() => {
     g.call("get_cat", {}).then(async res => {
       const data = await JSON.parse(res);
-
-      data.map((itm: any) => {
-        return [itm.id, itm.name, itm.descrip]
-      });
 
       setCats(data);
     }).catch(error => {
@@ -26,10 +25,6 @@ function FinanceReview(props: any) {
     g.call("get_com", {}).then(async res => {
       const data = await JSON.parse(res);
 
-      data.map((itm: any) => {
-        return [itm.id, itm.name, itm.descrip]
-      });
-
       setComs(data);
     }).catch(error => {
       console.error('Error Getting Data', error);
@@ -38,7 +33,6 @@ function FinanceReview(props: any) {
     const date = new Date;
     g.call("get_finances", {body: JSON.stringify({month: (date.getMonth()+1), year: date.getFullYear()})}).then(async res => {
       const data = await JSON.parse(res);
-      console.log("RES", res);
       setFinancedata(data);
     }).catch(error => {
       console.error('Error Getting Data', error);
@@ -46,10 +40,9 @@ function FinanceReview(props: any) {
   }, []);
 
   useEffect(() => {
-    console.log("FINDATA:",financedata);
-    const Income:number[] = Array(financedata.length)
+    const Income:number[] = Array(31) // arbitrarily set rn
                           .fill(0)
-                          .map((itm:number, idx:number) => {
+      /*                    .map((itm:number, idx:number) => {
       return financedata.filter((data:any) => data.type===2)
                         .filter((data:any) => {
                           const d = new Date((data.date as unknown as number) * 1000);
@@ -57,10 +50,10 @@ function FinanceReview(props: any) {
                           return d.getDay() === idx;
                         }).reduce((total:number, data:any) => { return total+data.price });
 
-    });
+    });*/
 
-    /*setMOB({
-      labels: Array(financedata.length).keys(),
+    setMOB({
+      labels: Array(31).keys(),
       datasets: [
         {
           label: 'Income',
@@ -70,17 +63,55 @@ function FinanceReview(props: any) {
           tension: .4
         },
       ]
-    });*/
+    });
+
+    setMEB({
+      labels: cats.map((itm:any) => itm.name),
+      datasets: [
+        {
+          data: Object.values(financedata.filter((row:any) => row.cat !== -1).groupBy("cat")).map((row:any) => {
+            return row.reduce((total:number, curVal:any) => {
+              return total+curVal.price;
+            },0);
+          }),
+          backgroundColor: [
+              "#F3722C", // housing
+              "#90BE6D", // cannabis
+              "#43AA8B", // food
+              "#F8961E", // video games
+              "#F9C74F", // gas
+              "#577590", // misc
+              "#4D908E", // alcohol
+              "#277DA1", // h&h
+          ],
+          hoverBackgroundColor: [
+              "#f2905c",
+              "#a6bf93",
+              "#64aa95",
+              "#f7ab4f",
+              "#f9d581",
+              "#72818e",
+              "#688e8d",
+              "#4685a0",
+          ]
+        }
+      ]
+    });
   }, [financedata]);
+
+  useEffect(() => {
+    mobRef!.current!.refresh();
+  }, [monthOverallBreakdown]);
 
   return (
     <div>
       <div style={{float: "left", width: "50%"}}>
         <h2 className="font-weight-light">Overall Breakdown</h2>
-        <Chart type="line" data={monthOverallBreakdown} />
+        <Chart ref={mobRef} type="line" data={monthOverallBreakdown} />
       </div>
       <div style={{float: "left", width: "50%"}}>
         <h2 className="font-weight-light">Expenses Breakdown</h2>
+        <Chart type="pie" data={monthExpenseBreakdown} />
       </div>
     </div>
   );

@@ -8,6 +8,12 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 
+declare global {
+  interface Array<T> {
+    groupBy(key: string): Array<T>;
+  }
+}
+
 function App() {
   const routes = useMemo(() => [
       {
@@ -37,6 +43,14 @@ function App() {
       },
   ], []);
 
+
+  // Additional member functions
+  Array.prototype.groupBy = function(key: string) {
+  return this.reduce(function(rv:any, x:any) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};
 
 	return (
 	<div className="App">

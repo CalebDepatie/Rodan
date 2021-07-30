@@ -190,12 +190,15 @@ func GetMonthFinances(c app.Context) (interface{}, error) {
     m int `json:"month"`
     y int `json:"year"`
   }{
-    m: 0,
-    y: 0,
+    m: 6,    // safe defaults
+    y: 2021,
   }
 
+  c.App.Log.Debug("STRUCT ", c.GetOr("body", "").(string))
   dec := json.NewDecoder(strings.NewReader(c.GetOr("body", "").(string)))
   err = dec.Decode(&time)
+
+  c.App.Log.Debug("TIME ", time)
 
   if err != nil {
       if errors.As(err, &unmarshalErr) {
