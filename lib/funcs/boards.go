@@ -47,7 +47,7 @@ func GetBoard(c app.Context) (interface{}, error) {
 
   board := c.GetOr("board", "").(string)
 
-  stmt := `SELECT * FROM prj.FN_BoardCRUD(_operation := 3, _board := $1);`
+  stmt := `SELECT * FROM prj.FN_FragnetCRUD(_operation := 2, _board := $1);`
   err  := globals.ScrDB.Select(&board_frags, stmt, board)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
@@ -124,7 +124,7 @@ func CreateFragnet(c app.Context) (interface{}, error) {
       }
   }
 
-  stmt := `SELECT * FROM prj.FN_BoardCRUD(_operation := 2, _board := $1, _title := $2, _status := $3, _effort := $4, _parent := $5, _moscow := $6, _tcd := $7);`
+  stmt := `SELECT * FROM prj.FN_FragnetCRUD(_operation := 1, _board := $1, _title := $2, _status := $3, _effort := $4, _parent := $5, _moscow := $6, _tcd := $7);`
   _, err = globals.ScrDB.Exec(stmt, board_args.BoardId, board_args.Title, board_args.Status, board_args.Effort, board_args.Parent, board_args.Moscow, board_args.TCD)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())

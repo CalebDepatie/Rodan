@@ -186,11 +186,11 @@ function ProjectTable(props: any) {
   return (
     <>
       <Toast ref={toast} />
-      <TreeTable value={projectData} header={header}>
+      <TreeTable value={projectData} header={header} tableClassName="proj-table">
         <Column field="name" header="Name" expander/>
-        <Column field="descrip" header="Description" editor={descripEditor} />
-        <Column field="status" header="Status" body={statusFormat} editor={statusEditor} />
-        <Column field="created" header="Created" body={dateFormat} />
+        <Column field="descrip" header="Description" editor={descripEditor} bodyClassName ="big-text"/>
+        <Column field="status" header="Status" body={statusFormat} editor={statusEditor} style={{width:"100px"}} />
+        <Column field="created" header="Created" body={dateFormat} style={{width:"100px"}} />
       </TreeTable>
 
       <Dialog header="Create a Project" visible={show} onHide={handleClose} position='center' modal style={{width: '70vw'}} footer={(

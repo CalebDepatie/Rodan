@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION prj.FN_ProjectCRUD (
 
     _updateVal VARCHAR(256) = NULL,
     _updateCol VARCHAR(256) = NULL
-) RETURNS TABLE (id INTEGER, name VARCHAR(128), description VARCHAR(256), created_date FLOAT, status INTEGER, parent INTEGER)
+) RETURNS TABLE (id INT, name VARCHAR(128), description VARCHAR(256), created_date FLOAT, status INT, parent INT)
 AS $$
 BEGIN
   IF _operation = 1 THEN
@@ -36,7 +36,7 @@ BEGIN
       EXECUTE FORMAT('UPDATE prj.initiatives SET %I = $1::%s WHERE prj.initiatives.id = $2', _updateCol, (SELECT data_type FROM information_schema.columns WHERE table_name = 'initiatives' AND column_name = _updateCol))
         USING _updateVal, _initiativeID;
     END IF;
-    
+
   ELSIF _operation = 4 THEN
     IF _projectID IS NOT NULL THEN
       DELETE FROM prj.projects WHERE prj.projects.id = _projectID;
