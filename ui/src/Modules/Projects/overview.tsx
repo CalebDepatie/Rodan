@@ -9,6 +9,7 @@ import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
+import { InputTextarea } from 'primereact/inputtextarea';
 
 import './overview.scss';
 
@@ -23,6 +24,34 @@ function ProjectTable(props: any) {
 
   const handleShow  = () => setShow(true);
   const handleClose = () => setShow(false);
+
+  const refresh = async () => {
+    const projdata = JSON.parse(await g.call("get_projects", {})
+      .catch(error => {
+        console.error('Error Getting Data', error);
+        return "";
+      }));
+
+    const initiatives = projdata.filter((itm:any) => itm.parent !== 0);
+    const projects    = projdata.filter((itm:any) => itm.parent === 0);
+    setProjects(projects.concat([{id: 0, name:"None"}]));
+
+    const ini = initiatives.map((itm: any) => {
+      return {
+        key: itm.parent + '-' + itm.id,
+        data: itm,
+        children: null,
+      };
+    });
+
+    setProjectsdata(projects.map((proj: any) => {
+      return {
+        key: proj.id,
+        data: proj,
+        children: ini.filter((i: any) => i.data.parent === proj.id),
+      }
+    }));
+  };
 
   useEffect(() => {
     const setupData = async () => {
@@ -54,7 +83,7 @@ function ProjectTable(props: any) {
 
       setProjectsdata(projects.map((proj: any) => {
         return {
-          key: proj.id,
+          key: proj.id.toString(),
           data: proj,
           children: ini.filter((i: any) => i.data.parent === proj.id),
         }
@@ -100,12 +129,31 @@ function ProjectTable(props: any) {
     };
   };
 
-  const onEditorValueChange = (props: any, value: string, proj: boolean, id: number) => {
-    g.call("update_project", {body: JSON.stringify({updateCol: props.field, updateVal: value,
+  const findNodeByKey = (nodes:TreeNode[], key:string): TreeNode => {
+    const path:string[]    = key.split('-');
+    let node:TreeNode|null = null;
+
+    node = nodes.filter((i:TreeNode) => i.key === path[0])[0];
+
+    if (path.length > 1) {
+      const children:TreeNode[] = node.children;
+      node = children.filter((i:TreeNode) => i.key === key)[0];
+    }
+
+    return node;
+  }
+
+  const onEditorValueChange = (props: any, field:string, value: string, proj: boolean, id: number) => {
+    g.call("update_project", {body: JSON.stringify({updateCol: field, updateVal: value.toString(),
                                       ...(proj ? {projID: id} : {iniID: id} )})})
       .catch(error => {
         console.error('Error Getting Data', error);
       });
+    // update table data
+    let newNodes = JSON.parse(JSON.stringify(projectData)); // deep copy
+    let editedNode = findNodeByKey(newNodes, props.node.key);
+    editedNode.data[props.field] = value;
+    setProjectsdata(newNodes);
   };
 
   const statusEditor = (props: any) => {
@@ -113,9 +161,19 @@ function ProjectTable(props: any) {
     const id   = props.node.data.id;
     const proj = props.node.data.parent === 0;
     return (
-      <Dropdown value={data} onChange={(e) => onEditorValueChange(props, e.value, proj, id)}
+      <Dropdown value={data} onChange={(e) => onEditorValueChange(props, 'status', e.value, proj, id)}
                 options={statuses} optionValue='id' optionLabel='name'
                 valueTemplate={statusValueTemplate} itemTemplate={statusItemTemplate}/>
+    );
+  };
+
+  const descripEditor = (props: any) => {
+    const data = props.node.data.descrip;
+    const id   = props.node.data.id;
+    const proj = props.node.data.parent === 0;
+    return (
+      <InputTextarea value={data} autoResize
+        onChange={(e) => onEditorValueChange(props, 'description', e.target.value, proj, id)} />
     );
   };
 
@@ -130,7 +188,7 @@ function ProjectTable(props: any) {
       <Toast ref={toast} />
       <TreeTable value={projectData} header={header}>
         <Column field="name" header="Name" expander/>
-        <Column field="descrip" header="Description" />
+        <Column field="descrip" header="Description" editor={descripEditor} />
         <Column field="status" header="Status" body={statusFormat} editor={statusEditor} />
         <Column field="created" header="Created" body={dateFormat} />
       </TreeTable>

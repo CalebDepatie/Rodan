@@ -24,6 +24,10 @@ var Funcs = app.Funcs{
   "create_project": funcs.CreateProject,
   "update_project": funcs.UpdateProject,
   "delete_project": funcs.DeleteProject,
+  "get_board_heads": funcs.GetBoardHeads,
+  "get_board": funcs.GetBoard,
+  "create_board": funcs.CreateBoard,
+  "create_fragnet": funcs.CreateFragnet,
 }
 
 // App hooks.

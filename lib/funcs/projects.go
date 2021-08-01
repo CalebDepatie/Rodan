@@ -86,11 +86,11 @@ func DeleteProject(c app.Context) (interface{}, error) {
   )
 
   p := struct {
-    projID int `json:"projID"`
-    iniID  int `json:"iniID"`
+    ProjID int `json:"projID"`
+    IniID  int `json:"iniID"`
   }{
-    projID: 0,
-    iniID:  0,
+    ProjID: 0,
+    IniID:  0,
   }
 
   dec := json.NewDecoder(strings.NewReader(c.GetOr("body", "").(string)))
@@ -104,12 +104,12 @@ func DeleteProject(c app.Context) (interface{}, error) {
       }
   }
 
-  if p.projID != 0 {
+  if p.ProjID != 0 {
     stmt = `SELECT * FROM prj.FN_ProjectCRUD(_operation := 4, _projectID := $1);`
-    _, err = globals.ScrDB.Exec(stmt, p.projID)
+    _, err = globals.ScrDB.Exec(stmt, p.ProjID)
   } else {
     stmt = `SELECT * FROM prj.FN_ProjectCRUD(_operation := 4, _initiativeID := $1);`
-    _, err = globals.ScrDB.Exec(stmt, p.iniID)
+    _, err = globals.ScrDB.Exec(stmt, p.IniID)
   }
 
   if err != nil {
@@ -127,15 +127,15 @@ func UpdateProject(c app.Context) (interface{}, error) {
   )
 
   p := struct {
-    projID    int    `json:"projID"`
-    iniID     int    `json:"iniID"`
-    updateVal string `json:"updateVal"`
-    updateCol string `json:"updateCol"`
+    ProjID    int    `json:"projID"`
+    IniID     int    `json:"iniID"`
+    UpdateVal string `json:"updateVal"`
+    UpdateCol string `json:"updateCol"`
   }{
-    projID:    0,
-    iniID:     0,
-    updateVal: "",
-    updateCol: "",
+    ProjID:    0,
+    IniID:     0,
+    UpdateVal: "",
+    UpdateCol: "",
   }
 
   dec := json.NewDecoder(strings.NewReader(c.GetOr("body", "").(string)))
@@ -149,12 +149,12 @@ func UpdateProject(c app.Context) (interface{}, error) {
       }
   }
 
-  if p.projID != 0 {
-    stmt = `SELECT * FROM prj.FN_ProjectCRUD(_operation := 4, _projectID := $1, _updateVal := $2, _updateCol := $3);`
-    _, err = globals.ScrDB.Exec(stmt, p.projID, p.updateVal, p.updateCol)
+  if p.ProjID != 0 {
+    stmt = `SELECT * FROM prj.FN_ProjectCRUD(_operation := 3, _projectID := $1, _updateVal := $2, _updateCol := $3);`
+    _, err = globals.ScrDB.Exec(stmt, p.ProjID, p.UpdateVal, p.UpdateCol)
   } else {
-    stmt = `SELECT * FROM prj.FN_ProjectCRUD(_operation := 4, _initiativeID := $1, _updateVal := $2, _updateCol := $3);`
-    _, err = globals.ScrDB.Exec(stmt, p.iniID, p.updateVal, p.updateCol)
+    stmt = `SELECT * FROM prj.FN_ProjectCRUD(_operation := 3, _initiativeID := $1, _updateVal := $2, _updateCol := $3);`
+    _, err = globals.ScrDB.Exec(stmt, p.IniID, p.UpdateVal, p.UpdateCol)
   }
 
   if err != nil {

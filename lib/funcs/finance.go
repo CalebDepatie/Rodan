@@ -187,18 +187,15 @@ func GetMonthFinances(c app.Context) (interface{}, error) {
   )
 
   time := struct {
-    m int `json:"month"`
-    y int `json:"year"`
+    M int `json:"month"`
+    Y int `json:"year"`
   }{
-    m: 6,    // safe defaults
-    y: 2021,
+    M: 6,    // safe defaults
+    Y: 2021,
   }
 
-  c.App.Log.Debug("STRUCT ", c.GetOr("body", "").(string))
   dec := json.NewDecoder(strings.NewReader(c.GetOr("body", "").(string)))
   err = dec.Decode(&time)
-
-  c.App.Log.Debug("TIME ", time)
 
   if err != nil {
       if errors.As(err, &unmarshalErr) {
@@ -209,7 +206,7 @@ func GetMonthFinances(c app.Context) (interface{}, error) {
   }
 
   stmt := `SELECT * FROM public.FN_GetMonthExpenses($1, $2);`
-	err  = globals.FinDB.Select(&r, stmt, time.m, time.y)
+	err  = globals.FinDB.Select(&r, stmt, time.M, time.Y)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
   }

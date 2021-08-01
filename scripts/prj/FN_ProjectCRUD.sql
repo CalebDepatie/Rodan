@@ -13,9 +13,8 @@ CREATE OR REPLACE FUNCTION prj.FN_ProjectCRUD (
     _updateCol VARCHAR(256) = NULL
 ) RETURNS TABLE (id INTEGER, name VARCHAR(128), description VARCHAR(256), created_date FLOAT, status INTEGER, parent INTEGER)
 AS $$
-DECLARE _sql VARCHAR(512);
 BEGIN
-  IF    _operation = 1 THEN
+  IF _operation = 1 THEN
     IF _parent = 0 THEN
       INSERT INTO prj.projects (name, description, created_date, status)
         VALUES (_name, _description, NOW()::DATE, _status);
@@ -23,24 +22,26 @@ BEGIN
       INSERT INTO prj.initiatives (name, description, created_date, status, parent)
         VALUES (_name, _description, NOW()::DATE, _status, _parent);
     END IF;
+
   ELSIF _operation = 2 THEN
     RETURN QUERY
     SELECT PRJ.id, PRJ.name, PRJ.description, PRJ.created_date, PRJ.status, PRJ.parent
       FROM prj.VV_Projects AS PRJ;
 
   ELSIF _operation = 3 THEN
-    IF _projectID <> NULL THEN
-      SELECT _sql = 'UPDATE prj.projects SET [' + _updateCol + '] = ''' + _updateVal + ''' WHERE [id] = '''+ _projectID + '''';
-      EXECUTE(_sql);
+    IF _projectID IS NOT NULL THEN
+      EXECUTE FORMAT('UPDATE prj.projects SET %I = $1::%s WHERE prj.projects.id = $2', _updateCol, (SELECT data_type FROM information_schema.columns WHERE table_name = 'projects' AND column_name = _updateCol))
+        USING _updateVal, _projectID;
     ELSE
-      SELECT _sql = 'UPDATE prj.initiatives SET [' + _updateCol + '] = ''' + _updateVal + ''' WHERE [id] = '''+ _initiativeID + '''';
-      EXECUTE(_sql);
+      EXECUTE FORMAT('UPDATE prj.initiatives SET %I = $1::%s WHERE prj.initiatives.id = $2', _updateCol, (SELECT data_type FROM information_schema.columns WHERE table_name = 'initiatives' AND column_name = _updateCol))
+        USING _updateVal, _initiativeID;
     END IF;
+    
   ELSIF _operation = 4 THEN
-    IF _projectID <> NULL THEN
-      DELETE FROM prj.projects WHERE id = _projectID;
+    IF _projectID IS NOT NULL THEN
+      DELETE FROM prj.projects WHERE prj.projects.id = _projectID;
     ELSE
-      DELETE FROM prj.initiatives WHERE id = _initiativeID;
+      DELETE FROM prj.initiatives WHERE prj.initiatives.id = _initiativeID;
     END IF;
   END IF;
 END; $$

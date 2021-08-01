@@ -31,7 +31,7 @@ function FinanceReview(props: any) {
     });
 
     const date = new Date;
-    g.call("get_finances", {body: JSON.stringify({month: (date.getMonth()+1), year: date.getFullYear()})}).then(async res => {
+    g.call("get_finances", {body: JSON.stringify({month: 7, year: 2021})}).then(async res => {
       const data = await JSON.parse(res);
       setFinancedata(data);
     }).catch(error => {
@@ -41,7 +41,7 @@ function FinanceReview(props: any) {
 
   useEffect(() => {
     const Income:number[] = Array(31) // arbitrarily set rn
-                          .fill(0)
+                          .fill(0);
       /*                    .map((itm:number, idx:number) => {
       return financedata.filter((data:any) => data.type===2)
                         .filter((data:any) => {
@@ -66,7 +66,7 @@ function FinanceReview(props: any) {
     });
 
     setMEB({
-      labels: cats.map((itm:any) => itm.name),
+      labels: cats.sort((itm1:any, itm2:any) => itm1.id - itm2.id).map((itm:any) => itm.name),
       datasets: [
         {
           data: Object.values(financedata.filter((row:any) => row.cat !== -1).groupBy("cat")).map((row:any) => {

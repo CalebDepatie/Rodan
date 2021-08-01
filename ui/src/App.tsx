@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Header, Footer } from './Components';
-import { Home, Payment, RawData, ProjectTable, FinanceReview } from './Modules';
+import { Home, Payment, RawData, ProjectTable, FinanceReview, Boards } from './Modules';
 
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -24,6 +24,11 @@ function App() {
       {
         path:'/projects/raw',
         component: ProjectTable,
+        exact: true,
+      },
+      {
+        path:'/projects/boards',
+        component: Boards,
         exact: true,
       },
       {
