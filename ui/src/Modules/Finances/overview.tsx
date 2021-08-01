@@ -31,7 +31,7 @@ function FinanceReview(props: any) {
     });
 
     const date = new Date;
-    g.call("get_finances", {body: JSON.stringify({month: 7, year: 2021})}).then(async res => {
+    g.call("get_finances", {body: JSON.stringify({month: (date.getMonth()+1), year: date.getFullYear()})}).then(async res => {
       const data = await JSON.parse(res);
       setFinancedata(data);
     }).catch(error => {
