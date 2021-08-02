@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import g from 'guark';
 
+import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
+
 import { TreeTable } from 'primereact/treetable';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -10,8 +12,6 @@ import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
 import { InputTextarea } from 'primereact/inputtextarea';
-
-import './overview.scss';
 
 function ProjectTable(props: any) {
   const [ projectData, setProjectsdata ] = useState<TreeNode[]>();
@@ -98,16 +98,6 @@ function ProjectTable(props: any) {
     return <div className={`status-${node.data.status}`}>{status}</div>
   };
 
-  const statusValueTemplate = (option:any, props:any) => {
-    if (option) {
-      return <div className={`status-${option.id}`} >{option.name}</div>
-    }
-  };
-
-  const statusItemTemplate = (option:any) => {
-    return <div className={`status-${option.id}`} >{option.name}</div>
-  };
-
   const dateFormat = (node: TreeNode) => {
     const d = new Date((node.data.created as unknown as number) * 1000);
     d.setDate(d.getDate() + 1);
@@ -186,7 +176,7 @@ function ProjectTable(props: any) {
   return (
     <>
       <Toast ref={toast} />
-      <TreeTable value={projectData} header={header} tableClassName="proj-table">
+      <TreeTable value={projectData} header={header} tableClassName="proj-table" style={{paddingBottom:"30px"}}>
         <Column field="name" header="Name" expander/>
         <Column field="descrip" header="Description" editor={descripEditor} bodyClassName ="big-text"/>
         <Column field="status" header="Status" body={statusFormat} editor={statusEditor} style={{width:"100px"}} />

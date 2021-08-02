@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 import g from 'guark';
+
+import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
 import { TreeTable } from 'primereact/treetable';
 import TreeNode from 'primereact/treenode';
@@ -10,7 +12,7 @@ import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
-import {InputSwitch} from 'primereact/inputswitch';
+import { InputSwitch } from 'primereact/inputswitch';
 
 function Boards(props:any) {
   const [ boardHeads, setBoardHeads ]  = useState<any[]>([]);
@@ -19,10 +21,15 @@ function Boards(props:any) {
   const [ initiatives, setIni]         = useState([]);
   const [ activeBoard, setActiveBoard] = useState('');
   const [ form, setForm ]              = useState<{[key: string]: any}>({});
-  const [ show, setShow ]              = useState<boolean>(false);
+  const [ showHead, setShowHead ]      = useState<boolean>(false);
+  const [ showFrag, setShowFrag ]      = useState<boolean>(false);
+  const [ selectedKey, setSelected ]   = useState<string>('');
 
-  const handleShow  = () => setShow(true);
-  const handleClose = () => setShow(false);
+  const handleShowHead  = () => setShowHead(true);
+  const handleCloseHead = () => setShowHead(false);
+
+  const handleShowFrag  = () => setShowFrag(true);
+  const handleCloseFrag = () => setShowFrag(false);
 
   const toast = useRef<any>(null);
 
@@ -82,6 +89,29 @@ function Boards(props:any) {
     }
   }, [form["template"], form["initiative"]]);
 
+  useEffect(() => {
+    setForm({...form, board_id: activeBoard})
+    if (activeBoard && activeBoard !== '') {
+      const fn = async () => {
+        const board_frags = JSON.parse(await g.call("get_board", {board: activeBoard})
+          .catch(error => {
+            console.error('Error Getting Data', error);
+            return "";
+          }));
+        setFrags(board_frags);
+      };
+
+      fn();
+    }
+  }, [activeBoard]);
+
+  const moscow = [
+    {label:"M - Must Have", value:"Must Have"},
+    {label:"S - Should Have", value:"Should Have"},
+    {label:"C - Could Have", value:"Could Have"},
+    {label:"W - Won't Have", value:"Wont Have"},
+  ];
+
   const groupTemplate = (option:any) => {
     return (
       <span>
@@ -118,16 +148,18 @@ function Boards(props:any) {
     <div>
       <div style={{float: "left", width: "20%"}}>
         <span className="p-buttonset">
-          <Button onClick={handleShow} icon="pi pi-plus" label="Add Board" className='p-button-secondary' />
+          <Button onClick={handleShowHead} label="Add Board" className='p-button-secondary' />
+          <Button onClick={handleShowFrag} label="Add Fragnet" className='p-button-secondary' />
         </span>
 
         <ListBox value={activeBoard} options={boardHeads} optionLabel="title"
-          optionValue="board_id" optionGroupLabel="label" optionGroupChildren="items"
+          optionValue="id" optionGroupLabel="label" optionGroupChildren="items"
           optionGroupTemplate={groupTemplate}
           onChange={(e) => setActiveBoard(e.value)} style={{height:"20rem", marginTop:"10px"}} />
       </div>
-      <div style={{float: "left", width: "80%", paddingLeft:"5px"}}>
-        <TreeTable value={[]}>
+      <div style={{float: "left", width: "80%"}}>
+        <TreeTable value={frags} selectionMode="single"
+          selectionKeys={selectedKey} onSelectionChange={(e:any) => setSelected(e.value)}>
           <Column field="title" header="Title" expander/>
           <Column field="status" header="Status"/>
           <Column field="effort" header="Effort"/>
@@ -136,8 +168,64 @@ function Boards(props:any) {
         </TreeTable>
       </div>
     </div>
+    {/* Board Frags */}
+    <Dialog header="Create a Fragnet" visible={showFrag} onHide={handleCloseFrag} position='center' modal style={{width: '70vw'}} footer={(
+      <>
+        <Button label='Submit' className='p-button-success' onClick={(e:any) => {
+          const fn = async () => {
+            await g.call("create_fragnet", {body: JSON.stringify(form)})
+              .catch(error => {
+                console.error('Error Getting Data', error);
+                return "";
+              });
+            toast!.current!.show({severity: 'success', summary: 'Fragment Created', detail: ''});
+          };
+          fn();
+        }} />
+      </>
+    )}>
+      <div className='p-fluid p-formgrid p-grid'>
+        <div className="p-field p-col-6">
+          <label htmlFor="board">Board ID</label>
+          <InputText id="board" type="text" disabled={true} {...formText('board_id')}/>
+        </div>
 
-    <Dialog header="Create a Board" visible={show} onHide={handleClose} position='center' modal style={{width: '70vw'}} footer={(
+        <div className="p-field p-col-6">
+          <label htmlFor="parent">Parent Fragnet</label>
+          <InputText id="parent" type="text" disabled={true} {...formText('parent')}/>
+        </div>
+
+        <div className="p-field p-col-6">
+          <label htmlFor="name">Title</label>
+          <InputText id="name" type="text" {...formText('title')}/>
+        </div>
+
+        <div className="p-field p-col-6">
+          <label htmlFor="effort">Effort</label>
+          <InputText id="effort" type="number" {...formText('effort')}/>
+        </div>
+
+        <div className="p-field p-col-6">
+          <label htmlFor="status">Status</label>
+          <Dropdown id="status" options={statuses} optionValue='id' optionLabel='name' {...formDropdown('status')}
+            valueTemplate={statusValueTemplate} itemTemplate={statusItemTemplate}/>
+        </div>
+
+        <div className="p-field p-col-6">
+          <label htmlFor="moscow">MoSCoW</label>
+          <Dropdown id="moscow" options={moscow} {...formDropdown('moscow')}/>
+        </div>
+
+        <div className="p-field p-col-6">
+          <label htmlFor="tcd">Targted Completion Date</label>
+          <InputText id="tcd" type="date" {...formText('tcd')}/>
+        </div>
+
+      </div>
+    </Dialog>
+
+    {/* Board Heads */}
+    <Dialog header="Create a Board" visible={showHead} onHide={handleCloseHead} position='center' modal style={{width: '70vw'}} footer={(
       <>
         <Button label='Submit' className='p-button-success' onClick={(e:any) => {
           const fn = async () => {
