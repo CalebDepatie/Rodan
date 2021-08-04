@@ -69,7 +69,9 @@ function FinanceReview(props: any) {
       labels: cats.sort((itm1:any, itm2:any) => itm1.id - itm2.id).map((itm:any) => itm.name),
       datasets: [
         {
-          data: Object.values(financedata.filter((row:any) => row.cat !== -1).groupBy("cat")).map((row:any) => {
+          data: Object.values(financedata.filter((row:any) => row.cat !== -1)
+                      .concat([...cats.map((itm:any) => ({cat: itm.id, price:0}))]) // pushes an empty value for every category so the graph doesnt get tripped up
+                      .groupBy("cat")).map((row:any) => {
             return row.reduce((total:number, curVal:any) => {
               return total+curVal.price;
             },0);
