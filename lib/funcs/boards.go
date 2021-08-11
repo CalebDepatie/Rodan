@@ -129,3 +129,37 @@ func CreateFragnet(c app.Context) (interface{}, error) {
 
   return nil, nil
 }
+
+func UpdateFragnet(c app.Context) (interface{}, error) {
+  var (
+    stmt string
+    err  error
+    unmarshalErr *json.UnmarshalTypeError
+  )
+
+  p := struct {
+    FragID    string `json:"fragID"`
+    UpdateVal string `json:"updateVal"`
+    UpdateCol string `json:"updateCol"`
+  }{}
+
+  dec := json.NewDecoder(strings.NewReader(c.GetOr("body", "").(string)))
+  err = dec.Decode(&p)
+
+  if err != nil {
+      if errors.As(err, &unmarshalErr) {
+        c.App.Log.Error("JSON Error: ", unmarshalErr.Field)
+      } else {
+        c.App.Log.Error("Request Error: ", err.Error())
+      }
+  }
+
+  stmt = `SELECT * FROM prj.FN_FragnetCRUD(_operation := 3, _fragnet := $1, _updateVal := $2, _updateCol := $3);`
+  _, err = globals.ScrDB.Exec(stmt, p.FragID, p.UpdateVal, p.UpdateCol)
+
+  if err != nil {
+    c.App.Log.Error("Error getting data: ", err.Error())
+  }
+
+  return nil, nil
+}

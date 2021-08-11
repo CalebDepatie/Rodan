@@ -28,6 +28,7 @@ var Funcs = app.Funcs{
   "get_board": funcs.GetBoard,
   "create_board": funcs.CreateBoard,
   "create_fragnet": funcs.CreateFragnet,
+  "update_fragnet": funcs.UpdateFragnet,
 }
 
 // App hooks.

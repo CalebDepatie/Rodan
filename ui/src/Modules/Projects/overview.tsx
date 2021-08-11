@@ -55,7 +55,7 @@ function ProjectTable(props: any) {
 
   useEffect(() => {
     const setupData = async () => {
-      const statuses = JSON.parse(await g.call("get_statuses", {})
+      const statuses = JSON.parse(await g.call("get_statuses", {section: "project"})
         .catch(error => {
           console.error('Error Getting Data', error);
           return "";
@@ -180,7 +180,7 @@ function ProjectTable(props: any) {
         <Column field="name" header="Name" expander/>
         <Column field="descrip" header="Description" editor={descripEditor} bodyClassName ="big-text"/>
         <Column field="status" header="Status" body={statusFormat} editor={statusEditor} style={{width:"100px"}} />
-        <Column field="created" header="Created" body={dateFormat} style={{width:"100px"}} />
+        <Column field="created" header="Created" body={dateFormat} style={{width:"110px"}} />
       </TreeTable>
 
       <Dialog header="Create a Project" visible={show} onHide={handleClose} position='center' modal style={{width: '70vw'}} footer={(

@@ -11,8 +11,13 @@ import (
 func GetStatuses(c app.Context) (interface{}, error) {
   comps := []globals.Status{}
 
-  stmt := `SELECT * FROM prj.status;`
-  err  := globals.ScrDB.Select(&comps, stmt)
+  section := c.GetOr("section", "").(string)
+
+  stmt := `SELECT id, name
+            FROM prj.status
+            WHERE section = $1
+            ORDER BY workflow;`
+  err  := globals.ScrDB.Select(&comps, stmt, section)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
   }

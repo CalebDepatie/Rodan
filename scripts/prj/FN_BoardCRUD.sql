@@ -6,11 +6,11 @@ CREATE OR REPLACE FUNCTION prj.FN_BoardCRUD (
     _draft      BOOL         = FALSE,
     _template   BOOL         = FALSE,
 
-    _board     UUID         = NULL,
+    _board     VARCHAR(36)  = NULL,
     _updateVal VARCHAR(256) = NULL,
     _updateCol VARCHAR(256) = NULL
 
-) RETURNS TABLE (id UUID, title VARCHAR(255), initiative INT, draft BOOL, template BOOL, created_date DOUBLE PRECISION)
+) RETURNS TABLE (id VARCHAR(36), title VARCHAR(255), initiative INT, draft BOOL, template BOOL, created_date DOUBLE PRECISION)
 AS $$
 BEGIN
   /*

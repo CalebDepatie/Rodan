@@ -35,7 +35,7 @@ function Boards(props:any) {
 
   useEffect(() => {
     const setupData = async () => {
-      const statuses = JSON.parse(await g.call("get_statuses", {})
+      const statuses = JSON.parse(await g.call("get_statuses", {section:"board"})
         .catch(error => {
           console.error('Error Getting Data', error);
           return "";
@@ -98,12 +98,35 @@ function Boards(props:any) {
             console.error('Error Getting Data', error);
             return "";
           }));
-        setFrags(board_frags);
+
+        const create_children = (key: string, parent: string) => {
+          return board_frags.filter((itm:any) => itm.parent === parent).map((itm:any) => {
+            return {
+              key: key + '~' + itm.id,
+              data: itm,
+              children: create_children(key + '-' + itm.id, itm.id),
+            };
+          });
+        };
+
+        setFrags(board_frags.filter((itm:any) => itm.parent === '').map((itm:any) => {
+          return {
+            key: itm.id,
+            data: itm,
+            children: create_children(itm.id, itm.id),
+          };
+        }));
       };
 
       fn();
     }
   }, [activeBoard]);
+
+  useEffect(() => {
+    const keys = selectedKey.split('~');
+    const id = keys[keys.length-1];
+    setForm({...form, parent: id});
+  }, [selectedKey]);
 
   const moscow = [
     {label:"M - Must Have", value:"Must Have"},
@@ -142,6 +165,74 @@ function Boards(props:any) {
     };
   };
 
+  const findNodeByKey = (nodes:TreeNode[], key:string): TreeNode|null => {
+    const path:string[]    = key.split('~');
+    let node:TreeNode|null = null;
+
+    while (path.length) {
+      let list:TreeNode[] = node ? node.children : nodes;
+      node = list.filter((i:TreeNode) => i.data.id === path[0])[0];
+      path.shift();
+    }
+
+    return node;
+  }
+
+  const onEditorValueChange = (props: any, field:string, value: string, id: string) => {
+    g.call("update_fragnet", {body: JSON.stringify({updateCol: field, updateVal: value.toString(), fragID:id})})
+      .catch(error => {
+        console.error('Error Getting Data', error);
+      });
+    // update table data
+    let newNodes = JSON.parse(JSON.stringify(frags)); // deep copy
+    let editedNode = findNodeByKey(newNodes, props.node.key);
+    editedNode!.data[props.field] = value;
+    setFrags(newNodes);
+  };
+
+  const statusEditor = (props: any) => {
+    const data = props.node.data.status;
+    const id   = props.node.data.id;
+    const proj = props.node.data.parent === 0;
+    return (
+      <Dropdown value={data} onChange={(e) => onEditorValueChange(props, 'status', e.value, id)}
+                options={statuses} optionValue='id' optionLabel='name'
+                valueTemplate={statusValueTemplate} itemTemplate={statusItemTemplate}/>
+    );
+  };
+
+  const titleEditor = (props: any) => {
+    const data = props.node.data.title;
+    const id   = props.node.data.id;
+    const proj = props.node.data.parent === 0;
+    return (
+      <InputText value={data}
+        onChange={(e) => onEditorValueChange(props, 'title', e.target.value, id)} />
+    );
+  };
+
+  const statusFormat = (node: TreeNode) => {
+    const status = statuses.filter((i:any) => i.id === node.data.status)[0]["name"];
+    return <div className={`status-${node.data.status}`}>{status}</div>
+  };
+
+  const dateFormat = (node: TreeNode) => {
+    if ((node.data.tcd as unknown as number) == 0) {
+      return '';
+    }
+    const d = new Date((node.data.tcd as unknown as number) * 1000);
+    d.setDate(d.getDate() + 1);
+    const a = d.toLocaleString('default', {day:'numeric', month:'short', year:'2-digit'}).split(' ');
+    return a.join('-');
+  };
+
+  const effortFormat = (node: TreeNode) => {
+    if (node.data.effort === -1) {
+      return '';
+    }
+    return node.data.effort;
+  };
+
   return (
     <>
     <Toast ref={toast} />
@@ -158,13 +249,13 @@ function Boards(props:any) {
           onChange={(e) => setActiveBoard(e.value)} style={{height:"20rem", marginTop:"10px"}} />
       </div>
       <div style={{float: "left", width: "80%"}}>
-        <TreeTable value={frags} selectionMode="single"
+        <TreeTable value={frags} selectionMode="single" style={{paddingBottom:"30px"}}
           selectionKeys={selectedKey} onSelectionChange={(e:any) => setSelected(e.value)}>
-          <Column field="title" header="Title" expander/>
-          <Column field="status" header="Status"/>
-          <Column field="effort" header="Effort"/>
+          <Column field="title" header="Title" expander style={{width:"20rem"}} editor={titleEditor}/>
+          <Column field="status" header="Status" body={statusFormat} style={{width:"100px"}} editor={statusEditor}/>
+          <Column field="effort" header="Effort" body={effortFormat}/>
           <Column field="moscow" header="MoSCoW"/>
-          <Column field="tcd" header="TCD"/>
+          <Column field="tcd" header="TCD" body={dateFormat}/>
         </TreeTable>
       </div>
     </div>
