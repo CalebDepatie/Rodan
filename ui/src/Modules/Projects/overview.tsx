@@ -15,8 +15,10 @@ import { Toast } from 'primereact/toast';
 import { InputTextarea } from 'primereact/inputtextarea';
 
 function ProjectTable(props: any) {
-  const [projectsFetch, projectsSignal] = useFetch({func:"get_projects"});
-  const [statusFetch, statusSignal]     = useFetch({func:"get_statuses", args:{section:"project"}});
+  const [projectsFetch, projectsSignal] = useFetch("get_projects");
+  const [statusFetch, statusSignal]     = useFetch("get_statuses");
+  const [ updateFetch, updateSignal ]   = useFetch("update_project");
+  const [ createFetch, createSignal ]   = useFetch("create_project");
 
   const [ projectData, setProjectsdata ] = useState<TreeNode[]>();
   const [ statuses, setStatuses ]    = useState([]);
@@ -31,8 +33,8 @@ function ProjectTable(props: any) {
 
   const refresh = () => {
     // signal all fetch commands
-    projectsSignal();
-    statusSignal();
+    projectsSignal({});
+    statusSignal({section:"project"});
   };
 
   useEffect(() => {
@@ -44,7 +46,7 @@ function ProjectTable(props: any) {
     if (projectsFetch?.error) {
       toast.current.show({severity:'error', summary:'Could not load projects', detail:projectsFetch!.error, life:3000});
     } else {
-      const projdata = projectsFetch!.body;
+      const projdata = projectsFetch?.body ?? [];
 
       const initiatives = projdata.filter((itm:any) => itm.parent !== 0);
       const projects    = projdata.filter((itm:any) => itm.parent === 0);
@@ -72,12 +74,27 @@ function ProjectTable(props: any) {
     if (statusFetch?.error) {
       toast.current.show({severity:'error', summary:'Could not load statuses', detail:statusFetch!.error, life:3000});
     } else {
-      setStatuses(statusFetch!.body);
+      const status = statusFetch?.body ?? [];
+      setStatuses(status);
     }
   }, [statusFetch]);
 
+  useEffect(() => {
+    if (updateFetch?.error) {
+      toast.current.show({severity:'error', summary:'Could not update value', detail:updateFetch!.error, life:3000});
+    }
+  }, [updateFetch]);
+
+  useEffect(() => {
+    if (createFetch?.error) {
+      toast.current.show({severity:'error', summary:'Could not create project', detail:createFetch!.error, life:3000});
+    } else if (createFetch?.body) {
+      toast.current.show({severity: 'success', summary: 'Project Created', detail: ''});
+    };
+  }, [createFetch]);
+
   const statusFormat = (node: TreeNode) => {
-    const status = statuses.filter((i:any) => i.id === node.data.status)[0]["name"];
+    const status = statuses.filter((i:any) => i.id === node.data.status)[0]?.["name"];
     return <div className={`status-${node.data.status}`}>{status}</div>
   };
 
@@ -117,11 +134,8 @@ function ProjectTable(props: any) {
   }
 
   const onEditorValueChange = (props: any, field:string, value: string, proj: boolean, id: number) => {
-    g.call("update_project", {body: JSON.stringify({updateCol: field, updateVal: value.toString(),
+    updateSignal({body: JSON.stringify({updateCol: field, updateVal: value.toString(),
                                       ...(proj ? {projID: id} : {iniID: id} )})})
-      .catch(error => {
-        console.error('Error Getting Data', error);
-      });
     // update table data
     let newNodes = JSON.parse(JSON.stringify(projectData)); // deep copy
     let editedNode = findNodeByKey(newNodes, props.node.key);
@@ -169,15 +183,7 @@ function ProjectTable(props: any) {
       <Dialog header="Create a Project" visible={show} onHide={handleClose} position='center' modal style={{width: '70vw'}} footer={(
         <>
           <Button label='Submit' className='p-button-success' onClick={(e:any) => {
-            const fn = async () => {
-              await g.call("create_project", {body: JSON.stringify(form)})
-                .catch(error => {
-                  console.error('Error Getting Data', error);
-                  return "";
-                });
-              toast!.current!.show({severity: 'success', summary: 'Project Created', detail: ''});
-            };
-            fn();
+            createSignal({body: JSON.stringify(form)});
           }} />
         </>
       )}>

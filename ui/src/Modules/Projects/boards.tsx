@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
+import { useFetch } from '../../Hooks';
 import g from 'guark';
 
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
@@ -15,6 +16,15 @@ import { Toast } from 'primereact/toast';
 import { InputSwitch } from 'primereact/inputswitch';
 
 function Boards(props:any) {
+  const [ statusFetch, statusSignal ]      = useFetch("get_statuses");
+  const [ boardHeadFetch, headSignal ]     = useFetch("get_board_heads");
+  const [projectsFetch, projectsSignal]    = useFetch("get_projects");
+  const [ fragFetch, fragSignal ]          = useFetch("get_board");
+  const [updateFragFetch,updateFragSignal] = useFetch("update_fragnet");
+  const [updateBoardFetch,updateBoardSignal] = useFetch("update_board");
+  const [createBoardFetch,createBoardSignal] = useFetch("create_board");
+  const [createFragFetch,createFragSignal] = useFetch("create_fragnet");
+
   const [ boardHeads, setBoardHeads ]  = useState<any[]>([]);
   const [ frags, setFrags ]            = useState([]);
   const [ statuses, setStatuses ]      = useState([]);
@@ -34,21 +44,32 @@ function Boards(props:any) {
 
   const toast = useRef<any>(null);
 
+  const refresh = () => {
+    statusSignal({section:"board"});
+    headSignal({});
+    projectsSignal({});
+  };
+
   useEffect(() => {
-    const setupData = async () => {
-      const statuses = JSON.parse(await g.call("get_statuses", {section:"board"})
-        .catch(error => {
-          console.error('Error Getting Data', error);
-          return "";
-        }));
+    refresh();
+    setForm({...form, draft:true, template:false})
+  }, []);
 
-      setStatuses(statuses);
+  /* Load Data */
+  useEffect(() => {
+    if (statusFetch?.error) {
+      toast.current.show({severity:'error', summary:'Could not load statuses', detail:statusFetch!.error, life:3000});
+    } else {
+      const status = statusFetch?.body ?? [];
+      setStatuses(status);
+    }
+  }, [statusFetch]);
 
-      const heads = JSON.parse(await g.call("get_board_heads", {})
-        .catch(error => {
-          console.error('Error Getting Data', error);
-          return "";
-        }));
+  useEffect(() => {
+    if (boardHeadFetch?.error) {
+      toast.current.show({severity:'error', summary:'Could not load board heads', detail:boardHeadFetch!.error, life:3000});
+    } else {
+      const heads = boardHeadFetch?.body ?? [];
 
       // transform board heads into the groupings of Template, Draft, Active
       const grouped_heads = [
@@ -71,20 +92,74 @@ function Boards(props:any) {
       ];
 
       setBoardHeads(grouped_heads);
+    }
+  }, [boardHeadFetch]);
 
-      const projdata = JSON.parse(await g.call("get_projects", {})
-        .catch(error => {
-          console.error('Error Getting Data', error);
-          return "";
-        }));
+  useEffect(() => {
+    if (projectsFetch?.error) {
+      toast.current.show({severity:'error', summary:'Could not load projects data', detail:projectsFetch!.error, life:3000});
+    } else {
+      const projdata = projectsFetch?.body ?? [];
+      const heads    = boardHeadFetch?.body ?? [];
 
       setIni(projdata.filter((itm:any) => itm.parent !== 0) // filter for initiatives
                      .filter((itm:any) => !heads.some((head:any) => head.initiative === itm.id))); // filter out inis with a board
+    }
+  }, [projectsFetch, boardHeadFetch]);
 
-      setForm({...form, draft:true, template:false})
-    };
-    setupData();
-  }, []);
+  useEffect(() => {
+    if (fragFetch?.error) {
+      toast.current.show({severity:'error', summary:'Could not load fragnets', detail:fragFetch!.error, life:3000});
+    } else {
+      const board_frags = fragFetch?.body ?? [];
+
+      const create_children = (key: string, parent: string) => {
+        return board_frags.filter((itm:any) => itm.parent === parent).map((itm:any) => {
+          return {
+            key: key + '~' + itm.id,
+            data: itm,
+            children: create_children(key + '~' + itm.id, itm.id),
+          };
+        });
+      };
+
+      setFrags(board_frags.filter((itm:any) => itm.parent === '').map((itm:any) => {
+        return {
+          key: itm.id,
+          data: itm,
+          children: create_children(itm.id, itm.id),
+        };
+      }));
+    }
+  }, [fragFetch]);
+
+  useEffect(() => {
+    if (updateFragFetch?.error) {
+      toast.current.show({severity:'error', summary:'Could not update value', detail:updateFragFetch!.error, life:3000});
+    }
+  }, [updateFragFetch]);
+
+  useEffect(() => {
+    if (updateBoardFetch?.error) {
+      toast.current.show({severity:'error', summary:'Could not workflow board', detail:updateBoardFetch!.error, life:3000});
+    }
+  }, [updateBoardFetch]);
+
+  useEffect(() => {
+    if (createFragFetch?.error) {
+      toast.current.show({severity:'error', summary:'Could not create fragnet', detail:createFragFetch!.error, life:3000});
+    } else if (createFragFetch?.body) {
+      toast.current.show({severity: 'success', summary: 'Fragnet Created', detail: ''});
+    }
+  }, [createFragFetch]);
+
+  useEffect(() => {
+    if (createBoardFetch?.error) {
+      toast.current.show({severity:'error', summary:'Could not create board', detail:createBoardFetch!.error, life:3000});
+    } else if (createBoardFetch?.body) {
+      toast.current.show({severity: 'success', summary: 'Board Created', detail: ''});
+    }
+  }, [createBoardFetch]);
 
   useEffect(() => {
     if (!form["template"] && form["initiative"]) {
@@ -97,33 +172,7 @@ function Boards(props:any) {
   useEffect(() => {
     setForm({...form, board_id: activeBoard})
     if (activeBoard && activeBoard !== '') {
-      const fn = async () => {
-        const board_frags = JSON.parse(await g.call("get_board", {board: activeBoard})
-          .catch(error => {
-            console.error('Error Getting Data', error);
-            return "";
-          }));
-
-        const create_children = (key: string, parent: string) => {
-          return board_frags.filter((itm:any) => itm.parent === parent).map((itm:any) => {
-            return {
-              key: key + '~' + itm.id,
-              data: itm,
-              children: create_children(key + '~' + itm.id, itm.id),
-            };
-          });
-        };
-
-        setFrags(board_frags.filter((itm:any) => itm.parent === '').map((itm:any) => {
-          return {
-            key: itm.id,
-            data: itm,
-            children: create_children(itm.id, itm.id),
-          };
-        }));
-      };
-
-      fn();
+      fragSignal({board: activeBoard});
     }
   }, [activeBoard]);
 
@@ -184,10 +233,7 @@ function Boards(props:any) {
   }
 
   const onEditorValueChange = (props: any, field:string, value: string, id: string) => {
-    g.call("update_fragnet", {body: JSON.stringify({updateCol: field, updateVal: value.toString(), fragID:id})})
-      .catch(error => {
-        console.error('Error Getting Data', error);
-      });
+    updateFragSignal({body: JSON.stringify({updateCol: field, updateVal: value.toString(), fragID:id})});
     // update table data
     let newNodes = JSON.parse(JSON.stringify(frags)); // deep copy
     let editedNode = findNodeByKey(newNodes, props.node.key);
@@ -250,10 +296,7 @@ function Boards(props:any) {
     const state:number = getBoardState();
 
     const updateHead = async (state:number) => {
-      g.call("update_board", {body: JSON.stringify({updateCol: 'state', updateVal: state.toString(), boardID:activeBoard})})
-        .catch(error => {
-          console.error('Error Getting Data', error);
-        });
+      updateBoardSignal({body: JSON.stringify({updateCol: 'state', updateVal: state.toString(), boardID:activeBoard})});
     };
 
     switch (state) {
@@ -322,15 +365,7 @@ function Boards(props:any) {
     <Dialog header="Create a Fragnet" visible={showFrag} onHide={handleCloseFrag} position='center' modal style={{width: '70vw'}} footer={(
       <>
         <Button label='Submit' className='p-button-success' onClick={(e:any) => {
-          const fn = async () => {
-            await g.call("create_fragnet", {body: JSON.stringify(form)})
-              .catch(error => {
-                console.error('Error Getting Data', error);
-                return "";
-              });
-            toast!.current!.show({severity: 'success', summary: 'Fragment Created', detail: ''});
-          };
-          fn();
+          createFragSignal({body: JSON.stringify(form)});
         }} />
       </>
     )}>
@@ -378,15 +413,7 @@ function Boards(props:any) {
     <Dialog header="Create a Board" visible={showHead} onHide={handleCloseHead} position='center' modal style={{width: '70vw'}} footer={(
       <>
         <Button label='Submit' className='p-button-success' onClick={(e:any) => {
-          const fn = async () => {
-            await g.call("create_board", {body: JSON.stringify(form)})
-              .catch(error => {
-                console.error('Error Getting Data', error);
-                return "";
-              });
-            toast!.current!.show({severity: 'success', summary: 'Board Created', detail: ''});
-          };
-          fn();
+          createBoardSignal({body: JSON.stringify(form)});
         }} />
       </>
     )}>
