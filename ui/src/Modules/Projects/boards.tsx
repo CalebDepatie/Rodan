@@ -53,15 +53,19 @@ function Boards(props:any) {
       const grouped_heads = [
         {
           label:"Template", icon:"pi-book",
-          items: heads.filter((head:any) => head.template === true)
+          items: heads.filter((head:any) => head.state === 0)
         },
         {
           label:"Draft", icon:"pi-clone",
-          items: heads.filter((head:any) => head.draft === true && head.template === false)
+          items: heads.filter((head:any) => head.state === 1)
         },
         {
           label:"Active", icon:"pi-briefcase",
-          items: heads.filter((head:any) => head.draft === false && head.template === false)
+          items: heads.filter((head:any) => head.state === 2)
+        },
+        {
+          label:"Complete", icon:"pi-check-circle",
+          items: heads.filter((head:any) => head.state === 3)
         },
       ];
 
@@ -104,7 +108,7 @@ function Boards(props:any) {
             return {
               key: key + '~' + itm.id,
               data: itm,
-              children: create_children(key + '-' + itm.id, itm.id),
+              children: create_children(key + '~' + itm.id, itm.id),
             };
           });
         };
@@ -171,7 +175,7 @@ function Boards(props:any) {
 
     while (path.length) {
       let list:TreeNode[] = node ? node.children : nodes;
-      node = list.filter((i:TreeNode) => i.data.id === path[0])[0];
+      node = list.filter((i:TreeNode) => i.data.id == path[0])[0];
       path.shift();
     }
 
@@ -253,9 +257,9 @@ function Boards(props:any) {
           selectionKeys={selectedKey} onSelectionChange={(e:any) => setSelected(e.value)}>
           <Column field="title" header="Title" expander style={{width:"20rem"}} editor={titleEditor}/>
           <Column field="status" header="Status" body={statusFormat} style={{width:"100px"}} editor={statusEditor}/>
-          <Column field="effort" header="Effort" body={effortFormat}/>
-          <Column field="moscow" header="MoSCoW"/>
-          <Column field="tcd" header="TCD" body={dateFormat}/>
+          <Column field="effort" header="Effort" body={effortFormat} style={{width:"100px"}}/>
+          <Column field="moscow" header="MoSCoW" style={{width:"100px"}}/>
+          <Column field="tcd" header="TCD" body={dateFormat} style={{width:"110px"}}/>
         </TreeTable>
       </div>
     </div>

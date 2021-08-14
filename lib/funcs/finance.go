@@ -26,8 +26,8 @@ func NewRecur(c app.Context) (interface{}, error) {
       }
   }
 
-  stmt   := `INSERT INTO public.reccurring (category_id, company_id, name, price, start_time, end_time) VALUES ($1, $2, $3, $4, $5, $6);`
-  _, err = globals.FinDB.Exec(stmt, p.Cat, p.Com, p.Name, p.Price, p.Start_date, p.End_date)
+  stmt   := `INSERT INTO fin.reccurring (category_id, company_id, name, price, start_time, end_time) VALUES ($1, $2, $3, $4, $5, $6);`
+  _, err = globals.DB.Exec(stmt, p.Cat, p.Com, p.Name, p.Price, p.Start_date, p.End_date)
   if err != nil {
     c.App.Log.Info("New Recur Pay Error: ", err.Error())
   }
@@ -53,8 +53,8 @@ func NewOne(c app.Context) (interface{}, error) {
       }
   }
 
-  stmt   := `INSERT INTO public.once (category_id, company_id, name, price, date) VALUES ($1, $2, $3, $4, $5);`
-	_, err = globals.FinDB.Exec(stmt, p.Cat, p.Com, p.Name, p.Price, p.Date)
+  stmt   := `INSERT INTO fin.once (category_id, company_id, name, price, date) VALUES ($1, $2, $3, $4, $5);`
+	_, err = globals.DB.Exec(stmt, p.Cat, p.Com, p.Name, p.Price, p.Date)
   if err != nil {
     c.App.Log.Info("New One Pay Error: ", err.Error())
   }
@@ -65,8 +65,8 @@ func NewOne(c app.Context) (interface{}, error) {
 func GetCom(c app.Context) (interface{}, error) {
   comps := []globals.Companies{}
 
-  stmt := `SELECT * FROM public.companies;`
-	err  := globals.FinDB.Select(&comps, stmt)
+  stmt := `SELECT * FROM fin.companies;`
+	err  := globals.DB.Select(&comps, stmt)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
   }
@@ -83,8 +83,8 @@ func GetCom(c app.Context) (interface{}, error) {
 func GetCat(c app.Context) (interface{}, error) {
   comps := []globals.Companies{}
 
-  stmt := `SELECT * FROM public.categories;`
-	err  := globals.FinDB.Select(&comps, stmt)
+  stmt := `SELECT * FROM fin.categories;`
+	err  := globals.DB.Select(&comps, stmt)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
   }
@@ -116,8 +116,8 @@ func NewCat(c app.Context) (interface{}, error) {
       }
   }
 
-  stmt   := `INSERT INTO public.categories (name, descrip) VALUES ($1, $2);`
-	_, err = globals.FinDB.Exec(stmt, p.Name, p.Descrip)
+  stmt   := `INSERT INTO fin.categories (name, descrip) VALUES ($1, $2);`
+	_, err = globals.DB.Exec(stmt, p.Name, p.Descrip)
   if err != nil {
     c.App.Log.Error("New Category Error: ", err.Error())
   }
@@ -143,8 +143,8 @@ func NewCom(c app.Context) (interface{}, error) {
       }
   }
 
-  stmt   := `INSERT INTO public.companies (name, descrip) VALUES ($1, $2);`
-	_, err = globals.FinDB.Exec(stmt, p.Name, p.Descrip)
+  stmt   := `INSERT INTO fin.companies (name, descrip) VALUES ($1, $2);`
+	_, err = globals.DB.Exec(stmt, p.Name, p.Descrip)
   if err != nil {
     c.App.Log.Error("New Company Error: ", err.Error())
   }
@@ -170,8 +170,8 @@ func NewIncome(c app.Context) (interface{}, error) {
       }
   }
 
-  stmt   := `INSERT INTO public.income (company_id, name, amount, date) VALUES ($1, $2, $3, $4);`
-	_, err = globals.FinDB.Exec(stmt, p.Com, p.Name, p.Amount, p.Date)
+  stmt   := `INSERT INTO fin.income (company_id, name, amount, date) VALUES ($1, $2, $3, $4);`
+	_, err = globals.DB.Exec(stmt, p.Com, p.Name, p.Amount, p.Date)
   if err != nil {
     c.App.Log.Error("New Income Error: ", err.Error())
   }
@@ -205,8 +205,8 @@ func GetMonthFinances(c app.Context) (interface{}, error) {
       }
   }
 
-  stmt := `SELECT * FROM public.FN_GetMonthExpenses($1, $2);`
-	err  = globals.FinDB.Select(&r, stmt, time.M, time.Y)
+  stmt := `SELECT * FROM fin.FN_GetMonthExpenses($1, $2);`
+	err  = globals.DB.Select(&r, stmt, time.M, time.Y)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
   }

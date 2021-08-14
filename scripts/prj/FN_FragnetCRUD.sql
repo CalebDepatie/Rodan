@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION prj.FN_FragnetCRUD (
     _updateVal VARCHAR(256) = NULL,
     _updateCol VARCHAR(256) = NULL
 
-) RETURNS TABLE (id VARCHAR(36), board_id VARCHAR(36), title VARCHAR(255), status INT, effort INT, moscow prj.TY_Moscow, tcd DOUBLE PRECISION, parent VARCHAR(36))
+) RETURNS TABLE (id VARCHAR(36), board_id VARCHAR(36), title VARCHAR(255), status INT, effort INT, moscow prj.TY_Moscow, tcd DOUBLE PRECISION, parent VARCHAR(36), created_date DOUBLE PRECISION)
 AS $$
 BEGIN
   /*
@@ -23,12 +23,12 @@ BEGIN
     4 - Delete Fragnet
   */
   IF _operation = 1 THEN
-    INSERT INTO prj.board_fragnet (id, board_id, title, status, effort, parent, moscow, tcd)
-      VALUES (uuid_generate_v4(), _board, _title, _status, NULLIF(_effort, 0), NULLIF(_parent, '')::UUID, NULLIF(_moscow, '')::prj.TY_Moscow, NULLIF(_tcd, '')::DATE);
+    INSERT INTO prj.board_fragnet (id, board_id, title, status, effort, parent, moscow, tcd, created_date)
+      VALUES (uuid_generate_v4(), _board, _title, _status, NULLIF(_effort, 0), NULLIF(_parent, '')::UUID, NULLIF(_moscow, '')::prj.TY_Moscow, NULLIF(_tcd, '')::DATE, NOW()::DATE);
 
   ELSIF _operation = 2 THEN
     RETURN QUERY
-    SELECT BF.id, BF.board_id, BF.title, BF.status, COALESCE(BF.effort, -1), COALESCE(BF.moscow, 'None'::prj.TY_Moscow), COALESCE(EXTRACT(EPOCH FROM BF.tcd), 0), COALESCE(BF.parent, '')
+    SELECT BF.id, BF.board_id, BF.title, BF.status, COALESCE(BF.effort, -1), COALESCE(BF.moscow, 'None'::prj.TY_Moscow), COALESCE(EXTRACT(EPOCH FROM BF.tcd), 0), COALESCE(BF.parent, ''), EXTRACT(EPOCH FROM BF.created_date)
       FROM prj.board_fragnet AS BF
       WHERE BF.board_id = _board;
 

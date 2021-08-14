@@ -3,14 +3,13 @@ CREATE OR REPLACE FUNCTION prj.FN_BoardCRUD (
 
     _title      VARCHAR(255) = NULL,
     _initiative INT          = NULL,
-    _draft      BOOL         = FALSE,
-    _template   BOOL         = FALSE,
+    _state      SMALLINT     = 1,
 
     _board     VARCHAR(36)  = NULL,
     _updateVal VARCHAR(256) = NULL,
     _updateCol VARCHAR(256) = NULL
 
-) RETURNS TABLE (id VARCHAR(36), title VARCHAR(255), initiative INT, draft BOOL, template BOOL, created_date DOUBLE PRECISION)
+) RETURNS TABLE (id VARCHAR(36), title VARCHAR(255), initiative INT, state SMALLINT, created_date DOUBLE PRECISION)
 AS $$
 BEGIN
   /*
@@ -20,12 +19,12 @@ BEGIN
     4 - Delete Board by head
   */
   IF _operation = 1 THEN
-    INSERT INTO prj.board_head (id, title, initiative, draft, template, created_date)
-      VALUES (uuid_generate_v4(), _title, _initiative, _draft, _template, NOW()::DATE);
+    INSERT INTO prj.board_head (id, title, initiative, state, created_date)
+      VALUES (uuid_generate_v4(), _title, _initiative, _state, NOW()::DATE);
 
   ELSIF _operation = 2 THEN
     RETURN QUERY
-    SELECT BH.id, BH.title, BH.initiative, BH.draft, BH.template, EXTRACT(EPOCH FROM BH.created_date)
+    SELECT BH.id, BH.title, BH.initiative, BH.state, EXTRACT(EPOCH FROM BH.created_date)
       FROM prj.board_head AS BH;
 
   ELSIF _operation = 3 THEN

@@ -76,18 +76,15 @@ const (
 )
 
 const (
-	CON_STRING_FIN = "postgres://howling:wolf@localhost:50000/finance?sslmode=disable"
-  CON_STRING_SCR = "postgres://howling:wolf@localhost:50000/scribe?sslmode=disable"
+  CON_STRING_SCR = "postgres://rodan:temporary@localhost:50000/scribe?sslmode=disable"
 )
 
-var FinDB *sqlx.DB
-var ScrDB *sqlx.DB
+var DB *sqlx.DB
 
 func init() {
-  FinDB, _ = sqlx.Open("postgres", CON_STRING_FIN) // I need a hook to close this
-  ScrDB, _ = sqlx.Open("postgres", CON_STRING_SCR)
+  DB, _ = sqlx.Open("postgres", CON_STRING_SCR)
 
-  err := FinDB.Ping()
+  err := DB.Ping()
 	if err != nil {
 		//a.Log.Error("Could not connect to server: ", err)
 	}
