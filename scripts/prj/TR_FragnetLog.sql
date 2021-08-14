@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION prj.FN_FragnetUpdateLog()
 AS $$
 BEGIN
   /* Niavely check each field. Probably a more dynamic way to do this */
-  IF NEW.parent <> OLD.parent THEN
+  IF NEW.title <> OLD.title THEN
     INSERT INTO prj.change_log (new_value, parent_id, id, table_name, column_name, change_date)
     VALUES (NEW.title, NEW.id, uuid_generate_v4(), 'board_fragnet', 'title', NOW()::DATE);
   END IF;

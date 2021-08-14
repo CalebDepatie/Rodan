@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useFetch } from '../../Hooks';
 import g from 'guark';
 
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
@@ -14,6 +15,9 @@ import { Toast } from 'primereact/toast';
 import { InputTextarea } from 'primereact/inputtextarea';
 
 function ProjectTable(props: any) {
+  const [projectsFetch, projectsSignal] = useFetch({func:"get_projects"});
+  const [statusFetch, statusSignal]     = useFetch({func:"get_statuses", args:{section:"project"}});
+
   const [ projectData, setProjectsdata ] = useState<TreeNode[]>();
   const [ statuses, setStatuses ]    = useState([]);
   const [ show, setShow ]            = useState<boolean>(false);
@@ -25,49 +29,22 @@ function ProjectTable(props: any) {
   const handleShow  = () => setShow(true);
   const handleClose = () => setShow(false);
 
-  const refresh = async () => {
-    const projdata = JSON.parse(await g.call("get_projects", {})
-      .catch(error => {
-        console.error('Error Getting Data', error);
-        return "";
-      }));
-
-    const initiatives = projdata.filter((itm:any) => itm.parent !== 0);
-    const projects    = projdata.filter((itm:any) => itm.parent === 0);
-    setProjects(projects.concat([{id: 0, name:"None"}]));
-
-    const ini = initiatives.map((itm: any) => {
-      return {
-        key: itm.parent + '-' + itm.id,
-        data: itm,
-        children: null,
-      };
-    });
-
-    setProjectsdata(projects.map((proj: any) => {
-      return {
-        key: proj.id,
-        data: proj,
-        children: ini.filter((i: any) => i.data.parent === proj.id),
-      }
-    }));
+  const refresh = () => {
+    // signal all fetch commands
+    projectsSignal();
+    statusSignal();
   };
 
   useEffect(() => {
-    const setupData = async () => {
-      const statuses = JSON.parse(await g.call("get_statuses", {section: "project"})
-        .catch(error => {
-          console.error('Error Getting Data', error);
-          return "";
-        }));
+    refresh();
+  }, []);
 
-      setStatuses(statuses);
-
-      const projdata = JSON.parse(await g.call("get_projects", {})
-        .catch(error => {
-          console.error('Error Getting Data', error);
-          return "";
-        }));
+  /* Load Data */
+  useEffect(() => {
+    if (projectsFetch?.error) {
+      toast.current.show({severity:'error', summary:'Could not load projects', detail:projectsFetch!.error, life:3000});
+    } else {
+      const projdata = projectsFetch!.body;
 
       const initiatives = projdata.filter((itm:any) => itm.parent !== 0);
       const projects    = projdata.filter((itm:any) => itm.parent === 0);
@@ -89,9 +66,15 @@ function ProjectTable(props: any) {
         }
       }));
     }
+  }, [projectsFetch]);
 
-    setupData();
-  }, []);
+  useEffect(() => {
+    if (statusFetch?.error) {
+      toast.current.show({severity:'error', summary:'Could not load statuses', detail:statusFetch!.error, life:3000});
+    } else {
+      setStatuses(statusFetch!.body);
+    }
+  }, [statusFetch]);
 
   const statusFormat = (node: TreeNode) => {
     const status = statuses.filter((i:any) => i.id === node.data.status)[0]["name"];
@@ -169,7 +152,7 @@ function ProjectTable(props: any) {
 
   const header = (
     <>
-      <Button icon="pi pi-plus" label="Add Project" onClick={handleShow} className='p-button-secondary' />
+      <Button icon="fa fa-plus" label="Add Project" onClick={handleShow} className='p-button-secondary' />
     </>
   );
 

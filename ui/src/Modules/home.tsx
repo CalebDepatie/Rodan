@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Home(props: any) {
+function Home() {
 	return (
 	<div className="home">
       <div className="container">

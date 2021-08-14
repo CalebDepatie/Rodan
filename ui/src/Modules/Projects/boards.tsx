@@ -24,6 +24,7 @@ function Boards(props:any) {
   const [ showHead, setShowHead ]      = useState<boolean>(false);
   const [ showFrag, setShowFrag ]      = useState<boolean>(false);
   const [ selectedKey, setSelected ]   = useState<string>('');
+  const [ workflowState, setWorkflow ] = useState<{icon:string,label:string,disabled?:boolean,onClick?:()=>void}>();
 
   const handleShowHead  = () => setShowHead(true);
   const handleCloseHead = () => setShowHead(false);
@@ -52,19 +53,19 @@ function Boards(props:any) {
       // transform board heads into the groupings of Template, Draft, Active
       const grouped_heads = [
         {
-          label:"Template", icon:"pi-book",
+          label:"Template", icon:"fa-bookmark",
           items: heads.filter((head:any) => head.state === 0)
         },
         {
-          label:"Draft", icon:"pi-clone",
+          label:"Draft", icon:"fa-edit",
           items: heads.filter((head:any) => head.state === 1)
         },
         {
-          label:"Active", icon:"pi-briefcase",
+          label:"Active", icon:"fa-briefcase",
           items: heads.filter((head:any) => head.state === 2)
         },
         {
-          label:"Complete", icon:"pi-check-circle",
+          label:"Complete", icon:"fa-check-circle",
           items: heads.filter((head:any) => head.state === 3)
         },
       ];
@@ -142,7 +143,7 @@ function Boards(props:any) {
   const groupTemplate = (option:any) => {
     return (
       <span>
-        <i className={"pi " + option.icon} style={{marginRight:"5px"}}/>
+        <i className={"fa " + option.icon} style={{marginRight:"5px"}}/>
         {option.label}
       </span>
     );
@@ -237,11 +238,62 @@ function Boards(props:any) {
     return node.data.effort;
   };
 
+  const getBoardState = ():number => {
+    const head = boardHeads.filter((group:{label:string,icon:string,items:any[]}) => {
+      return group.items.some((itm:any) => itm.id === activeBoard);
+    });
+
+    return head[0]?.items[0].state ?? -1;
+  };
+
+  const workflow = () => {
+    const state:number = getBoardState();
+
+    const updateHead = async (state:number) => {
+      g.call("update_board", {body: JSON.stringify({updateCol: 'state', updateVal: state.toString(), boardID:activeBoard})})
+        .catch(error => {
+          console.error('Error Getting Data', error);
+        });
+    };
+
+    switch (state) {
+      case -1: return {
+        icon: "fa fa-exclamation-triangle",
+        label: "No Board Selected",
+        disabled: true,
+      };
+      case 0: return {
+        icon: "fa fa-stop-circle",
+        label: "No Further Workflow",
+        disabled: true,
+      };
+      case 1: return {
+        icon: "fa fa-lock",
+        label: "Scope Lock | Set to Active",
+        onClick: () => { updateHead(2) },
+      };
+      case 2: return {
+        icon: "fa fa-archive",
+        label: "Set to Complete",
+        onClick: () => { updateHead(3) },
+      };
+      case 3: return {
+        icon: "fa fa-stop-circle",
+        label: "No Further Workflow",
+        disabled: true,
+      };
+    };
+  }
+
+  useEffect(()=>{
+    setWorkflow(workflow());
+  }, [activeBoard]);
+
   return (
     <>
     <Toast ref={toast} />
     <div>
-      <div style={{float: "left", width: "20%"}}>
+      <div style={{float: "left", width: "20%", display:"flex", flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
         <span className="p-buttonset">
           <Button onClick={handleShowHead} label="Add Board" className='p-button-secondary' />
           <Button onClick={handleShowFrag} label="Add Fragnet" className='p-button-secondary' />
@@ -250,7 +302,10 @@ function Boards(props:any) {
         <ListBox value={activeBoard} options={boardHeads} optionLabel="title"
           optionValue="id" optionGroupLabel="label" optionGroupChildren="items"
           optionGroupTemplate={groupTemplate}
-          onChange={(e) => setActiveBoard(e.value)} style={{height:"20rem", marginTop:"10px"}} />
+          onChange={(e) => setActiveBoard(e.value)} listStyle={{maxHeight:"400px"}} style={{width:'100%'}} />
+
+          <Button {...workflowState} className='p-button-secondary' style={{width:"100%"}} />
+
       </div>
       <div style={{float: "left", width: "80%"}}>
         <TreeTable value={frags} selectionMode="single" style={{paddingBottom:"30px"}}

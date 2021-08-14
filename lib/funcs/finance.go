@@ -24,15 +24,17 @@ func NewRecur(c app.Context) (interface{}, error) {
       } else {
         c.App.Log.Error("Request Error: ", err.Error())
       }
+      return "", err
   }
 
   stmt   := `INSERT INTO fin.reccurring (category_id, company_id, name, price, start_time, end_time) VALUES ($1, $2, $3, $4, $5, $6);`
   _, err = globals.DB.Exec(stmt, p.Cat, p.Com, p.Name, p.Price, p.Start_date, p.End_date)
   if err != nil {
     c.App.Log.Info("New Recur Pay Error: ", err.Error())
+    return "", err
   }
 
-	return nil, nil
+	return "", nil
 }
 
 func NewOne(c app.Context) (interface{}, error) {
@@ -51,15 +53,17 @@ func NewOne(c app.Context) (interface{}, error) {
       } else {
         c.App.Log.Error("Request Error: ", err.Error())
       }
+      return "", err
   }
 
   stmt   := `INSERT INTO fin.once (category_id, company_id, name, price, date) VALUES ($1, $2, $3, $4, $5);`
 	_, err = globals.DB.Exec(stmt, p.Cat, p.Com, p.Name, p.Price, p.Date)
   if err != nil {
     c.App.Log.Info("New One Pay Error: ", err.Error())
+    return "", err
   }
 
-	return nil, nil
+	return "", nil
 }
 
 func GetCom(c app.Context) (interface{}, error) {
@@ -69,12 +73,14 @@ func GetCom(c app.Context) (interface{}, error) {
 	err  := globals.DB.Select(&comps, stmt)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
+    return "", err
   }
 
   bytes, err := json.Marshal(comps)
 
   if err != nil {
     c.App.Log.Error("Error: ", err.Error())
+    return "", err
   }
 
 	return string(bytes), nil
@@ -87,12 +93,14 @@ func GetCat(c app.Context) (interface{}, error) {
 	err  := globals.DB.Select(&comps, stmt)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
+    return "", err
   }
 
   bytes, err := json.Marshal(comps)
 
   if err != nil {
     c.App.Log.Error("Error: ", err.Error())
+    return "", err
   }
 
 	return string(bytes), nil
@@ -114,15 +122,17 @@ func NewCat(c app.Context) (interface{}, error) {
       } else {
         c.App.Log.Error("Request Error: ", err.Error())
       }
+      return "", err
   }
 
   stmt   := `INSERT INTO fin.categories (name, descrip) VALUES ($1, $2);`
 	_, err = globals.DB.Exec(stmt, p.Name, p.Descrip)
   if err != nil {
     c.App.Log.Error("New Category Error: ", err.Error())
+    return "", err
   }
 
-	return nil, nil
+	return "", nil
 }
 
 func NewCom(c app.Context) (interface{}, error) {
@@ -141,15 +151,17 @@ func NewCom(c app.Context) (interface{}, error) {
       } else {
         c.App.Log.Error("Request Error: ", err.Error())
       }
+      return "", err
   }
 
   stmt   := `INSERT INTO fin.companies (name, descrip) VALUES ($1, $2);`
 	_, err = globals.DB.Exec(stmt, p.Name, p.Descrip)
   if err != nil {
     c.App.Log.Error("New Company Error: ", err.Error())
+    return "", err
   }
 
-	return nil, nil
+	return "", nil
 }
 
 func NewIncome(c app.Context) (interface{}, error) {
@@ -168,15 +180,17 @@ func NewIncome(c app.Context) (interface{}, error) {
       } else {
         c.App.Log.Error("Request Error: ", err.Error())
       }
+      return "", err
   }
 
   stmt   := `INSERT INTO fin.income (company_id, name, amount, date) VALUES ($1, $2, $3, $4);`
 	_, err = globals.DB.Exec(stmt, p.Com, p.Name, p.Amount, p.Date)
   if err != nil {
     c.App.Log.Error("New Income Error: ", err.Error())
+    return "", err
   }
 
-	return nil, nil
+	return "", nil
 }
 
 func GetMonthFinances(c app.Context) (interface{}, error) {
@@ -203,12 +217,14 @@ func GetMonthFinances(c app.Context) (interface{}, error) {
       } else {
         c.App.Log.Error("Request Error: ", err.Error())
       }
+      return "", err
   }
 
   stmt := `SELECT * FROM fin.FN_GetMonthExpenses($1, $2);`
 	err  = globals.DB.Select(&r, stmt, time.M, time.Y)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
+    return "", err
   }
 
   //c.App.Log.Debug("Len: ", len(r))
@@ -217,6 +233,7 @@ func GetMonthFinances(c app.Context) (interface{}, error) {
 
   if err != nil {
     c.App.Log.Error("Error: ", err.Error())
+    return "", err
   }
 
   return string(bytes), nil

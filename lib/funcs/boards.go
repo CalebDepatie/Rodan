@@ -21,12 +21,14 @@ func GetBoardHeads(c app.Context) (interface{}, error) {
   err  := globals.DB.Select(&board_heads, stmt)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
+    return "", err
   }
 
   bytes, err := json.Marshal(board_heads)
 
   if err != nil {
     c.App.Log.Error("Error: ", err.Error())
+    return "", err
   }
 
   return string(bytes), nil
@@ -51,12 +53,14 @@ func GetBoard(c app.Context) (interface{}, error) {
   err  := globals.DB.Select(&board_frags, stmt, board)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
+    return "", err
   }
 
   bytes, err := json.Marshal(board_frags)
 
   if err != nil {
     c.App.Log.Error("Error: ", err.Error())
+    return "", err
   }
 
   return string(bytes), nil
@@ -82,15 +86,17 @@ func CreateBoard(c app.Context) (interface{}, error) {
       } else {
         c.App.Log.Error("Request Error: ", err.Error())
       }
+      return "", err
   }
 
   stmt := `SELECT * FROM prj.FN_BoardCRUD(_operation := 1, _initiative := $1, _title := $2, _state := $3);`
   _, err = globals.DB.Exec(stmt, board_args.Ini, board_args.Title, board_args.State)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
+    return "", err
   }
 
-  return nil, nil
+  return "", nil
 }
 
 func CreateFragnet(c app.Context) (interface{}, error) {
@@ -117,6 +123,7 @@ func CreateFragnet(c app.Context) (interface{}, error) {
       } else {
         c.App.Log.Error("Request Error: ", err.Error())
       }
+      return "", err
   }
 
   stmt := `SELECT * FROM prj.FN_FragnetCRUD(_operation := 1, _board := $1, _title := $2, _status := $3, _effort := $4, _parent := $5, _moscow := $6, _tcd := $7);`
@@ -124,9 +131,10 @@ func CreateFragnet(c app.Context) (interface{}, error) {
 
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
+    return "", err
   }
 
-  return nil, nil
+  return "", nil
 }
 
 func UpdateFragnet(c app.Context) (interface{}, error) {
@@ -151,6 +159,7 @@ func UpdateFragnet(c app.Context) (interface{}, error) {
       } else {
         c.App.Log.Error("Request Error: ", err.Error())
       }
+      return "", err
   }
 
   stmt = `SELECT * FROM prj.FN_FragnetCRUD(_operation := 3, _fragnet := $1, _updateVal := $2, _updateCol := $3);`
@@ -158,7 +167,44 @@ func UpdateFragnet(c app.Context) (interface{}, error) {
 
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
+    return "", err
   }
 
-  return nil, nil
+  return "", nil
+}
+
+func UpdateBoard(c app.Context) (interface{}, error) {
+  var (
+    stmt string
+    err  error
+    unmarshalErr *json.UnmarshalTypeError
+  )
+
+  p := struct {
+    BoardID    string `json:"boardID"`
+    UpdateVal string `json:"updateVal"`
+    UpdateCol string `json:"updateCol"`
+  }{}
+
+  dec := json.NewDecoder(strings.NewReader(c.GetOr("body", "").(string)))
+  err = dec.Decode(&p)
+
+  if err != nil {
+      if errors.As(err, &unmarshalErr) {
+        c.App.Log.Error("JSON Error: ", unmarshalErr.Field)
+      } else {
+        c.App.Log.Error("Request Error: ", err.Error())
+      }
+      return "", err
+  }
+
+  stmt = `SELECT * FROM prj.FN_BoardCRUD(_operation := 3, _board := $1, _updateVal := $2, _updateCol := $3);`
+  _, err = globals.DB.Exec(stmt, p.BoardID, p.UpdateVal, p.UpdateCol)
+
+  if err != nil {
+    c.App.Log.Error("Error getting data: ", err.Error())
+    return "", err
+  }
+
+  return "", nil
 }

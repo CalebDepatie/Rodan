@@ -20,12 +20,14 @@ func GetStatuses(c app.Context) (interface{}, error) {
   err  := globals.DB.Select(&comps, stmt, section)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
+    return "", err
   }
 
   bytes, err := json.Marshal(comps)
 
   if err != nil {
     c.App.Log.Error("Error: ", err.Error())
+    return "", err
   }
 
   return string(bytes), nil
@@ -38,12 +40,14 @@ func GetProjects(c app.Context) (interface{}, error) {
   err  := globals.DB.Select(&comps, stmt)
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
+    return "", err
   }
 
   bytes, err := json.Marshal(comps)
 
   if err != nil {
     c.App.Log.Error("Error: ", err.Error())
+    return "", err
   }
 
   return string(bytes), nil
@@ -66,6 +70,7 @@ func CreateProject(c app.Context) (interface{}, error) {
       } else {
         c.App.Log.Error("Request Error: ", err.Error())
       }
+      return "", err
   }
 
   if p.Parent == 0 {
@@ -78,9 +83,10 @@ func CreateProject(c app.Context) (interface{}, error) {
 
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
+    return "", err
   }
 
-  return nil, nil
+  return "", nil
 }
 
 func DeleteProject(c app.Context) (interface{}, error) {
@@ -107,6 +113,7 @@ func DeleteProject(c app.Context) (interface{}, error) {
       } else {
         c.App.Log.Error("Request Error: ", err.Error())
       }
+      return "", err
   }
 
   if p.ProjID != 0 {
@@ -119,9 +126,10 @@ func DeleteProject(c app.Context) (interface{}, error) {
 
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
+    return "", err
   }
 
-  return nil, nil
+  return "", nil
 }
 
 func UpdateProject(c app.Context) (interface{}, error) {
@@ -152,6 +160,7 @@ func UpdateProject(c app.Context) (interface{}, error) {
       } else {
         c.App.Log.Error("Request Error: ", err.Error())
       }
+      return "", err
   }
 
   if p.ProjID != 0 {
@@ -164,7 +173,8 @@ func UpdateProject(c app.Context) (interface{}, error) {
 
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
+    return "", err
   }
 
-  return nil, nil
+  return "", nil
 }
