@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useRef } from 'react';
+
+import { Sound } from "../Components";
 
 function Home() {
+  let radioWaveMonster = useRef<any>(null);
+
 	return (
 	<div className="home">
       <div className="container">
@@ -12,7 +16,11 @@ function Home() {
             </p>
           </div>
           <div className="col-lg-7">
-            <img src="icon.png" className="img-fluid rounded mb-4 mb-lg-0"/>
+            <Sound ref={radioWaveMonster} soundFile={"RODAN RODAN RADIO WAVE MONSTER.mp3"} />
+            <img src="icon.png" className="img-fluid rounded mb-4 mb-lg-0"
+              onClick={() => {
+                radioWaveMonster.current!.play()
+              }}/>
           </div>
         </div>
       </div>
