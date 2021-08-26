@@ -30,6 +30,9 @@ var Funcs = app.Funcs{
   "create_fragnet": funcs.CreateFragnet,
   "update_fragnet": funcs.UpdateFragnet,
   "update_board": funcs.UpdateBoard,
+  "create_task": funcs.CreateTask,
+  "get_tasks": funcs.GetTasks,
+  "update_task": funcs.UpdateTask,
 }
 
 // App hooks.

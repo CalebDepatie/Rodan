@@ -45,9 +45,8 @@ func CreateTask(c app.Context) (interface{}, error) {
   p := struct{
     Title    string `db:"title" json:"title"`
     Descrip  string `db:"description" json:"description"`
-    Status   int    `db:"status" json:"status"`
     Activity string `db:"activity" json:"activity"`
-  }
+  }{}
 
   dec := json.NewDecoder(strings.NewReader(c.GetOr("body", "").(string)))
   err = dec.Decode(&p)
@@ -61,8 +60,8 @@ func CreateTask(c app.Context) (interface{}, error) {
       return "{}", err
   }
 
-  stmt   = `SELECT * FROM prj.FN_TaskCRUD(_operation := 1, _title := $1, _description := $2, _status := $3, _activity := $4);`
-  _, err = globals.DB.Exec(stmt, p.Title, p.Descrip, p.Status, p.Activity)
+  stmt   = `SELECT * FROM prj.FN_TaskCRUD(_operation := 1, _title := $1, _description := $2, _activity := $3);`
+  _, err = globals.DB.Exec(stmt, p.Title, p.Descrip, p.Activity)
 
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())

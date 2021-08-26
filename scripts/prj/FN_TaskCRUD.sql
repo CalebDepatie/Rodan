@@ -8,12 +8,12 @@ CREATE OR REPLACE FUNCTION prj.FN_TaskCRUD (
     _taskID    VARCHAR(36)  = NULL,
     _updateVal VARCHAR(256) = NULL,
     _updateCol VARCHAR(256) = NULL
-) RETURNS TABLE (id varchar(36), title varchar(255), description varchar, activity varchar(36), created_date float)
+) RETURNS TABLE (id varchar(36), title varchar(255), description varchar, status integer, activity varchar(36), created_date float)
 AS $$
 BEGIN
   IF _operation = 1 THEN
-    INSERT INTO prj.tasks (title, description, activity, created_date)
-      VALUES (_title, _description, _activity, NOW()::DATE);
+    INSERT INTO prj.tasks (id, title, description, activity, created_date)
+      VALUES (uuid_generate_v4(), _title, _description, _activity, NOW()::DATE);
 
   ELSIF _operation = 2 THEN
     RETURN QUERY

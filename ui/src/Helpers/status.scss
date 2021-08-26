@@ -8,7 +8,7 @@
   padding: .25rem .5rem;
   margin: auto;
   text-align: center;
-  width: 85px;
+  width: 90px;
 }
 
 .status-1 {
@@ -49,4 +49,16 @@
 
 .status-10 {
   @include status(#AE5D5D);
+}
+
+.status-11 {
+  @include status(#5C5D57);
+}
+
+.status-12 {
+  @include status(#00aedb)
+}
+
+.status-13 {
+  @include status(#6AB43F);
 }
