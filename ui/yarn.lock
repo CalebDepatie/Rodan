@@ -10793,10 +10793,10 @@ pretty-format@^26.0.0, pretty-format@^26.6.0, pretty-format@^26.6.2:
     ansi-styles "^4.0.0"
     react-is "^17.0.1"
 
-primeflex@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/primeflex/-/primeflex-3.0.0.tgz#c1d9f928579c0faf8013dc331f942ebe151ddd37"
-  integrity sha512-uIJaJWnH+bHIwbq/Q2rfK9A9PGp5zG+G685nskn9xwg5zGGh4fSYB8PkSo76jgapUTJSTg95+jaVT7yzClkdjg==
+primeflex@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/primeflex/-/primeflex-3.0.1.tgz#38b4f37caf0d20d3d28ed72fe1dee571671fc6b6"
+  integrity sha512-OmBVecmPyXFjIHuOmcbUVGJPh+2TPF3bBVO9ENtu4O4kF6taZThxGrxaWCljkfu6427wLfgDbtFKqq1vU2nj/Q==
 
 primeicons@^4.1.0:
   version "4.1.0"
