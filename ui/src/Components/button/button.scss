@@ -1,0 +1,45 @@
+@use '../../style.scss';
+@use 'sass:color';
+
+@mixin button($color, $text) {
+  font-family: style.$font-families;
+  background-color: $color;
+  transition: 0.4s;
+  color: $text;
+  text-align: center;
+  align-items: center;
+  border: none;
+  border-radius: 10px;
+  padding: 7px;
+  overflow: hidden;
+  cursor: pointer;
+
+  &:hover {
+    background-color: color.adjust($color, $lightness: 15%);
+  }
+
+  :not(:last-child) {
+    margin-right: 5px;
+  }
+
+  &.disabled {
+    background-color: color.adjust($color, $lightness: -15%);
+    cursor: default;
+  }
+}
+
+.r-button-primary {
+  @include button(style.$colour-primary, style.$colour-primary-text);
+}
+
+.r-button-secondary {
+  @include button(style.$colour-secondary, style.$colour-primary-text);
+}
+
+.r-button-tertiary {
+  @include button(style.$colour-tertiary, style.$colour-primary-text);
+}
+
+.r-button-success {
+  @include button(style.$colour-success, style.$colour-primary-text);
+}

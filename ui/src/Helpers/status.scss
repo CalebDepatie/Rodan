@@ -1,5 +1,7 @@
 /* https://www.color-hex.com/color-palette/700 */
 
+@use '../style.scss';
+
 @mixin status($colour) {
   background-color: $colour;
   color: white;

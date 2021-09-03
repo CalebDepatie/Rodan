@@ -4,8 +4,10 @@ import g from 'guark';
 
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
+import { Button } from '../../Components';
+
 import { TreeTable } from 'primereact/treetable';
-import { Button } from 'primereact/button';
+//import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import TreeNode from 'primereact/treenode';
 import { Column } from 'primereact/column';
@@ -166,7 +168,7 @@ function ProjectTable(props: any) {
 
   const header = (
     <>
-      <Button icon="fa fa-plus" label="Add Project" onClick={handleShow} className='p-button-secondary' />
+      <Button icon="fa fa-plus" label="Add Project" onClick={handleShow} />
     </>
   );
 
@@ -182,7 +184,7 @@ function ProjectTable(props: any) {
 
       <Dialog header="Create a Project" visible={show} onHide={handleClose} position='center' modal style={{width: '70vw'}} footer={(
         <>
-          <Button label='Submit' className='p-button-success' onClick={(e:any) => {
+          <Button label='Submit' className='r-button-success' onClick={(e:any) => {
             createSignal({body: JSON.stringify(form)});
           }} />
         </>

@@ -4,11 +4,12 @@ import g from 'guark';
 
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
+import { Button } from '../../Components';
+
 import { TreeTable } from 'primereact/treetable';
 import TreeNode from 'primereact/treenode';
 import { Column } from 'primereact/column';
 import { ListBox } from 'primereact/listbox';
-import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Dialog } from 'primereact/dialog';
@@ -338,8 +339,8 @@ function Boards(props:any) {
     <div>
       <div style={{float: "left", width: "20%", display:"flex", flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
         <span className="p-buttonset">
-          <Button onClick={handleShowHead} label="Add Board" className='p-button-secondary' />
-          <Button onClick={handleShowFrag} label="Add Fragnet" className='p-button-secondary' />
+          <Button onClick={handleShowHead} label="Add Board" />
+          <Button onClick={handleShowFrag} label="Add Fragnet" />
         </span>
 
         <ListBox value={activeBoard} options={boardHeads} optionLabel="title"
@@ -347,7 +348,7 @@ function Boards(props:any) {
           optionGroupTemplate={groupTemplate}
           onChange={(e) => setActiveBoard(e.value)} listStyle={{maxHeight:"400px"}} style={{width:'100%'}} />
 
-          <Button {...workflowState} className='p-button-secondary' style={{width:"100%"}} />
+          <Button {...workflowState} style={{width:"100%"}} />
 
       </div>
       <div style={{float: "left", width: "80%"}}>
@@ -364,7 +365,7 @@ function Boards(props:any) {
     {/* Board Frags */}
     <Dialog header="Create a Fragnet" visible={showFrag} onHide={handleCloseFrag} position='center' modal style={{width: '70vw'}} footer={(
       <>
-        <Button label='Submit' className='p-button-success' onClick={(e:any) => {
+        <Button label='Submit' className='r-button-success' onClick={(e:any) => {
           createFragSignal({body: JSON.stringify(form)});
         }} />
       </>
@@ -412,7 +413,7 @@ function Boards(props:any) {
     {/* Board Heads */}
     <Dialog header="Create a Board" visible={showHead} onHide={handleCloseHead} position='center' modal style={{width: '70vw'}} footer={(
       <>
-        <Button label='Submit' className='p-button-success' onClick={(e:any) => {
+        <Button label='Submit' className='r-button-success' onClick={(e:any) => {
           createBoardSignal({body: JSON.stringify(form)});
         }} />
       </>

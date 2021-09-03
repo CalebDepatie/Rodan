@@ -1,4 +1,15 @@
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
 @import '~@fortawesome/fontawesome-free/scss/solid';
 @import '~@fortawesome/fontawesome-free/scss/brands';
 @import '~@fortawesome/fontawesome-free/scss/regular';
+
+$font-families: Verdana, sans-serif;
+
+$colour-primary: #546866;
+$colour-primary-text: white;
+$colour-secondary: #E4DFDA;
+$colour-tertiary: #60993E;
+$colour-success: #60993E;
+$colour-accent: #840B0F;

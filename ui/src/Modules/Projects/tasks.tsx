@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 're
 import { useFetch } from '../../Hooks';
 import g from 'guark';
 
+import { Button } from '../../Components';
+
 import { DataTable } from 'primereact/datatable';
-import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
@@ -151,18 +152,18 @@ function Tasks(props:any) {
     updateSignal({body: JSON.stringify({updateCol: field, updateVal: value.toString(), taskID: id})});
     // update table data
     let newData = JSON.parse(JSON.stringify(tasks)); // deep copy
-    let editedNode = newData.filter((row:any) => row.id === id);
-    editedNode[props.field] = value;
+    let editedNode = newData.find((row:any) => row.id === id);
+    editedNode[field] = value;
     setTasks(newData);
   };
 
   const statusEditor = (props: any) => {
-    const data = props.status;
-    const id   = props.id;
+    const data = props.rowData.status;
+    const id   = props.rowData.id;
     return (
       <Dropdown value={data} onChange={(e) => onEditorValueChange(props, 'status', e.value, id)}
                 options={statuses} optionValue='id' optionLabel='name'
-                valueTemplate={statusValueTemplate} itemTemplate={statusItemTemplate}/>
+                />
     );
   };
 
@@ -173,23 +174,24 @@ function Tasks(props:any) {
 
   const header = (
     <>
-      <Button icon="fa fa-plus" label="Add Task" onClick={handleShow} className='p-button-secondary' />
+      <Button icon="fa fa-plus" label="Add Task" onClick={handleShow} />
     </>
   );
 
   return (
     <>
     <Toast ref={toast}/>
-    <DataTable header={header} value={tasks} >
+    <DataTable header={header} value={tasks} editMode="cell" style={{paddingBottom:"30px"}} >
       <Column field="title" header="Title" />
       <Column field="descrip" header="Description" />
       <Column field="status" header="Status" body={statusFormat} editor={statusEditor} style={{width:"100px"}} />
+      <Column field="initiative" header="Initiative" />
       <Column field="activity" header="Fragnet" />
     </DataTable>
 
     <Dialog header="Create a Task" visible={show} onHide={handleClose} position='center' modal style={{width: '70vw'}} footer={(
       <>
-        <Button label='Submit' className='p-button-success' onClick={(e:any) => {
+        <Button label='Submit' className='r-button-success' onClick={(e:any) => {
           createSignal({body: JSON.stringify(form)});
           setTasks([...tasks, form]);
         }} />

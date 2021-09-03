@@ -29,6 +29,7 @@
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "^4.0.3",
 		"react-transition-group": "^4.4.2",
+		"recompose": "^0.30.0",
 		"typescript": "^4.3.5",
 		"vue": "^2.6.14",
 		"vuex": "^3.4.0"

@@ -16,6 +16,7 @@ func GetTasks(c app.Context) (interface{}, error) {
     Activity string `db:"activity" json:"activity"`
     Status   int    `db:"status" json:"status"`
     Created  string `db:"created_date" json:"created"`
+    Ini      string `db:"initiative" json:"initiative"`
   }{}
 
   stmt := `SELECT * FROM prj.FN_TaskCRUD(_operation := 2);`
