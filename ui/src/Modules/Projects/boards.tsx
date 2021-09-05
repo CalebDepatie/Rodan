@@ -4,13 +4,12 @@ import g from 'guark';
 
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
-import { Button } from '../../Components';
+import { Button, InputText } from '../../Components';
 
 import { TreeTable } from 'primereact/treetable';
 import TreeNode from 'primereact/treenode';
 import { Column } from 'primereact/column';
 import { ListBox } from 'primereact/listbox';
-import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
@@ -370,39 +369,39 @@ function Boards(props:any) {
         }} />
       </>
     )}>
-      <div className='p-fluid p-formgrid p-grid'>
-        <div className="p-field p-col-6">
+      <div className='r-form'>
+        <div className="r-field r-col-6">
           <label htmlFor="board">Board ID</label>
           <InputText id="board" type="text" disabled={true} {...formText('board_id')}/>
         </div>
 
-        <div className="p-field p-col-6">
+        <div className="r-field r-col-6">
           <label htmlFor="parent">Parent Fragnet</label>
           <InputText id="parent" type="text" disabled={true} {...formText('parent')}/>
         </div>
 
-        <div className="p-field p-col-6">
+        <div className="r-field r-col-6">
           <label htmlFor="name">Title</label>
           <InputText id="name" type="text" {...formText('title')}/>
         </div>
 
-        <div className="p-field p-col-6">
+        <div className="r-field r-col-6">
           <label htmlFor="effort">Effort</label>
           <InputText id="effort" type="number" {...formText('effort')}/>
         </div>
 
-        <div className="p-field p-col-6">
+        <div className="r-field r-col-6">
           <label htmlFor="status">Status</label>
           <Dropdown id="status" options={statuses} optionValue='id' optionLabel='name' {...formDropdown('status')}
             valueTemplate={statusValueTemplate} itemTemplate={statusItemTemplate}/>
         </div>
 
-        <div className="p-field p-col-6">
+        <div className="r-field r-col-6">
           <label htmlFor="moscow">MoSCoW</label>
           <Dropdown id="moscow" options={moscow} {...formDropdown('moscow')}/>
         </div>
 
-        <div className="p-field p-col-6">
+        <div className="r-field r-col-6">
           <label htmlFor="tcd">Targted Completion Date</label>
           <InputText id="tcd" type="date" {...formText('tcd')}/>
         </div>
@@ -418,18 +417,18 @@ function Boards(props:any) {
         }} />
       </>
     )}>
-      <div className='p-fluid p-formgrid p-grid'>
-        <div className="p-field p-col-6">
+      <div className='r-form'>
+        <div className="r-field r-col-6">
           <label htmlFor="name">Title</label>
           <InputText id="name" type="text" disabled={!form["template"]} {...formText('title')}/>
         </div>
 
-        <div className="p-field p-col-6">
+        <div className="r-field r-col-6">
           <label htmlFor="tmp">Template</label>
           <InputSwitch id="tmp" {...formSwitch('template')}/>
         </div>
 
-        <div className="p-field p-col-6">
+        <div className="r-field r-col-6">
           <label htmlFor="ini">Initiative</label>
           <Dropdown id="ini" options={initiatives} optionValue="id" optionLabel="name"
             disabled={form["template"]} {...formDropdown('initiative')}/>

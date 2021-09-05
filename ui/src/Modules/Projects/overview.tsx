@@ -4,14 +4,13 @@ import g from 'guark';
 
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
-import { Button } from '../../Components';
+import { Button, InputText } from '../../Components';
 
 import { TreeTable } from 'primereact/treetable';
 //import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import TreeNode from 'primereact/treenode';
 import { Column } from 'primereact/column';
-import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
 import { InputTextarea } from 'primereact/inputtextarea';
@@ -189,24 +188,24 @@ function ProjectTable(props: any) {
           }} />
         </>
       )}>
-        <div className='p-fluid p-formgrid p-grid'>
-          <div className="p-field p-col-6">
+        <div className='r-form'>
+          <div className="r-field r-col-6">
             <label htmlFor="name">Name</label>
             <InputText id="name" type="text" {...formText('name')}/>
           </div>
 
-          <div className="p-field p-col-6">
+          <div className="r-field r-col-6">
             <label htmlFor="de">Description</label>
             <InputText id="de" type="text" {...formText('descrip')}/>
           </div>
 
-          <div className="p-field p-col-6">
+          <div className="r-field r-col-6">
             <label htmlFor="status">Status</label>
             <Dropdown id="status" options={statuses} optionValue='id' optionLabel='name' {...formDropdown('status')}
               valueTemplate={statusValueTemplate} itemTemplate={statusItemTemplate}/>
           </div>
 
-          <div className="p-field p-col-6">
+          <div className="r-field r-col-6">
             <label htmlFor="par">Parent</label>
             <Dropdown id="par" options={projects} optionValue='id' optionLabel='name' {...formDropdown('parent')}/>
           </div>

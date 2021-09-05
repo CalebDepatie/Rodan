@@ -2,12 +2,11 @@ import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 're
 import { useFetch } from '../../Hooks';
 import g from 'guark';
 
-import { Button } from '../../Components';
+import { Button, InputText } from '../../Components';
 
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { Column } from 'primereact/column';
-import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
 import { TreeSelect } from 'primereact/treeselect';
@@ -198,18 +197,18 @@ function Tasks(props:any) {
       </>
     )}>
 
-    <div className='p-fluid p-formgrid p-grid'>
-      <div className="p-field p-col-6">
+    <div className='r-form'>
+      <div className="r-field r-col-6">
         <label htmlFor="name">Name</label>
         <InputText id="name" type="text" {...formText('title')}/>
       </div>
 
-      <div className="p-field p-col-6">
+      <div className="r-field r-col-6">
         <label htmlFor="de">Description</label>
         <InputText id="de" type="text" {...formText('description')}/>
       </div>
 
-      <div className="p-field p-col-6">
+      <div className="r-field r-col-6">
         <label htmlFor="par">Activity</label>
         <TreeSelect options={activites ?? []} id="par" {...formDropdown('activity')}/>
       </div>

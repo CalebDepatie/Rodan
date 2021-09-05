@@ -1,9 +1,9 @@
 @use '../../style.scss';
 @use 'sass:color';
 
-@mixin button($color, $text) {
+@mixin button($colour, $text) {
   font-family: style.$font-families;
-  background-color: $color;
+  background-color: $colour;
   transition: 0.4s;
   color: $text;
   text-align: center;
@@ -15,7 +15,7 @@
   cursor: pointer;
 
   &:hover {
-    background-color: color.adjust($color, $lightness: 15%);
+    background-color: color.adjust($colour, $lightness: 15%);
   }
 
   :not(:last-child) {
@@ -23,8 +23,8 @@
   }
 
   &.disabled {
-    background-color: color.adjust($color, $lightness: -15%);
-    cursor: default;
+    background-color: color.adjust($colour, $lightness: -15%);
+    cursor: not-allowed;
   }
 }
 

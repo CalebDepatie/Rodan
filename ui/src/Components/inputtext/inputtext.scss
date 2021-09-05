@@ -1,0 +1,11 @@
+@use '../../style.scss';
+
+.r-inputtext {
+  cursor: text;
+  padding: 0.25rem;
+
+  &.disabled {
+    //background-color: color.adjust($colour, $lightness: -15%);
+    cursor: not-allowed;
+  }
+}

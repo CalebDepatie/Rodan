@@ -9,8 +9,6 @@ function Button(props:{label?:string, icon?:string, className?:string, disabled?
   const className:string = (props.className ?? 'r-button-primary')
                             + ((disabled) ? ' disabled' : ' ');
 
-  console.log("CLASS", className);
-
   const label = props.label ? <span>{props.label}</span> : null;
   const icon  = props.icon ? <span className={props.icon} /> : null;
 

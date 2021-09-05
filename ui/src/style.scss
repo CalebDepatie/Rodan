@@ -9,7 +9,35 @@ $font-families: Verdana, sans-serif;
 
 $colour-primary: #546866;
 $colour-primary-text: white;
+$colour-secondary-text: grey;
 $colour-secondary: #E4DFDA;
-$colour-tertiary: #60993E;
+$colour-tertiary: #800080;
 $colour-success: #60993E;
 $colour-accent: #840B0F;
+
+.r-form {
+  display: block;
+  grid-gap: 0.25rem;
+}
+
+.r-field {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+
+  & > label {
+    color: $colour-secondary-text;
+    padding: 0.20rem;
+    align-items: center;
+  }
+
+  &.r-col-3 {
+    width: 25%;
+  }
+  &.r-col-6 {
+    width: 50%;
+  }
+  &.r-col-12 {
+    width: 100%;
+  }
+}
