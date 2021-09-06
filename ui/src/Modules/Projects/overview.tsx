@@ -24,6 +24,7 @@ function ProjectTable(props: any) {
   const [ projectData, setProjectsdata ] = useState<TreeNode[]>();
   const [ statuses, setStatuses ]    = useState([]);
   const [ show, setShow ]            = useState<boolean>(false);
+  const [ showMove, setShowMove ]    = useState<boolean>(false);
   const [ form, setForm ]            = useState<{[key: string]: any}>({});
   const [ projects, setProjects]     = useState([]);
 
@@ -31,6 +32,9 @@ function ProjectTable(props: any) {
 
   const handleShow  = () => setShow(true);
   const handleClose = () => setShow(false);
+
+  const handleShowMove  = () => setShowMove(true);
+  const handleCloseMove = () => setShowMove(false);
 
   const refresh = () => {
     // signal all fetch commands
@@ -83,6 +87,8 @@ function ProjectTable(props: any) {
   useEffect(() => {
     if (updateFetch?.error) {
       toast.current.show({severity:'error', summary:'Could not update value', detail:updateFetch!.error, life:3000});
+    } else {
+      toast.current.show({severity:'success', summary:'Updated Value', life:3000});
     }
   }, [updateFetch]);
 
@@ -168,6 +174,7 @@ function ProjectTable(props: any) {
   const header = (
     <>
       <Button icon="fa fa-plus" label="Add Project" onClick={handleShow} />
+      <Button icon="fa fa-arrow-right" label="Move Initiative" onClick={handleShowMove} />
     </>
   );
 
@@ -208,6 +215,26 @@ function ProjectTable(props: any) {
           <div className="r-field r-col-6">
             <label htmlFor="par">Parent</label>
             <Dropdown id="par" options={projects} optionValue='id' optionLabel='name' {...formDropdown('parent')}/>
+          </div>
+        </div>
+      </Dialog>
+
+      <Dialog header="Move Project" visible={showMove} onHide={handleCloseMove} position='center' modal style={{width: '70vw'}} footer={(
+        <>
+          <Button label='Submit' className='r-button-success' onClick={(e:any) => {
+            updateSignal({body: JSON.stringify({...form, updateCol:"parent", updateVal: form.updateVal.toString()})});
+          }} />
+        </>
+      )}>
+        <div className='r-form'>
+          <div className="r-field r-col-6">
+            <label htmlFor="status">Initiative</label>
+            <Dropdown id="status" options={projectsFetch?.body?.filter((itm:any) => itm.parent !== 0)} optionValue='id' optionLabel='name' {...formDropdown('iniID')}/>
+          </div>
+
+          <div className="r-field r-col-6">
+            <label htmlFor="par">To</label>
+            <Dropdown id="par" options={projectsFetch?.body?.filter((itm:any) => itm.parent === 0)} optionValue='id' optionLabel='name' {...formDropdown('updateVal')}/>
           </div>
         </div>
       </Dialog>

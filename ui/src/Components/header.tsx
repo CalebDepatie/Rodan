@@ -25,6 +25,13 @@ function Header(props: any) {
             <NavDropdown.Item href="/finances/payments">Payments</NavDropdown.Item>
           </NavDropdown>
         </Nav>
+        <Nav>
+          <Nav.Item>
+            <Nav.Link title="Documentation" href="/documentation">
+              Documentation
+            </Nav.Link>
+          </Nav.Item>
+        </Nav>
       </Navbar.Collapse>
     </Navbar>
 	);

@@ -3,6 +3,8 @@
 .r-inputtext {
   cursor: text;
   padding: 0.25rem;
+  outline-color: style.$colour-accent;
+  //border-color:
 
   &.disabled {
     //background-color: color.adjust($colour, $lightness: -15%);

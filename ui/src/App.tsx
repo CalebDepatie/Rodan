@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Header, Footer } from './Components';
-import { Home, Payment, RawData, ProjectTable, FinanceReview, Boards, Tasks } from './Modules';
+import { Home, Payment, RawData, ProjectTable, FinanceReview, Boards, Tasks, PageContainer } from './Modules';
 
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -54,6 +54,11 @@ function App() {
         component: Payment,
         exact: true,
       },
+      {
+        path:'/documentation',
+        component: PageContainer,
+        exact: true,
+      }
   ], []);
 
 
