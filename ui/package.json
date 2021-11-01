@@ -46,7 +46,7 @@
 		"loader-utils": "^2.0.0",
 		"sass": "^1.26.5",
 		"sass-loader": "10.1.1",
-		"style-loader": "^2.0.0",
+		"style-loader": "^3.3.1",
 		"style-resources-loader": "^1.4.1",
 		"ts-loader": "8.2.0",
 		"vue-template-compiler": "^2.6.14"
