@@ -7,7 +7,7 @@ export interface fetchResponse {
 };
 
 /* Api calls abstracted to this hook to make it easier
-   to add things like error logging and chaning the API backend */
+   to add things like error logging and changing the API backend */
 function useFetch(props: string): [fetchResponse, (a:any)=>void] {
   const [ shouldFetch, setShouldFetch ] = useState<boolean>(false);
   const [ fetchInfo, setFetchInfo ]     = useState<fetchResponse>({} as fetchResponse);

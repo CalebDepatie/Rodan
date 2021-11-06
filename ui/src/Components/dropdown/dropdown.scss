@@ -1,10 +1,17 @@
 @use '../../style.scss';
 
-.r-dropdown {
+select.r-dropdown {
   cursor: pointer;
   padding: 0.25rem;
-  outline-color: style.$colour-accent;
+  //outline-color: style.$colour-accent;
+  background: style.$colour-primary;
+  color: style.$colour-primary-text;
+
   //border-color:
+
+  & option {
+    background: style.$colour-accent
+  }
 
   &.disabled {
     //background-color: color.adjust($colour, $lightness: -15%);

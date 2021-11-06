@@ -3,11 +3,15 @@
 .r-inputtext {
   cursor: text;
   padding: 0.25rem;
-  outline-color: style.$colour-accent;
-  //border-color:
+
+  &:focus {
+    border-color: style.$colour-accent;
+    border-style: solid;
+    border-radius: 4px;
+  }
 
   &.disabled {
-    //background-color: color.adjust($colour, $lightness: -15%);
+    background-color: grey;
     cursor: not-allowed;
   }
 }
