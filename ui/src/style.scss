@@ -15,9 +15,17 @@ $colour-tertiary: #800080;
 $colour-success: #60993E;
 $colour-accent: #840B0F;
 
+:root {
+  font-family: $font-families
+}
+
 .r-form {
-  display: block;
-  grid-gap: 0.25rem;
+  display: flex;
+  flex-wrap: wrap;
+
+  & > * {
+    padding: 0.1rem;
+  }
 }
 
 .r-field {
@@ -35,7 +43,7 @@ $colour-accent: #840B0F;
     width: 25%;
   }
   &.r-col-6 {
-    width: 50%;
+    width: 40%;
   }
   &.r-col-12 {
     width: 100%;
