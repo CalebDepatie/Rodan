@@ -1,14 +1,20 @@
 package main
 
 import (
-	"github.com/guark/guark/app"
-	"github.com/guark/guark/log"
-	"github.com/guark/guark/engine"
 	"github.com/CalebDepatie/ProjectSingularPoint/lib"
-  "github.com/CalebDepatie/ProjectSingularPoint/lib/globals"
+	"github.com/CalebDepatie/ProjectSingularPoint/lib/globals"
+	"github.com/guark/guark/app"
+	"github.com/guark/guark/engine"
+	"github.com/guark/guark/log"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+
+	err := godotenv.Load()
+	if err != nil {
+		a.Log.Fatal("Error loading .env file")
+	}
 
 	a := &app.App{
 		Log:     log.New("app"),
@@ -24,7 +30,7 @@ func main() {
 
 	defer a.Quit()
 
-  defer globals.DB.Close()
+	defer globals.DB.Close()
 
 	if err := a.Run(); err != nil {
 		a.Log.Fatal(err)
