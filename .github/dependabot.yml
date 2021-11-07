@@ -9,3 +9,8 @@ updates:
     directory: "/ui" # Location of package manifests
     schedule:
       interval: "monthly"
+
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "monthly"
