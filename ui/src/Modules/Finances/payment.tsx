@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
 import g from 'guark';
 
-import Dropdown from 'react-bootstrap/Dropdown';
-import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import InputGroup from 'react-bootstrap/InputGroup';
+import { Button, InputText } from '../../Components';
+import { Dropdown } from 'primereact/dropdown';
 
 type catcomData = [number, string, string];
 
 interface MetaData {
-  cats: catcomData[];
-  coms: catcomData[];
+  cats: {label:string, value:number}[];
+  coms: {label:string, value:number}[];
 }
 
 function Recurring(props: MetaData) {
-  const [ form, setForm ] = useState({});
+  const [ form, setForm ] = useState<any>({});
 
   const setField = async (field:string, value:any) => {
     setForm({
@@ -34,79 +31,52 @@ function Recurring(props: MetaData) {
 	}
 
 	return (
-		<Form onSubmit={handleSubmit}>
-      <Row>
-        <Col>
-          <Form.Group controlId="recur.name">
-            <Form.Label>Name</Form.Label>
-            <Form.Control required onChange={e => setField('name', e.target.value) }/>
-          </Form.Group>
-        </Col>
-        <Col>
-        <Form.Group controlId="recur.price">
-          <Form.Label>Price</Form.Label>
-          <InputGroup>
-              <InputGroup.Text>$</InputGroup.Text>
-            <Form.Control required type='text' onChange={e => setField('price', +e.target.value) }/>
-            <Form.Control.Feedback type="invalid">
-              Please enter a valid price.
-            </Form.Control.Feedback>
-          </InputGroup>
-        </Form.Group>
-        </Col>
-      </Row>
+    <div className='r-form'>
+      <div className="r-field r-col-6">
+        <label htmlFor="name">Name</label>
+        <InputText id="name" type="text" value={form?.name}
+          onChange={e => setField('name', e.target.value) }/>
+      </div>
 
-      <Row>
-        <Col>
-          <Form.Group controlId="recur.catSelect">
-            <Form.Label>Category</Form.Label>
-            <Form.Control required as="select" onChange={e => setField('cat', +e.target.value) }>
-              {props.cats.map((itm, i) =>
-              <option key={itm[1]} value={i+1}>{itm[1]}</option>)}
-            </Form.Control>
-          </Form.Group>
-        </Col>
-        <Col>
-        <Form.Group controlId="recur.comSelect">
-          <Form.Label>Company</Form.Label>
-          <Form.Control required as="select" onChange={e => setField('com', +e.target.value) }>
-            {props.coms.map((itm, i) =>
-            <option key={itm[1]} value={i+1}>{itm[1]}</option>)}
-          </Form.Control>
-        </Form.Group>
-        </Col>
-      </Row>
+      <div className="r-field r-col-6">
+        <label htmlFor="price">Price</label>
+        <InputText id="price" type="text" value={form?.price}
+          onChange={e => setField('price', +e.target.value) }/>
+      </div>
 
-      <Row>
-        <Col>
-        <Form.Group controlId="recur.start">
-          <Form.Label>Start Date</Form.Label>
-          <Form.Control required type='date' onChange={e => setField('start_date', e.target.value) }/>
-        </Form.Group>
-        </Col>
-        <Col>
-        <Form.Group controlId="recur.end">
-          <Form.Label>End Date</Form.Label>
-          <Form.Control type='date' onChange={e => setField('end_date', e.target.value) }/>
-        </Form.Group>
-        </Col>
-      </Row>
+      <div className="r-field r-col-6">
+        <label htmlFor="com">Company</label>
+        <Dropdown id="com" value={form?.com} options={props.coms}
+          onChange={e => setField('com', +e.value)} />
+      </div>
 
-      <Row>
-        <Col>
-          <Form.Control type='submit' value='Submit'/>
-        </Col>
-        <Col>
-          <Form.Control type='reset' value='Clear'/>
-        </Col>
-      </Row>
-    </Form>
+      <div className="r-field r-col-6">
+        <label htmlFor="com">Category</label>
+        <Dropdown id="com" value={form?.cat} options={props.cats}
+          onChange={e => setField('cat', +e.value)} />
+      </div>
+
+      <div className="r-field r-col-6">
+        <label htmlFor="start">Start Date</label>
+        <InputText id="start" type="date" value={form?.date}
+          onChange={e => setField('start_date', e.target.value) }/>
+      </div>
+
+      <div className="r-field r-col-6">
+        <label htmlFor="end">End Date</label>
+        <InputText id="end" type="date" value={form?.date}
+          onChange={e => setField('end_date', e.target.value) }/>
+      </div>
+
+      <Button label='Clear' onClick={() => setForm({})} />
+      <Button label='Submit' onClick={handleSubmit} />
+    </div>
 	);
 }
 
 
 function OneTime(props: MetaData) {
-  const [ form, setForm ] = useState({});
+  const [ form, setForm ] = useState<any>({});
 
   const setField = async (field:string, value:any) => {
     setForm({
@@ -124,72 +94,45 @@ function OneTime(props: MetaData) {
 	}
 
 	return (
-		<Form onSubmit={handleSubmit}>
-      <Row>
-        <Col>
-          <Form.Group controlId="one.name">
-            <Form.Label>Name</Form.Label>
-            <Form.Control required onChange={e => setField('name', e.target.value) }/>
-          </Form.Group>
-        </Col>
-        <Col>
-        <Form.Group controlId="one.price">
-          <Form.Label>Price</Form.Label>
-          <InputGroup>
-              <InputGroup.Text>$</InputGroup.Text>
-            <Form.Control required type='text' onChange={e => setField('price', +e.target.value) }/>
-            <Form.Control.Feedback type="invalid">
-              Please enter a valid price.
-            </Form.Control.Feedback>
-          </InputGroup>
-        </Form.Group>
-        </Col>
-      </Row>
+    <div className='r-form'>
+      <div className="r-field r-col-6">
+        <label htmlFor="name">Name</label>
+        <InputText id="name" type="text" value={form?.name}
+          onChange={e => setField('name', e.target.value) }/>
+      </div>
 
-      <Row>
-        <Col>
-          <Form.Group controlId="one.catSelect">
-            <Form.Label>Category</Form.Label>
-            <Form.Control required as="select" onChange={e => setField('cat', +e.target.value) }>
-              {props.cats.map((itm, i) =>
-              <option key={itm[1]} value={i+1}>{itm[1]}</option>)}
-            </Form.Control>
-          </Form.Group>
-        </Col>
-        <Col>
-        <Form.Group controlId="one.comSelect">
-          <Form.Label>Company</Form.Label>
-          <Form.Control required as="select" onChange={e => setField('com', +e.target.value) }>
-            {props.coms.map((itm, i) =>
-            <option key={itm[1]} value={i+1}>{itm[1]}</option>)}
-          </Form.Control>
-        </Form.Group>
-        </Col>
-      </Row>
+      <div className="r-field r-col-6">
+        <label htmlFor="price">Price</label>
+        <InputText id="price" type="text" value={form?.price}
+          onChange={e => setField('price', +e.target.value) }/>
+      </div>
 
-      <Row>
-        <Col>
-        <Form.Group controlId="one.date">
-          <Form.Label>Date</Form.Label>
-          <Form.Control required type='date' onChange={e => setField('date', e.target.value) }/>
-        </Form.Group>
-        </Col>
-      </Row>
+      <div className="r-field r-col-6">
+        <label htmlFor="com">Company</label>
+        <Dropdown id="com" value={form?.com} options={props.coms}
+          onChange={e => setField('com', +e.value)} />
+      </div>
 
-      <Row>
-        <Col>
-          <Form.Control type='submit' value='Submit'/>
-        </Col>
-        <Col>
-          <Form.Control type='reset' value='Clear'/>
-        </Col>
-      </Row>
-    </Form>
+      <div className="r-field r-col-6">
+        <label htmlFor="com">Category</label>
+        <Dropdown id="com" value={form?.cat} options={props.cats}
+          onChange={e => setField('cat', +e.value)} />
+      </div>
+
+      <div className="r-field r-col-6">
+        <label htmlFor="date">Date</label>
+        <InputText id="date" type="date" value={form?.date}
+          onChange={e => setField('date', e.target.value) }/>
+      </div>
+
+      <Button label='Clear' onClick={() => setForm({})} />
+      <Button label='Submit' onClick={handleSubmit} />
+    </div>
 	);
 }
 
 function CatOrCom(props: any) {
-  const [ form, setForm ] = useState({});
+  const [ form, setForm ] = useState<any>({});
 
   const setField = async (field:string, value:any) => {
     setForm({
@@ -214,36 +157,27 @@ function CatOrCom(props: any) {
 	}
 
 	return (
-		<Form onSubmit={handleSubmit}>
-      <Row>
-        <Col>
-          <Form.Group controlId="org.name">
-            <Form.Label>Name</Form.Label>
-            <Form.Control required onChange={e => setField('name', e.target.value) }/>
-          </Form.Group>
-        </Col>
-        <Col>
-          <Form.Group controlId="org.descrip">
-            <Form.Label>Description</Form.Label>
-            <Form.Control required onChange={e => setField('descrip', e.target.value) }/>
-          </Form.Group>
-        </Col>
-      </Row>
+    <div className='r-form'>
+      <div className="r-field r-col-6">
+        <label htmlFor="name">Name</label>
+        <InputText id="name" type="text" value={form?.name}
+          onChange={e => setField('name', e.target.value) }/>
+      </div>
 
-      <Row>
-        <Col>
-          <Form.Control type='submit' value='Submit'/>
-        </Col>
-        <Col>
-          <Form.Control type='reset' value='Clear'/>
-        </Col>
-      </Row>
-    </Form>
+      <div className="r-field r-col-6">
+        <label htmlFor="descrip">Description</label>
+        <InputText id="descrip" type="text" value={form?.descrip}
+          onChange={e => setField('descrip', e.target.value) }/>
+      </div>
+
+      <Button label='Clear' onClick={() => setForm({})} />
+      <Button label='Submit' onClick={handleSubmit} />
+    </div>
 	);
 }
 
 function Income(props: any) {
-  const [ form, setForm ] = useState({});
+  const [ form, setForm ] = useState<any>({});
 
   const setField = async (field:string, value:any) => {
     setForm({
@@ -261,59 +195,39 @@ function Income(props: any) {
 	}
 
 	return (
-		<Form onSubmit={handleSubmit}>
-      <Row>
-        <Col>
-          <Form.Group controlId="inc.name">
-            <Form.Label>Name</Form.Label>
-            <Form.Control required onChange={e => setField('name', e.target.value) }/>
-          </Form.Group>
-        </Col>
-        <Col>
-          <Form.Group controlId="inc.amount">
-            <Form.Label>Amount</Form.Label>
-            <InputGroup>
-                <InputGroup.Text>$</InputGroup.Text>
-              <Form.Control required type='text' onChange={e => setField('amount', +e.target.value) }/>
-              <Form.Control.Feedback type="invalid">
-                Please enter a valid amount.
-              </Form.Control.Feedback>
-            </InputGroup>
-          </Form.Group>
-        </Col>
-      </Row>
+    <div className="r-form">
+      <div className="r-field r-col-6">
+        <label htmlFor="name">Name</label>
+        <InputText id="name" type="text" value={form?.name}
+          onChange={e => setField('name', e.target.value) }/>
+      </div>
 
-      <Row>
-        <Col>
-          <Form.Group controlId="inc.comSelect">
-            <Form.Label>Company</Form.Label>
-            <Form.Control required as="select" onChange={e => setField('com', +e.target.value) }>
-              {props.coms.map((itm: catcomData, i: number) =>
-              <option key={itm[1]} value={i+1}>{itm[1]}</option>)}
-            </Form.Control>
-          </Form.Group>
-        </Col>
-        <Col>
-          <Form.Group controlId="inc.date">
-            <Form.Label>Date</Form.Label>
-            <Form.Control required type='date' onChange={e => setField('date', e.target.value) }/>
-          </Form.Group>
-        </Col>
-      </Row>
+      <div className="r-field r-col-6">
+        <label htmlFor="price">Amount</label>
+        <InputText id="price" type="text" value={form?.price}
+          onChange={e => setField('price', +e.target.value) }/>
+      </div>
 
-      <Row>
-        <Col>
-          <Form.Control type='submit' value='Submit'/>
-        </Col>
-        <Col>
-          <Form.Control type='reset' value='Clear'/>
-        </Col>
-      </Row>
-    </Form>
+      <div className="r-field r-col-6">
+        <label htmlFor="com">Company</label>
+        <Dropdown id="com" value={form?.com} options={props.coms}
+          onChange={e => setField('com', +e.value)} />
+      </div>
+
+      <div className="r-field r-col-6">
+        <label htmlFor="date">Date</label>
+        <InputText id="date" type="date" value={form?.date}
+          onChange={e => setField('date', e.target.value) }/>
+      </div>
+
+      <Button label='Clear' onClick={() => setForm({})} />
+      <Button label='Submit' onClick={handleSubmit} />
+    </div>
 	);
 }
 
-class Payment extends React.Component<{}, {type: string, cats: catcomData[], coms: catcomData[]}> {
+class Payment extends React.Component<{}, {type: string, cats: {label:string, value:number}[]
+  , coms: {label:string, value:number}[]}> {
 	constructor(props: any) {
 		super(props)
 
@@ -342,8 +256,20 @@ class Payment extends React.Component<{}, {type: string, cats: catcomData[], com
       console.error('Error Getting Data', error);
     });
 
-    this.state = {type: 'oneTime', cats: cat, coms: com};
+    this.state = {
+      type: 'oneTime',
+      cats: cat.map((itm:catcomData, i:number) => ({label: itm[1], value: i+1})),
+      coms: com.map((itm:catcomData, i:number) => ({label: itm[1], value: i+1})),
+    };
 	}
+
+  options = [
+      {label: 'Recurring', value: 'recurring'},
+      {label: 'One Time', value: 'oneTime'},
+      {label: 'Category', value: 'cat'},
+      {label: 'Company', value: 'com'},
+      {label: 'Income', value: 'income'},
+  ];
 
 	pickPayment() {
 		switch(this.state.type) {
@@ -362,18 +288,8 @@ class Payment extends React.Component<{}, {type: string, cats: catcomData[], com
 			<div className="row align-items-center my-5">
 			  <div className="col-lg-5">
 				<h1 className="font-weight-light">Add Finance Data</h1>
-				<Dropdown onSelect={e => this.setState<never>({type: e}, this.render)}>
-          <Dropdown.Toggle variant="success" id="dropdown-basic">
-					  Record Type:
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Item active={this.state.type === 'recurring'} eventKey='recurring'>Recurring</Dropdown.Item>
-            <Dropdown.Item active={this.state.type === 'oneTime'} eventKey='oneTime'>One Time</Dropdown.Item>
-            <Dropdown.Item active={this.state.type === 'cat'} eventKey='cat'>Category</Dropdown.Item>
-            <Dropdown.Item active={this.state.type === 'com'} eventKey='com'>Company</Dropdown.Item>
-            <Dropdown.Item active={this.state.type === 'income'} eventKey='income'>Income</Dropdown.Item>
-          </Dropdown.Menu>
-				</Dropdown>
+          <Dropdown value={this.state.type} options={this.options}
+            onChange={(e:any) => this.setState({...this.state, type: e.value})}/>
         <br />
 				<div>{this.pickPayment()}</div>
 			  </div>
