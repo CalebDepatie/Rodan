@@ -4,6 +4,7 @@ import g from 'guark';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import InputGroup from 'react-bootstrap/InputGroup';
 
 type catcomData = [number, string, string];
@@ -34,7 +35,7 @@ function Recurring(props: MetaData) {
 
 	return (
 		<Form onSubmit={handleSubmit}>
-      <Form.Row>
+      <Row>
         <Col>
           <Form.Group controlId="recur.name">
             <Form.Label>Name</Form.Label>
@@ -45,9 +46,7 @@ function Recurring(props: MetaData) {
         <Form.Group controlId="recur.price">
           <Form.Label>Price</Form.Label>
           <InputGroup>
-            <InputGroup.Prepend>
               <InputGroup.Text>$</InputGroup.Text>
-            </InputGroup.Prepend>
             <Form.Control required type='text' onChange={e => setField('price', +e.target.value) }/>
             <Form.Control.Feedback type="invalid">
               Please enter a valid price.
@@ -55,9 +54,9 @@ function Recurring(props: MetaData) {
           </InputGroup>
         </Form.Group>
         </Col>
-      </Form.Row>
+      </Row>
 
-      <Form.Row>
+      <Row>
         <Col>
           <Form.Group controlId="recur.catSelect">
             <Form.Label>Category</Form.Label>
@@ -76,9 +75,9 @@ function Recurring(props: MetaData) {
           </Form.Control>
         </Form.Group>
         </Col>
-      </Form.Row>
+      </Row>
 
-      <Form.Row>
+      <Row>
         <Col>
         <Form.Group controlId="recur.start">
           <Form.Label>Start Date</Form.Label>
@@ -91,16 +90,16 @@ function Recurring(props: MetaData) {
           <Form.Control type='date' onChange={e => setField('end_date', e.target.value) }/>
         </Form.Group>
         </Col>
-      </Form.Row>
+      </Row>
 
-      <Form.Row>
+      <Row>
         <Col>
           <Form.Control type='submit' value='Submit'/>
         </Col>
         <Col>
           <Form.Control type='reset' value='Clear'/>
         </Col>
-      </Form.Row>
+      </Row>
     </Form>
 	);
 }
@@ -126,7 +125,7 @@ function OneTime(props: MetaData) {
 
 	return (
 		<Form onSubmit={handleSubmit}>
-      <Form.Row>
+      <Row>
         <Col>
           <Form.Group controlId="one.name">
             <Form.Label>Name</Form.Label>
@@ -137,9 +136,7 @@ function OneTime(props: MetaData) {
         <Form.Group controlId="one.price">
           <Form.Label>Price</Form.Label>
           <InputGroup>
-            <InputGroup.Prepend>
               <InputGroup.Text>$</InputGroup.Text>
-            </InputGroup.Prepend>
             <Form.Control required type='text' onChange={e => setField('price', +e.target.value) }/>
             <Form.Control.Feedback type="invalid">
               Please enter a valid price.
@@ -147,9 +144,9 @@ function OneTime(props: MetaData) {
           </InputGroup>
         </Form.Group>
         </Col>
-      </Form.Row>
+      </Row>
 
-      <Form.Row>
+      <Row>
         <Col>
           <Form.Group controlId="one.catSelect">
             <Form.Label>Category</Form.Label>
@@ -168,25 +165,25 @@ function OneTime(props: MetaData) {
           </Form.Control>
         </Form.Group>
         </Col>
-      </Form.Row>
+      </Row>
 
-      <Form.Row>
+      <Row>
         <Col>
         <Form.Group controlId="one.date">
           <Form.Label>Date</Form.Label>
           <Form.Control required type='date' onChange={e => setField('date', e.target.value) }/>
         </Form.Group>
         </Col>
-      </Form.Row>
+      </Row>
 
-      <Form.Row>
+      <Row>
         <Col>
           <Form.Control type='submit' value='Submit'/>
         </Col>
         <Col>
           <Form.Control type='reset' value='Clear'/>
         </Col>
-      </Form.Row>
+      </Row>
     </Form>
 	);
 }
@@ -218,7 +215,7 @@ function CatOrCom(props: any) {
 
 	return (
 		<Form onSubmit={handleSubmit}>
-      <Form.Row>
+      <Row>
         <Col>
           <Form.Group controlId="org.name">
             <Form.Label>Name</Form.Label>
@@ -231,16 +228,16 @@ function CatOrCom(props: any) {
             <Form.Control required onChange={e => setField('descrip', e.target.value) }/>
           </Form.Group>
         </Col>
-      </Form.Row>
+      </Row>
 
-      <Form.Row>
+      <Row>
         <Col>
           <Form.Control type='submit' value='Submit'/>
         </Col>
         <Col>
           <Form.Control type='reset' value='Clear'/>
         </Col>
-      </Form.Row>
+      </Row>
     </Form>
 	);
 }
@@ -265,7 +262,7 @@ function Income(props: any) {
 
 	return (
 		<Form onSubmit={handleSubmit}>
-      <Form.Row>
+      <Row>
         <Col>
           <Form.Group controlId="inc.name">
             <Form.Label>Name</Form.Label>
@@ -276,9 +273,7 @@ function Income(props: any) {
           <Form.Group controlId="inc.amount">
             <Form.Label>Amount</Form.Label>
             <InputGroup>
-              <InputGroup.Prepend>
                 <InputGroup.Text>$</InputGroup.Text>
-              </InputGroup.Prepend>
               <Form.Control required type='text' onChange={e => setField('amount', +e.target.value) }/>
               <Form.Control.Feedback type="invalid">
                 Please enter a valid amount.
@@ -286,9 +281,9 @@ function Income(props: any) {
             </InputGroup>
           </Form.Group>
         </Col>
-      </Form.Row>
+      </Row>
 
-      <Form.Row>
+      <Row>
         <Col>
           <Form.Group controlId="inc.comSelect">
             <Form.Label>Company</Form.Label>
@@ -304,16 +299,16 @@ function Income(props: any) {
             <Form.Control required type='date' onChange={e => setField('date', e.target.value) }/>
           </Form.Group>
         </Col>
-      </Form.Row>
+      </Row>
 
-      <Form.Row>
+      <Row>
         <Col>
           <Form.Control type='submit' value='Submit'/>
         </Col>
         <Col>
           <Form.Control type='reset' value='Clear'/>
         </Col>
-      </Form.Row>
+      </Row>
     </Form>
 	);
 }

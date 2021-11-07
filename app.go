@@ -12,9 +12,6 @@ import (
 func main() {
 
 	err := godotenv.Load()
-	if err != nil {
-		a.Log.Fatal("Error loading .env file")
-	}
 
 	a := &app.App{
 		Log:     log.New("app"),
@@ -24,7 +21,11 @@ func main() {
 		Plugins: lib.Plugins,
 	}
 
-	if err := a.Use(engine.New(a)); err != nil {
+  if err != nil {
+		a.Log.Fatal("Error loading .env file")
+	}
+
+	if err = a.Use(engine.New(a)); err != nil {
 		a.Log.Fatal(err)
 	}
 
