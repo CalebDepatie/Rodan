@@ -224,7 +224,7 @@ function Boards(props:any) {
     let node:TreeNode|null = null;
 
     while (path.length) {
-      let list:TreeNode[] = node ? node.children : nodes;
+      let list:TreeNode[] = node?.children ?? nodes;
       node = list.filter((i:TreeNode) => i.data.id == path[0])[0];
       path.shift();
     }

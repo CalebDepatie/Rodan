@@ -133,7 +133,7 @@ function ProjectTable(props: any) {
     node = nodes.filter((i:TreeNode) => i.key === path[0])[0];
 
     if (path.length > 1) {
-      const children:TreeNode[] = node.children;
+      const children:TreeNode[] = node?.children ?? [];
       node = children.filter((i:TreeNode) => i.key === key)[0];
     }
 
