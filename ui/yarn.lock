@@ -11199,10 +11199,10 @@ primeflex@^3.0.0:
   resolved "https://registry.yarnpkg.com/primeflex/-/primeflex-3.0.0.tgz#c1d9f928579c0faf8013dc331f942ebe151ddd37"
   integrity sha512-uIJaJWnH+bHIwbq/Q2rfK9A9PGp5zG+G685nskn9xwg5zGGh4fSYB8PkSo76jgapUTJSTg95+jaVT7yzClkdjg==
 
-primeicons@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-4.1.0.tgz#19eaef8ef5594b0006358ae64e738d03e167c9bb"
-  integrity sha512-uEv2pSPk1zQCfaB2VgnUfnUxxlGryYi+5rbdxmZBBt5v9S/pscIQYS5YDLxsQZ7D9jn5c76+Tx5wX/2J1nK6sA==
+primeicons@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-5.0.0.tgz#73a0b6028a77c58a9eeb331ad13aaf085e8451ee"
+  integrity sha512-heygWF0X5HFI1otlZE62pp6ye7sZ8om78J9au2BRkg8O7Y8AHTZ9qKMRzchZUHLe8zUAvdi6hZzzm9XxgwIExw==
 
 primereact@^6.6.0:
   version "6.6.0"
