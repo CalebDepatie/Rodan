@@ -27,8 +27,8 @@ function Header(props: any) {
         </Nav>
         <Nav>
           <Nav.Item>
-            <Nav.Link title="Documentation" href="/documentation">
-              Documentation
+            <Nav.Link title="Pages" href="/documentation">
+              Pages
             </Nav.Link>
           </Nav.Item>
         </Nav>

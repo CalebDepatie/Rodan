@@ -4,7 +4,7 @@
 @mixin button($colour, $text) {
   font-family: style.$font-families;
   background-color: $colour;
-  transition: 0.4s;
+  transition: style.$standard-transition;
   color: $text;
   text-align: center;
   align-items: center;

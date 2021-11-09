@@ -1,13 +1,23 @@
 @use '../../style.scss';
+@use 'sass:color';
 
 .r-inputtext {
   cursor: text;
   padding: 0.25rem;
+  transition: style.$standard-transition;
+  border-color: style.$colour-border;
+  border-width: thin;
+  border-style: solid;
+  border-radius: 4px;
+
+  &:hover {
+    border-color: style.$colour-accent;
+  }
 
   &:focus {
     border-color: style.$colour-accent;
-    border-style: solid;
-    border-radius: 4px;
+    border-width: 2px;
+    margin: -2px;
   }
 
   &.disabled {
