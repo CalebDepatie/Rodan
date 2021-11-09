@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import g from 'guark';
 
-import { Button, InputText } from '../../Components';
-import { Dropdown } from 'primereact/dropdown';
+import { Button, InputText, Dropdown } from '../../Components';
+//import { Dropdown } from 'primereact/dropdown';
 
 type catcomData = [number, string, string];
 
@@ -68,8 +68,10 @@ function Recurring(props: MetaData) {
           onChange={e => setField('end_date', e.target.value) }/>
       </div>
 
-      <Button label='Clear' onClick={() => setForm({})} />
-      <Button label='Submit' onClick={handleSubmit} />
+      <div className="r-field r-col-12">
+        <Button label='Clear' onClick={() => setForm({})} />
+        <Button label='Submit' onClick={handleSubmit} />
+      </div>
     </div>
 	);
 }
@@ -125,8 +127,10 @@ function OneTime(props: MetaData) {
           onChange={e => setField('date', e.target.value) }/>
       </div>
 
-      <Button label='Clear' onClick={() => setForm({})} />
-      <Button label='Submit' onClick={handleSubmit} />
+      <div className="r-field r-col-12">
+        <Button label='Clear' onClick={() => setForm({})} />
+        <Button label='Submit' onClick={handleSubmit} />
+      </div>
     </div>
 	);
 }
@@ -170,8 +174,10 @@ function CatOrCom(props: any) {
           onChange={e => setField('descrip', e.target.value) }/>
       </div>
 
-      <Button label='Clear' onClick={() => setForm({})} />
-      <Button label='Submit' onClick={handleSubmit} />
+      <div className="r-field r-col-12">
+        <Button label='Clear' onClick={() => setForm({})} />
+        <Button label='Submit' onClick={handleSubmit} />
+      </div>
     </div>
 	);
 }
@@ -220,8 +226,10 @@ function Income(props: any) {
           onChange={e => setField('date', e.target.value) }/>
       </div>
 
-      <Button label='Clear' onClick={() => setForm({})} />
-      <Button label='Submit' onClick={handleSubmit} />
+      <div className="r-field r-col-12">
+        <Button label='Clear' onClick={() => setForm({})} />
+        <Button label='Submit' onClick={handleSubmit} />
+      </div>
     </div>
 	);
 }
@@ -289,7 +297,7 @@ class Payment extends React.Component<{}, {type: string, cats: {label:string, va
 			  <div className="col-lg-5">
 				<h1 className="font-weight-light">Add Finance Data</h1>
           <Dropdown value={this.state.type} options={this.options}
-            onChange={(e:any) => this.setState({...this.state, type: e.value})}/>
+            onChange={(e:any) => this.setState({...this.state, type: e.target.value})} />
         <br />
 				<div>{this.pickPayment()}</div>
 			  </div>

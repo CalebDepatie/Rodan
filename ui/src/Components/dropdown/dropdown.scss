@@ -1,16 +1,29 @@
 @use '../../style.scss';
 
-select.r-dropdown {
+.r-dropdown {
+  // remove default arrow
+  //-webkit-appearance: none;
   cursor: pointer;
   padding: 0.25rem;
-  //outline-color: style.$colour-accent;
-  background: style.$colour-primary;
-  color: style.$colour-primary-text;
+  transition: style.$standard-transition;
+  border-color: style.$colour-border;
+  background: transparent;
+  border-width: thin;
+  border-style: solid;
+  border-radius: 4px;
 
-  //border-color:
+  &:hover {
+    border-color: style.$colour-accent;
+  }
+
+  &:focus {
+    border-color: style.$colour-accent;
+    border-width: 2px;
+    margin: -2px;
+  }
 
   & option {
-    background: style.$colour-accent
+    background-color: style.$colour-accent;
   }
 
   &.disabled {
