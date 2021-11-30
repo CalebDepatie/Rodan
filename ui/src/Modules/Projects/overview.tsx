@@ -155,7 +155,7 @@ function ProjectTable(props: any) {
     const id   = props.node.data.id;
     const proj = props.node.data.parent === 0;
     return (
-      <Dropdown value={data} onChange={(e) => onEditorValueChange(props, 'status', e.value, proj, id)}
+      <Dropdown value={data} onChange={(e: any) => onEditorValueChange(props, 'status', e.value, proj, id)}
                 options={statuses} optionValue='id' optionLabel='name'
                 valueTemplate={statusValueTemplate} itemTemplate={statusItemTemplate}/>
     );

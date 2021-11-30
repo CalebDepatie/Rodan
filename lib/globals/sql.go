@@ -3,7 +3,6 @@ package globals
 import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"os"
 )
 
 type (
@@ -78,12 +77,3 @@ const (
 )
 
 var DB *sqlx.DB
-
-func init() {
-	DB, _ = sqlx.Open("postgres", os.Getenv("CON_STRING"))
-
-	err := DB.Ping()
-	if err != nil {
-		//a.Log.Error("Could not connect to server: ", err)
-	}
-}

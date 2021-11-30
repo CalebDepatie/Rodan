@@ -277,11 +277,25 @@ function Boards(props:any) {
     return a.join('-');
   };
 
-  const effortFormat = (node: TreeNode) => {
-    if (node.data.effort === -1) {
-      return '';
+  const tasksFormat = (node: TreeNode) => {
+    const count_children = (parent: TreeNode): number => {
+      let cur_count:number = 0;
+      parent.children?.forEach((el:TreeNode) => {
+        cur_count += count_children(el);
+      });
+
+      return cur_count + parent.data.tasks;
     }
-    return node.data.effort;
+
+    const tasks_count = count_children(node);
+
+    if (tasks_count === 0) {
+      return '';
+    } else if (tasks_count - node.data.tasks === 0) {
+      return tasks_count;
+    } else {
+      return `${tasks_count} ( ${node.data.tasks} + ${tasks_count-node.data.tasks} )`;
+    }
   };
 
   const getBoardState = ():number => {
@@ -355,7 +369,7 @@ function Boards(props:any) {
           selectionKeys={selectedKey} onSelectionChange={(e:any) => setSelected(e.value)}>
           <Column field="title" header="Title" expander style={{width:"20rem"}} editor={titleEditor}/>
           <Column field="status" header="Status" body={statusFormat} style={{width:"100px"}} editor={statusEditor}/>
-          <Column field="effort" header="Effort" body={effortFormat} style={{width:"100px"}}/>
+          <Column field="tasks" header="Tasks" body={tasksFormat} style={{width:"100px"}}/>
           <Column field="moscow" header="MoSCoW" style={{width:"100px"}}/>
           <Column field="tcd" header="TCD" body={dateFormat} style={{width:"110px"}}/>
         </TreeTable>

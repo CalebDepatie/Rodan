@@ -13,11 +13,6 @@ BEGIN
     VALUES (NEW.parent, NEW.id, uuid_generate_v4(), 'board_fragnet', 'parent', NOW()::DATE);
   END IF;
 
-  IF NEW.effort <> OLD.effort THEN
-    INSERT INTO prj.change_log (new_value, parent_id, id, table_name, column_name, change_date)
-    VALUES (NEW.effort, NEW.id, uuid_generate_v4(), 'board_fragnet', 'effort', NOW()::DATE);
-  END IF;
-
   IF NEW.moscow <> OLD.moscow THEN
     INSERT INTO prj.change_log (new_value, parent_id, id, table_name, column_name, change_date)
     VALUES (NEW.moscow, NEW.id, uuid_generate_v4(), 'board_fragnet', 'moscow', NOW()::DATE);
@@ -56,11 +51,6 @@ BEGIN
   IF NEW.parent IS NOT NULL THEN
     INSERT INTO prj.change_log (new_value, parent_id, id, table_name, column_name, change_date)
       VALUES (NEW.parent, NEW.id, uuid_generate_v4(), 'board_fragnet', 'parent', NOW()::DATE);
-  END IF;
-
-  IF NEW.effort IS NOT NULL THEN
-    INSERT INTO prj.change_log (new_value, parent_id, id, table_name, column_name, change_date)
-      VALUES (NEW.effort, NEW.id, uuid_generate_v4(), 'board_fragnet', 'effort', NOW()::DATE);
   END IF;
 
   IF NEW.tcd IS NOT NULL THEN

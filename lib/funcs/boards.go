@@ -40,7 +40,7 @@ func GetBoard(c app.Context) (interface{}, error) {
     BoardId  string `db:"board_id" json:"board_id"`
     Title    string `db:"title" json:"title"`
     Status   int    `db:"status" json:"status"`
-    Effort   int    `db:"effort" json:"effort"`
+    Tasks    int    `db:"tasks" json:"tasks"`
     Parent   string `db:"parent" json:"parent"`
     Moscow   string `db:"moscow" json:"moscow"`
     TCD      string `db:"tcd" json:"tcd"`
