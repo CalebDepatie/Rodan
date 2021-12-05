@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import g from 'guark';
 
-import { Button, InputText, Dropdown } from '../../Components';
-//import { Dropdown } from 'primereact/dropdown';
+import { Button, InputText } from '../../Components';
+import { Dropdown } from 'primereact/dropdown';
 
 type catcomData = [number, string, string];
 
@@ -105,7 +105,7 @@ function OneTime(props: MetaData) {
 
       <div className="r-field r-col-6">
         <label htmlFor="price">Price</label>
-        <InputText id="price" type="text" value={form?.price}
+        <InputText id="price" type="number" value={form?.price}
           onChange={e => setField('price', +e.target.value) }/>
       </div>
 
@@ -239,8 +239,8 @@ class Payment extends React.Component<{}, {type: string, cats: {label:string, va
 	constructor(props: any) {
 		super(props)
 
-    let cat: catcomData[] = []
-    let com: catcomData[] = []
+    let cat: catcomData[] = [];
+    let com: catcomData[] = [];
 
     g.call("get_cat", {}).then(async res => {
       //console.log(res);
@@ -248,7 +248,12 @@ class Payment extends React.Component<{}, {type: string, cats: {label:string, va
 
       data.forEach((itm: any) => {
         cat.push([itm.id, itm.name, itm.descrip])
-      })
+      });
+
+      this.state = {
+        ...this.state,
+        cats: cat.map((itm:catcomData, i:number) => ({label: itm[1], value: i+1})),
+      };
     }).catch(error => {
       console.error('Error Getting Data', error);
     });
@@ -259,15 +264,19 @@ class Payment extends React.Component<{}, {type: string, cats: {label:string, va
 
       data.forEach((itm: any) => {
         com.push([itm.id, itm.name, itm.descrip])
-      })
+      });
+
+      this.state = {
+        ...this.state,
+        coms: com.map((itm:catcomData, i:number) => ({label: itm[1], value: i+1})),
+      };
     }).catch(error => {
       console.error('Error Getting Data', error);
     });
 
     this.state = {
+      ...this.state,
       type: 'oneTime',
-      cats: cat.map((itm:catcomData, i:number) => ({label: itm[1], value: i+1})),
-      coms: com.map((itm:catcomData, i:number) => ({label: itm[1], value: i+1})),
     };
 	}
 
@@ -297,7 +306,7 @@ class Payment extends React.Component<{}, {type: string, cats: {label:string, va
 			  <div className="col-lg-5">
 				<h1 className="font-weight-light">Add Finance Data</h1>
           <Dropdown value={this.state.type} options={this.options}
-            onChange={(e:any) => this.setState({...this.state, type: e.target.value})} />
+            onChange={(e:any) => this.setState({...this.state, type: e.value})} />
         <br />
 				<div>{this.pickPayment()}</div>
 			  </div>

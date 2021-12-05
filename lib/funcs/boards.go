@@ -108,7 +108,6 @@ func CreateFragnet(c app.Context) (interface{}, error) {
     BoardId  string `db:"board_id" json:"board_id"`
     Title    string `db:"title" json:"title"`
     Status   int    `db:"status" json:"status"`
-    Effort   int    `db:"effort" json:"effort"`
     Parent   string `db:"parent" json:"parent"`
     Moscow   string `db:"moscow" json:"moscow"`
     TCD      string `db:"tcd" json:"tcd"`
@@ -126,8 +125,8 @@ func CreateFragnet(c app.Context) (interface{}, error) {
       return "{}", err
   }
 
-  stmt := `SELECT * FROM prj.FN_FragnetCRUD(_operation := 1, _board := $1, _title := $2, _status := $3, _effort := $4, _parent := $5, _moscow := $6, _tcd := $7);`
-  _, err = globals.DB.Exec(stmt, board_args.BoardId, board_args.Title, board_args.Status, board_args.Effort, board_args.Parent, board_args.Moscow, board_args.TCD)
+  stmt := `SELECT * FROM prj.FN_FragnetCRUD(_operation := 1, _board := $1, _title := $2, _status := $3, _parent := $4, _moscow := $5, _tcd := $6);`
+  _, err = globals.DB.Exec(stmt, board_args.BoardId, board_args.Title, board_args.Status, board_args.Parent, board_args.Moscow, board_args.TCD)
 
   if err != nil {
     c.App.Log.Error("Error getting data: ", err.Error())
