@@ -4,13 +4,13 @@ import g from 'guark';
 
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
-import { Button, InputText } from '../../Components';
+import { Button, InputText, Dropdown } from '../../Components';
 
 import { TreeTable } from 'primereact/treetable';
 import TreeNode from 'primereact/treenode';
 import { Column } from 'primereact/column';
 import { ListBox } from 'primereact/listbox';
-import { Dropdown } from 'primereact/dropdown';
+//import { Dropdown } from 'primereact/dropdown';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 import { InputSwitch } from 'primereact/inputswitch';
@@ -208,7 +208,7 @@ function Boards(props:any) {
   const formDropdown = (field: string) => {
     return {
       value: form[field],
-      onChange: (e: any) => setForm({...form, [field]: e.value})
+      onChange: (e: any) => setForm({...form, [field]: e.target.value})
     };
   };
 
@@ -246,7 +246,7 @@ function Boards(props:any) {
     const id   = props.node.data.id;
     const proj = props.node.data.parent === 0;
     return (
-      <Dropdown value={data} onChange={(e) => onEditorValueChange(props, 'status', e.value, id)}
+      <Dropdown value={data} onChange={(e) => onEditorValueChange(props, 'status', e.target.value, id)}
                 options={statuses} optionValue='id' optionLabel='name'
                 valueTemplate={statusValueTemplate} itemTemplate={statusItemTemplate}/>
     );
@@ -263,7 +263,7 @@ function Boards(props:any) {
   };
 
   const statusFormat = (node: TreeNode) => {
-    const status = statuses.filter((i:any) => i.id === node.data.status)[0]["name"];
+    const status = statuses.filter((i:any) => parseInt(i.id) === parseInt(node.data.status))[0]["name"];
     return <div className={`status-${node.data.status}`}>{status}</div>
   };
 

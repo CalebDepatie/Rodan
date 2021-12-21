@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import g from 'guark';
 
-import { Button, InputText } from '../../Components';
-import { Dropdown } from 'primereact/dropdown';
+import { Button, InputText, Dropdown } from '../../Components';
+//import { Dropdown } from 'primereact/dropdown';
 
 type catcomData = [number, string, string];
 
@@ -47,13 +47,13 @@ function Recurring(props: MetaData) {
       <div className="r-field r-col-6">
         <label htmlFor="com">Company</label>
         <Dropdown id="com" value={form?.com} options={props.coms}
-          onChange={e => setField('com', +e.value)} />
+          onChange={e => setField('com', +e.target.value)} />
       </div>
 
       <div className="r-field r-col-6">
         <label htmlFor="com">Category</label>
         <Dropdown id="com" value={form?.cat} options={props.cats}
-          onChange={e => setField('cat', +e.value)} />
+          onChange={e => setField('cat', +e.target.value)} />
       </div>
 
       <div className="r-field r-col-6">
@@ -112,13 +112,13 @@ function OneTime(props: MetaData) {
       <div className="r-field r-col-6">
         <label htmlFor="com">Company</label>
         <Dropdown id="com" value={form?.com} options={props.coms}
-          onChange={e => setField('com', +e.value)} />
+          onChange={e => setField('com', +e.target.value)} />
       </div>
 
       <div className="r-field r-col-6">
         <label htmlFor="com">Category</label>
         <Dropdown id="com" value={form?.cat} options={props.cats}
-          onChange={e => setField('cat', +e.value)} />
+          onChange={e => setField('cat', +e.target.value)} />
       </div>
 
       <div className="r-field r-col-6">
@@ -217,7 +217,7 @@ function Income(props: any) {
       <div className="r-field r-col-6">
         <label htmlFor="com">Company</label>
         <Dropdown id="com" value={form?.com} options={props.coms}
-          onChange={e => setField('com', +e.value)} />
+          onChange={e => setField('com', +e.target.value)} />
       </div>
 
       <div className="r-field r-col-6">
@@ -306,7 +306,7 @@ class Payment extends React.Component<{}, {type: string, cats: {label:string, va
 			  <div className="col-lg-5">
 				<h1 className="font-weight-light">Add Finance Data</h1>
           <Dropdown value={this.state.type} options={this.options}
-            onChange={(e:any) => this.setState({...this.state, type: e.value})} />
+            onChange={(e:any) => this.setState({...this.state, type: e.target.value})} />
         <br />
 				<div>{this.pickPayment()}</div>
 			  </div>
