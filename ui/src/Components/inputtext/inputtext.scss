@@ -20,7 +20,7 @@
     margin: -2px;
   }
 
-  &.disabled {
+  &[disabled] {
     background-color: grey;
     cursor: not-allowed;
   }
