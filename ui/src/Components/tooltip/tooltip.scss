@@ -1,0 +1,48 @@
+@use '../../style.scss';
+@use 'sass:color';
+
+.r-tooltip {
+  border-radius: 4px;
+  background-color: style.$colour-tertiary;
+  color: style.$colour-primary-text;
+  padding: 4px 8px;
+  text-align: center;
+  display: none;
+
+  &[data-show] {
+    display: block;
+  }
+
+  &[data-popper-placement^='top'] > .r-arrow {
+    bottom: -4px;
+  }
+
+  &[data-popper-placement^='bottom'] > .r-arrow {
+    top: -4px;
+  }
+
+  &[data-popper-placement^='left'] > .r-arrow {
+    right: -4px;
+  }
+
+  &[data-popper-placement^='right'] > .r-arrow {
+    left: -4px;
+  }
+}
+
+.r-arrow {
+  visibility: hidden;
+
+  &, &::before {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: inherit;
+  }
+
+  &::before {
+    visibility: visible;
+    content: '';
+    transform: rotate(45deg);
+  }
+}
