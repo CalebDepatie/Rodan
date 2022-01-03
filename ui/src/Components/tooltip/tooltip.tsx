@@ -7,7 +7,7 @@ import './tooltip.scss';
 function Tooltip(props:{id?:string, content:any,
     children:any, className?:string, arrowClassName?:string, style?:{[key:string]: string}}) {
 
-  const refElement    = useRef<any>(props.children);
+  const refElement    = useRef<any>(null);
   const popperElement = useRef<any>(null);
   const [arrowRef, setArrowRef] = useState<any>(null);
   const { styles, attributes }  = usePopper(refElement?.current, popperElement?.current,
@@ -48,7 +48,9 @@ function Tooltip(props:{id?:string, content:any,
 
   return (
     <>
-    {props.children}
+    <div ref={refElement}>
+     {props.children}
+    </div>
 
     <div ref={popperElement} style={{...styles.popper, ...props.style}}
       className={props.className} {...attributes.popper}>

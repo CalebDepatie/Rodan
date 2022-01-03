@@ -10,9 +10,7 @@ function Footer(props: any) {
       <footer className="py-1 bg-dark fixed-bottom">
         <div className="container">
           <p className="m-0 text-left text-white">
-            <Tooltip content="test">
             RI Version: {version}
-            </Tooltip>
           </p>
         </div>
       </footer>
