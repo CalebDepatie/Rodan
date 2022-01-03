@@ -23,10 +23,10 @@
   }
 
   & option {
-    
+
   }
 
-  &.disabled {
+  &[disabled] {
     //background-color: color.adjust($colour, $lightness: -15%);
     cursor: not-allowed;
   }

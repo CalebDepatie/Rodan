@@ -4,11 +4,11 @@ import g from 'guark';
 
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
-import { Button, InputText, Dropdown } from '../../Components';
+import { Button, InputText, Dropdown, Modal } from '../../Components';
 
 import { TreeTable } from 'primereact/treetable';
 //import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
+//import { Dialog } from 'primereact/dialog';
 import TreeNode from 'primereact/treenode';
 import { Column } from 'primereact/column';
 //import { Dropdown } from 'primereact/dropdown';
@@ -101,7 +101,7 @@ function ProjectTable(props: any) {
   }, [createFetch]);
 
   const statusFormat = (node: TreeNode) => {
-    const status = statuses.filter((i:any) => i.id === node.data.status)[0]?.["name"];
+    const status = statuses.filter((i:any) => parseInt(i.id) === parseInt(node.data.status))[0]?.["name"];
     return <div className={`status-${node.data.status}`}>{status}</div>
   };
 
@@ -122,7 +122,7 @@ function ProjectTable(props: any) {
   const formDropdown = (field: string) => {
     return {
       value: form[field],
-      onChange: (e: any) => setForm({...form, [field]: e.value})
+      onChange: (e: any) => setForm({...form, [field]: e.target.value})
     };
   };
 
@@ -155,7 +155,7 @@ function ProjectTable(props: any) {
     const id   = props.node.data.id;
     const proj = props.node.data.parent === 0;
     return (
-      <Dropdown value={data} onChange={(e: any) => onEditorValueChange(props, 'status', e.value, proj, id)}
+      <Dropdown value={data} onChange={(e: any) => onEditorValueChange(props, 'status', e.target.value, proj, id)}
                 options={statuses} optionValue='id' optionLabel='name'
                 valueTemplate={statusValueTemplate} itemTemplate={statusItemTemplate}/>
     );
@@ -188,7 +188,7 @@ function ProjectTable(props: any) {
         <Column field="created" header="Created" body={dateFormat} style={{width:"110px"}} />
       </TreeTable>
 
-      <Dialog header="Create a Project" visible={show} onHide={handleClose} position='center' modal style={{width: '70vw'}} footer={(
+      <Modal header="Create a Project" visible={show} onHide={handleClose} style={{width: '70vw'}} footer={(
         <>
           <Button label='Submit' className='r-button-success' onClick={(e:any) => {
             createSignal({body: JSON.stringify(form)});
@@ -217,9 +217,9 @@ function ProjectTable(props: any) {
             <Dropdown id="par" options={projects} optionValue='id' optionLabel='name' {...formDropdown('parent')}/>
           </div>
         </div>
-      </Dialog>
+      </Modal>
 
-      <Dialog header="Move Project" visible={showMove} onHide={handleCloseMove} position='center' modal style={{width: '70vw'}} footer={(
+      <Modal header="Move Project" visible={showMove} onHide={handleCloseMove} style={{width: '70vw'}} footer={(
         <>
           <Button label='Submit' className='r-button-success' onClick={(e:any) => {
             updateSignal({body: JSON.stringify({...form, updateCol:"parent", updateVal: form.updateVal.toString()})});
@@ -237,7 +237,7 @@ function ProjectTable(props: any) {
             <Dropdown id="par" options={projectsFetch?.body?.filter((itm:any) => itm.parent === 0)} optionValue='id' optionLabel='name' {...formDropdown('updateVal')}/>
           </div>
         </div>
-      </Dialog>
+      </Modal>
     </>
   );
 };

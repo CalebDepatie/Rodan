@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 're
 import { useFetch } from '../../Hooks';
 import g from 'guark';
 
-import { Button, InputText } from '../../Components';
+import { Button, InputText, Dropdown } from '../../Components';
 
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { Column } from 'primereact/column';
-import { Dropdown } from 'primereact/dropdown';
+//import { Dropdown } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
 import { TreeSelect } from 'primereact/treeselect';
 
@@ -143,7 +143,7 @@ function Tasks(props:any) {
   const formDropdown = (field: string) => {
     return {
       value: form[field],
-      onChange: (e: any) => setForm({...form, [field]: e.value})
+      onChange: (e: any) => setForm({...form, [field]: e.target.value})
     };
   };
 
@@ -160,14 +160,14 @@ function Tasks(props:any) {
     const data = props.rowData.status;
     const id   = props.rowData.id;
     return (
-      <Dropdown value={data} onChange={(e) => onEditorValueChange(props, 'status', e.value, id)}
+      <Dropdown value={data} onChange={(e) => onEditorValueChange(props, 'status', e.target.value, id)}
                 options={statuses} optionValue='id' optionLabel='name'
                 />
     );
   };
 
   const statusFormat = (row: any) => {
-    const status = statuses.filter((i:any) => i.id === row.status)[0]?.["name"];
+    const status = statuses.filter((i:any) => parseInt(i.id) === parseInt(row.status))[0]?.["name"];
     return <div className={`status-${row.status}`}>{status}</div>
   };
 
