@@ -33,6 +33,10 @@ var Funcs = app.Funcs{
   "create_task": funcs.CreateTask,
   "get_tasks": funcs.GetTasks,
   "update_task": funcs.UpdateTask,
+  "create_page": funcs.CreatePage,
+  "get_pages": funcs.GetPages,
+  "update_page": funcs.UpdatePage,
+  "delete_page": funcs.DeletePage,
 }
 
 // App hooks.

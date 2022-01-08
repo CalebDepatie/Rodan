@@ -1,10 +1,15 @@
 import React from 'react';
 
 import ReactMarkdown from 'react-markdown';
+import { InputTextarea } from 'primereact/inputtextarea';
 
-function PageViewer(props:{page:string}) {
+function PageViewer(props:{page:string, edit:boolean}) {
 
-  return <ReactMarkdown>{props.page}</ReactMarkdown>;
+  return ( <>
+    { props.edit ? <InputTextarea autoResize value={props.page} />
+      : <ReactMarkdown>{props.page}</ReactMarkdown>
+    } </>
+  );
 
 };
 
