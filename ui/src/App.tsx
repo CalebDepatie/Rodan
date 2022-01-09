@@ -1,11 +1,13 @@
 import React, { useMemo } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Header, Footer } from './Components';
+import { ToastContainer } from 'react-toastify';
 import { Home, Payment, RawData, ProjectTable, FinanceReview, Boards, Tasks, PageContainer } from './Modules';
 
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeflex/primeflex.css';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 import 'primeicons/primeicons.css';
 
@@ -71,6 +73,7 @@ function App() {
 };
 
 	return (
+  <>
 	<div className="App">
       <Router>
         <Header />
@@ -80,9 +83,14 @@ function App() {
             <Route key={i} {...route} />
           ))}
         </Switch>
+
+        <ToastContainer position="top-right" autoClose={5000} rtl={false} theme='dark'
+          hideProgressBar={false} newestOnTop={true} closeOnClick pauseOnHover />
+
         <Footer />
       </Router>
     </div>
+    </>
 	);
 }
 

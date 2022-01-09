@@ -5,9 +5,10 @@ import g from 'guark';
 import { Button, InputText, Dropdown } from '../../Components';
 import TaskForm from './taskForm';
 
+import { toast } from 'react-toastify';
+
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Toast } from 'primereact/toast';
 
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
@@ -19,8 +20,6 @@ function Tasks(props:any) {
   const [ statuses, setStatuses ] = useState([]);
   const [ tasks, setTasks ] = useState<any[]>([]);
   const [ show, setShow ]   = useState<boolean>(false);
-
-  const toast = useRef<any>(null);
 
   const handleShow  = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -37,7 +36,7 @@ function Tasks(props:any) {
 
   useEffect(() => {
     if (statusFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not load statuses', detail:statusFetch!.error, life:3000});
+      toast.error('Could not load statuses, ' + statusFetch!.error, {});
     } else {
       const status = statusFetch?.body ?? [];
       setStatuses(status);
@@ -46,7 +45,7 @@ function Tasks(props:any) {
 
   useEffect(() => {
     if (tasksFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not load Tasks', detail:tasksFetch!.error, life:3000});
+      toast.error('Could not load Tasks, ' + tasksFetch!.error, {});
     } else {
       const tasks = tasksFetch?.body ?? [];
       setTasks(tasks);
@@ -55,7 +54,7 @@ function Tasks(props:any) {
 
   useEffect(() => {
     if (updateFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not update value', detail:updateFetch!.error, life:3000});
+      toast.error('Could not update value, ' + updateFetch!.error, {});
     }
   }, [updateFetch]);
 
@@ -91,7 +90,6 @@ function Tasks(props:any) {
 
   return (
     <>
-    <Toast ref={toast}/>
     <DataTable header={header} value={tasks} editMode="cell" style={{paddingBottom:"30px"}} >
       <Column field="title" header="Title" />
       <Column field="descrip" header="Description" />

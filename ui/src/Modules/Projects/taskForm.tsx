@@ -4,9 +4,10 @@ import g from 'guark';
 
 import { Button, InputText, Dropdown } from '../../Components';
 
+import { toast } from 'react-toastify';
+
 import { Dialog } from 'primereact/dialog';
 import { TreeSelect } from 'primereact/treeselect';
-import { Toast } from 'primereact/toast';
 
 function TaskForm(props:{show:boolean, handleClose:()=>void, onSubmit?:(f:any)=>void}) {
   const [ createFetch, createSignal ] = useFetch("create_task");
@@ -18,21 +19,19 @@ function TaskForm(props:{show:boolean, handleClose:()=>void, onSubmit?:(f:any)=>
   const [ boardHeads, setBoardHeads ]  = useState<any[]>([]);
   const [ activites, setActivities ] = useState<any[]>([]);
 
-  const toast = useRef<any>(null);
-
   useEffect(() => headSignal({}), [])
 
   useEffect(() => {
     if (createFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not create task', detail:createFetch!.error, life:3000});
+      toast.error('Could not create task, ' + createFetch!.error, {});
     } else if (createFetch?.body) {
-      toast.current.show({severity: 'success', summary: 'Task Created', detail: ''});
+      toast.success('Task Created', {});
     };
   }, [createFetch]);
 
   useEffect(() => {
     if (boardHeadFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not load board heads', detail:boardHeadFetch!.error, life:3000});
+      toast.error('Could not load board heads, ' + boardHeadFetch!.error, {});
     } else {
       const heads = boardHeadFetch?.body ?? [];
       setBoardHeads(heads.filter((head:any) => head.state !== 0 && head.state !== 3));
@@ -41,7 +40,7 @@ function TaskForm(props:{show:boolean, handleClose:()=>void, onSubmit?:(f:any)=>
 
   useEffect(() => {
     if (fragFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not load fragnets', detail:fragFetch!.error, life:3000});
+      toast.error('Could not load fragnets, ' + fragFetch!.error, {});
     } else {
       const board_frags = fragFetch?.body ?? [];
 
@@ -95,7 +94,6 @@ function TaskForm(props:{show:boolean, handleClose:()=>void, onSubmit?:(f:any)=>
 
   return (
     <>
-    <Toast ref={toast}/>
     <Dialog header="Create a Task" visible={props.show} onHide={props.handleClose} position='center' modal style={{width: '70vw'}} footer={(
       <>
         <Button label='Submit' className='r-button-success' onClick={(e:any) => {

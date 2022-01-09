@@ -4,18 +4,16 @@ import { useFetch } from '../../Hooks';
 
 import PageViewer from './pageViewer';
 
+import { toast } from 'react-toastify';
 import { Tree } from 'primereact/tree';
 import TreeNode from 'primereact/treenode';
 import { Dialog } from 'primereact/dialog';
-import { Toast } from 'primereact/toast';
 import { Button, InputText } from '../../Components';
 
 function PageContainer(props:{}) {
   const [ edit, setEdit ] = useState(false);
   const [ nodes, setNodes ] = useState<any>([]);
   const [ selectedKey, setSelectedKey ] = useState('');
-
-  const toast = useRef<any>(null);
 
   const [ pageFetch, pageSignal ] = useFetch("get_pages");
   const [updatePageFetch,updatePageSignal] = useFetch("update_page");
@@ -26,7 +24,7 @@ function PageContainer(props:{}) {
 
   useEffect(() => {
     if (pageFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not load fragnets', detail:pageFetch!.error, life:3000});
+      toast.error('Could not Load Pages, ' + pageFetch!.error, {});
     } else {
       const pages = pageFetch?.body ?? [];
 
@@ -56,7 +54,7 @@ function PageContainer(props:{}) {
 
   useEffect(() => {
     if (updatePageFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not update value', detail:updatePageFetch!.error, life:3000});
+      toast.error('Could not update page, ' + updatePageFetch!.error, {});
     }
   }, [updatePageFetch]);
 
@@ -95,7 +93,6 @@ function PageContainer(props:{}) {
 
   return (
     <>
-    <Toast ref={toast} />
     <div style={{display:"flex"}}>
       <div style={{width:"300px", marginRight:"5px"}}>
         <Button label="Add Page"/>

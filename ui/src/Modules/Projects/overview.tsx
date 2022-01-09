@@ -6,13 +6,14 @@ import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
 import { Button, InputText, Dropdown, Modal } from '../../Components';
 
+import { toast } from 'react-toastify';
+
 import { TreeTable } from 'primereact/treetable';
 //import { Button } from 'primereact/button';
 //import { Dialog } from 'primereact/dialog';
 import TreeNode from 'primereact/treenode';
 import { Column } from 'primereact/column';
 //import { Dropdown } from 'primereact/dropdown';
-import { Toast } from 'primereact/toast';
 import { InputTextarea } from 'primereact/inputtextarea';
 
 function ProjectTable(props: any) {
@@ -27,8 +28,6 @@ function ProjectTable(props: any) {
   const [ showMove, setShowMove ]    = useState<boolean>(false);
   const [ form, setForm ]            = useState<{[key: string]: any}>({});
   const [ projects, setProjects]     = useState([]);
-
-  const toast = useRef<any>(null);
 
   const handleShow  = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -49,7 +48,7 @@ function ProjectTable(props: any) {
   /* Load Data */
   useEffect(() => {
     if (projectsFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not load projects', detail:projectsFetch!.error, life:3000});
+      toast.error('Could not load projects, ' + projectsFetch!.error, {});
     } else {
       const projdata = projectsFetch?.body ?? [];
 
@@ -77,7 +76,7 @@ function ProjectTable(props: any) {
 
   useEffect(() => {
     if (statusFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not load statuses', detail:statusFetch!.error, life:3000});
+      toast.error('Could not load statuses, ' + statusFetch!.error, {});
     } else {
       const status = statusFetch?.body ?? [];
       setStatuses(status);
@@ -86,17 +85,17 @@ function ProjectTable(props: any) {
 
   useEffect(() => {
     if (updateFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not update value', detail:updateFetch!.error, life:3000});
+      toast.error('Could not update value, ' + updateFetch!.error, {});
     } else {
-      toast.current.show({severity:'success', summary:'Updated Value', life:3000});
+      toast.success('Updated value', {});
     }
   }, [updateFetch]);
 
   useEffect(() => {
     if (createFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not create project', detail:createFetch!.error, life:3000});
+      toast.error('Could not create project, ' + createFetch!.error, {});
     } else if (createFetch?.body) {
-      toast.current.show({severity: 'success', summary: 'Project Created', detail: ''});
+      toast.success('Project Created', {});
     };
   }, [createFetch]);
 
@@ -180,7 +179,6 @@ function ProjectTable(props: any) {
 
   return (
     <>
-      <Toast ref={toast} />
       <TreeTable value={projectData} header={header} tableClassName="proj-table" style={{paddingBottom:"30px"}}>
         <Column field="name" header="Name" expander/>
         <Column field="descrip" header="Description" editor={descripEditor} bodyClassName ="big-text"/>

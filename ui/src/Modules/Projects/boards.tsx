@@ -6,13 +6,14 @@ import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
 import { Button, InputText, Dropdown } from '../../Components';
 
+import { toast } from 'react-toastify';
+
 import { TreeTable } from 'primereact/treetable';
 import TreeNode from 'primereact/treenode';
 import { Column } from 'primereact/column';
 import { ListBox } from 'primereact/listbox';
 //import { Dropdown } from 'primereact/dropdown';
 import { Dialog } from 'primereact/dialog';
-import { Toast } from 'primereact/toast';
 import { InputSwitch } from 'primereact/inputswitch';
 
 function Boards(props:any) {
@@ -42,8 +43,6 @@ function Boards(props:any) {
   const handleShowFrag  = () => setShowFrag(true);
   const handleCloseFrag = () => setShowFrag(false);
 
-  const toast = useRef<any>(null);
-
   const refresh = () => {
     statusSignal({section:"board"});
     headSignal({});
@@ -58,7 +57,7 @@ function Boards(props:any) {
   /* Load Data */
   useEffect(() => {
     if (statusFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not load statuses', detail:statusFetch!.error, life:3000});
+      toast.error('Could not load statuses, ' + statusFetch!.error, {});
     } else {
       const status = statusFetch?.body ?? [];
       setStatuses(status);
@@ -67,7 +66,7 @@ function Boards(props:any) {
 
   useEffect(() => {
     if (boardHeadFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not load board heads', detail:boardHeadFetch!.error, life:3000});
+      toast.error('Could not load board heads, ' + boardHeadFetch!.error, {});
     } else {
       const heads = boardHeadFetch?.body ?? [];
 
@@ -97,7 +96,7 @@ function Boards(props:any) {
 
   useEffect(() => {
     if (projectsFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not load projects data', detail:projectsFetch!.error, life:3000});
+      toast.error('Could not load projects data, ' + projectsFetch!.error, {});
     } else {
       const projdata = projectsFetch?.body ?? [];
       const heads    = boardHeadFetch?.body ?? [];
@@ -109,7 +108,7 @@ function Boards(props:any) {
 
   useEffect(() => {
     if (fragFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not load fragnets', detail:fragFetch!.error, life:3000});
+      toast.error('Could not load fragnets, ' + fragFetch!.error, {});
     } else {
       const board_frags = fragFetch?.body ?? [];
 
@@ -135,29 +134,29 @@ function Boards(props:any) {
 
   useEffect(() => {
     if (updateFragFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not update value', detail:updateFragFetch!.error, life:3000});
+      toast.error('Could not update value, ' + updateFragFetch!.error, {});
     }
   }, [updateFragFetch]);
 
   useEffect(() => {
     if (updateBoardFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not workflow board', detail:updateBoardFetch!.error, life:3000});
+      toast.error('Could not workflow board, ' + updateBoardFetch!.error, {});
     }
   }, [updateBoardFetch]);
 
   useEffect(() => {
     if (createFragFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not create fragnet', detail:createFragFetch!.error, life:3000});
+      toast.error('Could not create fragnet, ' + createFragFetch!.error, {});
     } else if (createFragFetch?.body) {
-      toast.current.show({severity: 'success', summary: 'Fragnet Created', detail: ''});
+      toast.success('Fragnet Created', {});
     }
   }, [createFragFetch]);
 
   useEffect(() => {
     if (createBoardFetch?.error) {
-      toast.current.show({severity:'error', summary:'Could not create board', detail:createBoardFetch!.error, life:3000});
+      toast.error('Could not create board, ' + createBoardFetch!.error, {});
     } else if (createBoardFetch?.body) {
-      toast.current.show({severity: 'success', summary: 'Board Created', detail: ''});
+      toast.success('Board Created', {});
     }
   }, [createBoardFetch]);
 
@@ -348,7 +347,6 @@ function Boards(props:any) {
 
   return (
     <>
-    <Toast ref={toast} />
     <div>
       <div style={{float: "left", width: "20%", display:"flex", flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
         <span className="p-buttonset">
