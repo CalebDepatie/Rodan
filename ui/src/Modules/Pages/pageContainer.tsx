@@ -84,13 +84,6 @@ function PageContainer(props:{}) {
     });
   }
 
-  // lift up
-  const nestedFilter = (items:any, cond:any) => items
-    .map((item:any) => item.children
-      ? {...item, children: nestedFilter(item.children, cond) }
-      : item
-    ).filter(cond);
-
   return (
     <>
     <div style={{display:"flex"}}>
@@ -101,7 +94,7 @@ function PageContainer(props:{}) {
           onSelectionChange={(e:any) => setSelectedKey(e.value)} />
       </div>
 
-      <PageViewer page={nestedFilter(nodes, (item:any) => item.data.id === selectedKey)?.[0]?.data?.content ?? ''}
+      <PageViewer page={nodes.nestedFilter((item:any) => item.data.id === selectedKey)?.[0]?.data?.content ?? ''}
         edit={edit} onPublish={publish} />
     </div>
     </>

@@ -4,13 +4,13 @@ import g from 'guark';
 
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
-import { Button, InputText, Dropdown, Modal } from '../../Components';
+import { Button, InputText, Dropdown } from '../../Components';
 
 import { toast } from 'react-toastify';
 
 import { TreeTable } from 'primereact/treetable';
 //import { Button } from 'primereact/button';
-//import { Dialog } from 'primereact/dialog';
+import { Dialog } from 'primereact/dialog';
 import TreeNode from 'primereact/treenode';
 import { Column } from 'primereact/column';
 //import { Dropdown } from 'primereact/dropdown';
@@ -186,7 +186,7 @@ function ProjectTable(props: any) {
         <Column field="created" header="Created" body={dateFormat} style={{width:"110px"}} />
       </TreeTable>
 
-      <Modal header="Create a Project" visible={show} onHide={handleClose} style={{width: '70vw'}} footer={(
+      <Dialog header="Create a Project" visible={show} onHide={handleClose} style={{width: '70vw'}} footer={(
         <>
           <Button label='Submit' className='r-button-success' onClick={(e:any) => {
             createSignal({body: JSON.stringify(form)});
@@ -215,9 +215,9 @@ function ProjectTable(props: any) {
             <Dropdown id="par" options={projects} optionValue='id' optionLabel='name' {...formDropdown('parent')}/>
           </div>
         </div>
-      </Modal>
+      </Dialog>
 
-      <Modal header="Move Project" visible={showMove} onHide={handleCloseMove} style={{width: '70vw'}} footer={(
+      <Dialog header="Move Project" visible={showMove} onHide={handleCloseMove} style={{width: '70vw'}} footer={(
         <>
           <Button label='Submit' className='r-button-success' onClick={(e:any) => {
             updateSignal({body: JSON.stringify({...form, updateCol:"parent", updateVal: form.updateVal.toString()})});
@@ -235,7 +235,7 @@ function ProjectTable(props: any) {
             <Dropdown id="par" options={projectsFetch?.body?.filter((itm:any) => itm.parent === 0)} optionValue='id' optionLabel='name' {...formDropdown('updateVal')}/>
           </div>
         </div>
-      </Modal>
+      </Dialog>
     </>
   );
 };

@@ -16,6 +16,7 @@ import './style.scss';
 declare global {
   interface Array<T> {
     groupBy(key: string): Array<T>;
+    nestedFilter(cond: (item: T) => boolean): Array<T>;
   }
 }
 
@@ -65,12 +66,33 @@ function App() {
 
 
   // Additional member functions
-  Array.prototype.groupBy = function(key: string) {
-  return this.reduce(function(rv:any, x:any) {
-    (rv[x[key]] = rv[x[key]] || []).push(x);
-    return rv;
-  }, {});
-};
+  if (!Array.prototype.groupBy) {
+    Object.defineProperty(Array.prototype, 'groupBy', {
+      enumerable: false,
+      writable: false,
+      configurable: false,
+      value: function(key: string) {
+        return this.reduce(function(rv:any, x:any) {
+          (rv[x[key]] = rv[x[key]] || []).push(x);
+          return rv;
+        }, {});
+      }
+    });
+  }
+
+  if (!Array.prototype.nestedFilter) {
+    Object.defineProperty(Array.prototype, 'nestedFilter', {
+      enumerable: false,
+      writable: false,
+      configurable: false,
+      value: function(cond:(itm: any)=>boolean) {
+        return this.map((item:any) => item.children
+          ? {...item, children: item.children.nestedFilter(cond) }
+          : item
+        ).filter(cond);
+      }
+    });
+  }
 
 	return (
   <>
