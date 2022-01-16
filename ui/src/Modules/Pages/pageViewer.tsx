@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { InputTextarea } from 'primereact/inputtextarea';
 
-function PageViewer(props:{page:string, edit:boolean, onPublish:any}) {
+function PageViewer(props:{page:string, edit:boolean, onPublish:any, className:string}) {
   const [ editedText, setEditedText ] = useState(props.page);
   const [ prevVal, setPrevVal ] = useState<boolean|null>(null);
 
@@ -21,9 +21,9 @@ function PageViewer(props:{page:string, edit:boolean, onPublish:any}) {
   }, [props.edit]);
 
   return ( <>
-    { props.edit ? <InputTextarea autoResize value={editedText}
-        onChange={(e:any) => setEditedText(e.target.value)} />
-      : <ReactMarkdown>{props.page}</ReactMarkdown>
+    { props.edit ? <InputTextarea value={editedText}
+        onChange={(e:any) => setEditedText(e.target.value)} className={props.className} />
+      : <ReactMarkdown className={props.className}>{props.page}</ReactMarkdown>
     } </>
   );
 

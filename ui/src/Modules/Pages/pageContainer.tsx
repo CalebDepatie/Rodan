@@ -10,6 +10,8 @@ import TreeNode from 'primereact/treenode';
 import { Dialog } from 'primereact/dialog';
 import { Button, InputText } from '../../Components';
 
+import './pages.scss';
+
 function PageContainer(props:{}) {
   const [ edit, setEdit ] = useState(false);
   const [ nodes, setNodes ] = useState<any>([]);
@@ -95,7 +97,7 @@ function PageContainer(props:{}) {
       </div>
 
       <PageViewer page={nodes.nestedFilter((item:any) => item.data.id === selectedKey)?.[0]?.data?.content ?? ''}
-        edit={edit} onPublish={publish} />
+        edit={edit} onPublish={publish} className='r-pages' />
     </div>
     </>
   );

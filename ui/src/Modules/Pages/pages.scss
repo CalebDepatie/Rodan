@@ -1,0 +1,7 @@
+@use '../../style.scss';
+
+.r-pages {
+  height: calc(100vh - 90px);
+  width: calc(100vw - 305px);
+  overflow-y: scroll;
+}
