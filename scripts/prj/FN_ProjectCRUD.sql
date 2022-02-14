@@ -16,11 +16,11 @@ AS $$
 BEGIN
   IF _operation = 1 THEN
     IF _parent = 0 THEN
-      INSERT INTO prj.projects (name, description, created_date, status)
-        VALUES (_name, _description, NOW()::DATE, _status);
+      INSERT INTO prj.projects (id, name, description, created_date, status)
+        VALUES ((SELECT MAX(projIn.id) FROM prj.projects AS projIn) + 1, _name, _description, NOW()::DATE, 5);
     ELSE
-      INSERT INTO prj.initiatives (name, description, created_date, status, parent)
-        VALUES (_name, _description, NOW()::DATE, _status, _parent);
+      INSERT INTO prj.initiatives (id, name, description, created_date, status, parent)
+        VALUES ((SELECT MAX(iniIn.id) FROM prj.initiatives AS iniIn) + 1, _name, _description, NOW()::DATE, 5, _parent);
     END IF;
 
   ELSIF _operation = 2 THEN

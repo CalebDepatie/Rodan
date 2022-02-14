@@ -121,7 +121,7 @@ function ProjectTable(props: any) {
   const formDropdown = (field: string) => {
     return {
       value: form[field],
-      onChange: (e: any) => setForm({...form, [field]: e.target.value})
+      onChange: (e: any) => setForm({...form, [field]: parseInt(e.target.value)})
     };
   };
 
@@ -202,12 +202,6 @@ function ProjectTable(props: any) {
           <div className="r-field r-col-6">
             <label htmlFor="de">Description</label>
             <InputText id="de" type="text" {...formText('descrip')}/>
-          </div>
-
-          <div className="r-field r-col-6">
-            <label htmlFor="status">Status</label>
-            <Dropdown id="status" options={statuses} optionValue='id' optionLabel='name' {...formDropdown('status')}
-              valueTemplate={statusValueTemplate} itemTemplate={statusItemTemplate}/>
           </div>
 
           <div className="r-field r-col-6">
