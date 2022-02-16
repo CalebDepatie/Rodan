@@ -23,7 +23,7 @@ BEGIN
   */
   IF _operation = 1 THEN
     INSERT INTO prj.board_fragnet (id, board_id, title, status, parent, moscow, tcd, created_date)
-      VALUES (uuid_generate_v4(), _board, _title, _status, NULLIF(_parent, '')::UUID, NULLIF(_moscow, '')::prj.TY_Moscow, NULLIF(_tcd, '')::DATE, NOW()::DATE);
+      VALUES (uuid_generate_v4(), _board, _title, 6, NULLIF(_parent, '')::UUID, NULLIF(_moscow, '')::prj.TY_Moscow, NULLIF(_tcd, '')::DATE, NOW()::DATE);
 
   ELSIF _operation = 2 THEN
     RETURN QUERY

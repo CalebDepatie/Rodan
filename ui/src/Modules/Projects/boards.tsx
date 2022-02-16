@@ -123,6 +123,7 @@ function Boards(props:any) {
       };
 
       setFrags(board_frags.filter((itm:any) => itm.parent === '').map((itm:any) => {
+        toast.info(itm)
         return {
           key: itm.id,
           data: itm,
@@ -357,7 +358,7 @@ function Boards(props:any) {
         <ListBox value={activeBoard} options={boardHeads} optionLabel="title"
           optionValue="id" optionGroupLabel="label" optionGroupChildren="items"
           optionGroupTemplate={groupTemplate}
-          onChange={(e) => setActiveBoard(e.value)} listStyle={{maxHeight:"400px"}} style={{width:'100%'}} />
+          onChange={(e) => setActiveBoard(e.value)} listStyle={{height:"calc(100vh - 166px)"}} style={{width:'100%'}} />
 
           <Button {...workflowState} style={{width:"100%"}} />
 
@@ -400,12 +401,6 @@ function Boards(props:any) {
         <div className="r-field r-col-6">
           <label htmlFor="effort">Effort</label>
           <InputText id="effort" type="number" {...formText('effort')}/>
-        </div>
-
-        <div className="r-field r-col-6">
-          <label htmlFor="status">Status</label>
-          <Dropdown id="status" options={statuses} optionValue='id' optionLabel='name' {...formDropdown('status')}
-            valueTemplate={statusValueTemplate} itemTemplate={statusItemTemplate}/>
         </div>
 
         <div className="r-field r-col-6">
