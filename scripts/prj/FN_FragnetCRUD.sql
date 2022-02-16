@@ -31,7 +31,7 @@ BEGIN
        (SELECT COUNT(*)::INT FROM prj.tasks AS TK WHERE TK.activity = BF.id) AS tasks,
        COALESCE(BF.moscow, 'None'::prj.TY_Moscow), COALESCE(EXTRACT(EPOCH FROM BF.tcd), 0), COALESCE(BF.parent, ''), EXTRACT(EPOCH FROM BF.created_date)
       FROM prj.board_fragnet AS BF
-      WHERE BF.board_id = BF.id;
+      WHERE BF.board_id = _board;
 
   ELSIF _operation = 3 THEN
     EXECUTE FORMAT('UPDATE prj.board_fragnet SET %I = $1::%s WHERE prj.board_fragnet.id = $2', _updateCol, (SELECT data_type FROM information_schema.columns WHERE table_name = 'board_fragnet' AND column_name = _updateCol))

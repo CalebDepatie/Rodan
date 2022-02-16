@@ -123,7 +123,6 @@ function Boards(props:any) {
       };
 
       setFrags(board_frags.filter((itm:any) => itm.parent === '').map((itm:any) => {
-        toast.info(itm)
         return {
           key: itm.id,
           data: itm,
