@@ -102,7 +102,8 @@ function Boards(props:any) {
       const heads    = boardHeadFetch?.body ?? [];
 
       setIni(projdata.filter((itm:any) => itm.parent !== 0) // filter for initiatives
-                     .filter((itm:any) => !heads.some((head:any) => head.initiative === itm.id))); // filter out inis with a board
+                     .filter((itm:any) => !heads.some((head:any) => head.initiative === itm.id)) // filter out inis with a board
+                     .filter((itm:any) => itm.status !== 4)); // filter out completed projects
     }
   }, [projectsFetch, boardHeadFetch]);
 
@@ -162,7 +163,7 @@ function Boards(props:any) {
 
   useEffect(() => {
     if (!form["template"] && form["initiative"]) {
-      setForm({...form, title: (initiatives.filter((ini:any) => ini.id === form["initiative"])[0])["name"]});
+      setForm({...form, title: (initiatives.filter((ini:any) => ini.id === parseInt(form["initiative"]))[0])["name"]});
     } else if (form["template"]) {
       setForm({...form, initiative:0});
     }
@@ -419,7 +420,7 @@ function Boards(props:any) {
     <Dialog header="Create a Board" visible={showHead} onHide={handleCloseHead} position='center' modal style={{width: '70vw'}} footer={(
       <>
         <Button label='Submit' className='r-button-success' onClick={(e:any) => {
-          createBoardSignal({body: JSON.stringify(form)});
+          createBoardSignal({body: JSON.stringify({...form, initiative: parseInt(form["initiative"])})});
         }} />
       </>
     )}>

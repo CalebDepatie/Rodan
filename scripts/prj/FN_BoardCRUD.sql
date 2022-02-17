@@ -20,7 +20,7 @@ BEGIN
   */
   IF _operation = 1 THEN
     INSERT INTO prj.board_head (id, title, initiative, state, created_date)
-      VALUES (uuid_generate_v4(), _title, _initiative, _state, NOW()::DATE);
+      VALUES (uuid_generate_v4(), _title, _initiative, 1, NOW()::DATE);
 
   ELSIF _operation = 2 THEN
     RETURN QUERY
