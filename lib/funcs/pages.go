@@ -41,7 +41,7 @@ func CreatePage(c app.Context) (interface{}, error) {
 
   page_args := struct {
     Name string `db:"name" json:"name"`
-    Icon string `db:"initiative" json:"initiative"`
+    Icon string `db:"icon" json:"icon"`
     Parent string `db:"parent" json:"parent"`
   }{}
 

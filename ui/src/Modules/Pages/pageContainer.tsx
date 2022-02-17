@@ -16,9 +16,12 @@ function PageContainer(props:{}) {
   const [ edit, setEdit ] = useState(false);
   const [ nodes, setNodes ] = useState<any>([]);
   const [ selectedKey, setSelectedKey ] = useState('');
+  const [ showForm, setShowForm ] = useState(false);
+  const [ form, setForm ] = useState<any>({});
 
   const [ pageFetch, pageSignal ] = useFetch("get_pages");
   const [updatePageFetch,updatePageSignal] = useFetch("update_page");
+  const [createPageFetch, createPageSignal] = useFetch("create_page");
 
   useEffect(() => {
     pageSignal({});
@@ -60,6 +63,15 @@ function PageContainer(props:{}) {
     }
   }, [updatePageFetch]);
 
+  useEffect(() => {
+    if (createPageFetch?.error) {
+      toast.error('Could not create page, ' + createPageFetch!.error, {});
+    } else {
+      toast.success('New Page created');
+      setForm({})
+    }
+  }, [createPageFetch]);
+
   // lift up
   const findNodeByKey = (nodes:TreeNode[], key:string): TreeNode|null => {
     const path:string[]    = key.split('~');
@@ -75,7 +87,8 @@ function PageContainer(props:{}) {
   }
 
   const publish = (newText:string) => {
-    updatePageSignal({body: JSON.stringify({id:selectedKey, updateCol:"content", updateVal:newText})});
+    const id = selectedKey.split('~')[selectedKey.split('~').length-1];
+    updatePageSignal({body: JSON.stringify({id:id, updateCol:"content", updateVal:newText})});
 
     setNodes((curNodes:any) => {
       let newNodes = JSON.parse(JSON.stringify(curNodes));
@@ -86,19 +99,58 @@ function PageContainer(props:{}) {
     });
   }
 
+  const formText = (field: string) => {
+    return {
+      value: form[field],
+      onChange: (e: any) => setForm({...form, [field]: e.target.value})
+    };
+  };
+
+  const flatten = (acc:any, cur:any) => {
+    return cur.children ? [...acc, cur, ...cur.children.reduce(flatten, [])]
+                        : [...acc, cur];
+  };
+
   return (
     <>
     <div style={{display:"flex"}}>
       <div style={{width:"300px", marginRight:"5px"}}>
-        <Button label="Add Page"/>
+        <Button label="Add Page" onClick={() => setShowForm(true)}/>
         <Button label={edit ? "Publish Page" : "Edit Page"} onClick={() => setEdit(!edit)} />
         <Tree value={nodes} selectionMode="single" selectionKeys={selectedKey}
+          style={{height:"calc(100vh - 126px)"}}
           onSelectionChange={(e:any) => setSelectedKey(e.value)} />
       </div>
 
-      <PageViewer page={nodes.nestedFilter((item:any) => item.data.id === selectedKey)?.[0]?.data?.content ?? ''}
+      <PageViewer page={nodes.reduce(flatten, [])
+                            .filter((item:any) => item.key === selectedKey)?.[0]?.data?.content ?? ''}
         edit={edit} onPublish={publish} className='r-pages' />
     </div>
+
+    <Dialog header="Create a Page" visible={showForm} onHide={()=>setShowForm(false)} position='center' modal style={{width: '70vw'}} footer={(
+      <>
+        <Button label='Submit' className='r-button-success' onClick={(e:any) => {
+          createPageSignal({body: JSON.stringify({...form, parent: selectedKey.split('~')[selectedKey.split('~').length-1]})});
+        }} />
+      </>
+    )}>
+      <div className='r-form'>
+        <div className="r-field r-col-6">
+          <label htmlFor="name">Name</label>
+          <InputText id="name" type="text" {...formText('name')}/>
+        </div>
+
+        <div className="r-field r-col-6">
+          <label htmlFor="icon">Icon <i className={form['icon']} /></label>
+          <InputText id="icon" type="text" {...formText('icon')}/>
+        </div>
+
+        <div className="r-field r-col-6">
+          <label htmlFor="parent">Parent</label>
+          <InputText id="parent" type="text" disabled={true} value={selectedKey}/>
+        </div>
+      </div>
+    </Dialog>
     </>
   );
 };

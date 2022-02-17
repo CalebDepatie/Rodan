@@ -85,7 +85,7 @@ function App() {
       enumerable: false,
       writable: false,
       configurable: false,
-      value: function(cond:(itm: any)=>boolean) {
+      value: function(cond:(itm: any)=>boolean) {        
         return this.map((item:any) => item.children
           ? {...item, children: item.children.nestedFilter(cond) }
           : item
