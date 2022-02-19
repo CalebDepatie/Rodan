@@ -118,7 +118,7 @@ function PageContainer(props:{}) {
         <Button label="Add Page" onClick={() => setShowForm(true)}/>
         <Button label={edit ? "Publish Page" : "Edit Page"} onClick={() => setEdit(!edit)} />
         <Tree value={nodes} selectionMode="single" selectionKeys={selectedKey}
-          style={{height:"calc(100vh - 126px)"}}
+          style={{height:"calc(100vh - 126px)", overflowY:'scroll'}}
           onSelectionChange={(e:any) => setSelectedKey(e.value)} />
       </div>
 
