@@ -48,7 +48,7 @@ function Tasks(props:any) {
       toast.error('Could not load Tasks, ' + tasksFetch!.error, {});
     } else {
       const tasks = tasksFetch?.body ?? [];
-      setTasks(tasks);
+      setTasks(tasks.filter((el:any) => el.status != 13));
     }
   }, [tasksFetch]);
 

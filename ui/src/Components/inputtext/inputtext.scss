@@ -21,7 +21,7 @@
   }
 
   &[disabled] {
-    background-color: grey;
+    background-color: color.adjust(white, $lightness: -15%);;
     cursor: not-allowed;
   }
 }

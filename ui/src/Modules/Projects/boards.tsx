@@ -183,6 +183,7 @@ function Boards(props:any) {
   }, [selectedKey]);
 
   const moscow = [
+    {label:"Nothing Selected", value:null},
     {label:"M - Must Have", value:"Must Have"},
     {label:"S - Should Have", value:"Should Have"},
     {label:"C - Could Have", value:"Could Have"},
@@ -406,11 +407,6 @@ function Boards(props:any) {
         <div className="r-field r-col-6">
           <label htmlFor="moscow">MoSCoW</label>
           <Dropdown id="moscow" options={moscow} {...formDropdown('moscow')}/>
-        </div>
-
-        <div className="r-field r-col-6">
-          <label htmlFor="tcd">Targted Completion Date</label>
-          <InputText id="tcd" type="date" {...formText('tcd')}/>
         </div>
 
       </div>
