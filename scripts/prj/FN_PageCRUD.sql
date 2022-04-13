@@ -19,7 +19,8 @@ BEGIN
   ELSIF _operation = 2 THEN
     RETURN QUERY
     SELECT page.id, page.name, page.icon, page.content, page.parent
-    FROM prj.pages AS page;
+    FROM prj.pages AS page
+    ORDER BY page.name ASC;
 
   ELSIF _operation = 3 THEN
     EXECUTE FORMAT('UPDATE prj.pages SET %I = $1::%s WHERE prj.pages.id = $2', _updateCol, (SELECT data_type FROM information_schema.columns WHERE table_name = 'pages' AND column_name = _updateCol))
