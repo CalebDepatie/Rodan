@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { version } from '../../../package.json';
+import { getVersion } from 'common';
 
 import { Tooltip } from './tooltip';
 
@@ -10,7 +10,7 @@ function Footer(props: any) {
       <footer className="py-1 bg-dark fixed-bottom">
         <div className="container">
           <p className="m-0 text-left text-white">
-            RI Version: {version}
+            RI Version: {getVersion()}
           </p>
         </div>
       </footer>

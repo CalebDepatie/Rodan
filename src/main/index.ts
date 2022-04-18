@@ -13,7 +13,10 @@ function createMainWindow() {
   const window = new BrowserWindow({
     width: 1360,
     height: 800,
-    webPreferences: {nodeIntegration: true}
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    }
   })
 
   window.loadURL(`file://${process.cwd()}/src/renderer/Public/index.html`);

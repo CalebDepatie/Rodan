@@ -1,25 +1,31 @@
 const path = require('path');
 const webpack = require('webpack');
+const HtmlWebPackPlugin = require( 'html-webpack-plugin' );
 
 module.exports = {
 
     target: "electron-renderer",
     devtool: "source-map",
 
-    entry: [
-        './src/renderer/index.tsx',
-    ],
+    entry: './src/renderer/index.tsx',
 
     output: {
         path: path.join(__dirname, 'build'),
-        publicPath: "./",
-        filename: "renderer.bundle.js"
+        publicPath: "/",
+        filename: "renderer.bundle.js",
+        libraryTarget: 'commonjs2'
+    },
+
+    externals: {
+      react: "commonjs react",
+      "react-dom": "commonjs react-dom",
     },
 
     devServer: {
         static: {
             directory: path.join(__dirname, 'src/renderer/Public')
         },
+        historyApiFallback: true,
         hot: true,
         compress: true,
         port: 8182
@@ -59,13 +65,20 @@ module.exports = {
     },
 
     plugins: [
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new HtmlWebPackPlugin({
+          template: path.join(__dirname, 'src/renderer/Public/index.html'),
+          filename: 'index.html'
+        })
     ],
 
     resolve: {
       extensions: ['.tsx', '.ts', '.js', '.jsx', '.scss'],
       fallback: {
         "path": require.resolve("path-browserify")
+      },
+      alias: {
+        "common": path.join(__dirname, 'src/common/')
       }
     }
 }
