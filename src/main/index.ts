@@ -19,7 +19,10 @@ function createMainWindow() {
   window.loadURL(`file://${process.cwd()}/src/renderer/Public/index.html`);
 
   if (isDevelopment) {
+    window.loadURL( `http://localhost:${ process.env.POST || 8182 }/index.html` )
     window.webContents.openDevTools()
+  } else {
+
   }
 
   window.on('closed', () => {
