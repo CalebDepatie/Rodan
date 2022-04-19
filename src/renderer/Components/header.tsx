@@ -8,7 +8,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown'
 function Header(props: any) {
 	return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-      <Navbar.Brand href="/">Project Singular Point</Navbar.Brand>
+      <Navbar.Brand href="/index.html">Project Singular Point</Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav>

@@ -23,7 +23,7 @@ declare global {
 function App() {
   const routes = useMemo(() => [
       {
-        path: '/',
+        path: '/index.html',
         component: Home,
         exact: true,
       },

@@ -1,6 +1,9 @@
 import React, { useRef } from 'react';
+import path from 'path'
 
 import { Sound } from "../Components";
+
+declare const __static:string;
 
 function Home() {
   let radioWaveMonster = useRef<any>(null);
@@ -17,7 +20,7 @@ function Home() {
           </div>
           <div className="col-lg-7">
             <Sound ref={radioWaveMonster} soundFile={"RODAN RODAN RADIO WAVE MONSTER.mp3"} />
-            <img src="icon.png" className="img-fluid rounded mb-4 mb-lg-0"
+            <img src={"icon.png"} className="img-fluid rounded mb-4 mb-lg-0"
               onClick={() => {
                 radioWaveMonster.current!.play()
               }}/>
