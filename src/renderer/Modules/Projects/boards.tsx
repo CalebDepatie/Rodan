@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
+import { ipcRenderer } from 'electron';
 import { useFetch } from '../../Hooks';
-import g from 'guark';
 
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
@@ -17,7 +17,6 @@ import { Dialog } from 'primereact/dialog';
 import { InputSwitch } from 'primereact/inputswitch';
 
 function Boards(props:any) {
-  const [ statusFetch, statusSignal ]      = useFetch("get_statuses");
   const [ boardHeadFetch, headSignal ]     = useFetch("get_board_heads");
   const [projectsFetch, projectsSignal]    = useFetch("get_projects");
   const [ fragFetch, fragSignal ]          = useFetch("get_board");
@@ -44,7 +43,6 @@ function Boards(props:any) {
   const handleCloseFrag = () => setShowFrag(false);
 
   const refresh = () => {
-    statusSignal({section:"board"});
     headSignal({});
     projectsSignal({});
   };
@@ -52,6 +50,17 @@ function Boards(props:any) {
   useEffect(() => {
     refresh();
     setForm({...form, draft:true, template:false})
+
+    const fn = async () => {
+      const res = await ipcRenderer.invoke('statuses-get', {section:"board"});
+
+      if (res.error != undefined) {
+        toast.error('Could not load statuses: ' + res.error)
+      }
+
+      setStatuses(res.body);
+    };
+    fn();
   }, []);
 
   /* Load Data */

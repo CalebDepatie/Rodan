@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
+import { ipcRenderer } from 'electron';
 import { useFetch } from '../../Hooks';
-import g from 'guark';
 
 import { Button, InputText, Dropdown } from '../../Components';
 

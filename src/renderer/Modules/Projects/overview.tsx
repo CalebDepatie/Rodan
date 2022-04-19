@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { ipcRenderer } from 'electron';
 import { useFetch } from '../../Hooks';
-import g from 'guark';
 
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
@@ -9,16 +9,13 @@ import { Button, InputText, Dropdown } from '../../Components';
 import { toast } from 'react-toastify';
 
 import { TreeTable } from 'primereact/treetable';
-//import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import TreeNode from 'primereact/treenode';
 import { Column } from 'primereact/column';
-//import { Dropdown } from 'primereact/dropdown';
 import { InputTextarea } from 'primereact/inputtextarea';
 
 function ProjectTable(props: any) {
   const [projectsFetch, projectsSignal] = useFetch("get_projects");
-  const [statusFetch, statusSignal]     = useFetch("get_statuses");
   const [ updateFetch, updateSignal ]   = useFetch("update_project");
   const [ createFetch, createSignal ]   = useFetch("create_project");
 
@@ -38,11 +35,22 @@ function ProjectTable(props: any) {
   const refresh = () => {
     // signal all fetch commands
     projectsSignal({});
-    statusSignal({section:"project"});
   };
 
   useEffect(() => {
     refresh();
+
+    const fn = async () => {
+      const res = await ipcRenderer.invoke('statuses-get', {section:"project"});
+
+      if (res.error != undefined) {
+        toast.error('Could not load statuses: ' + res.error)
+      }
+
+      setStatuses(res.body);
+    };
+    fn();
+
   }, []);
 
   /* Load Data */
@@ -73,15 +81,6 @@ function ProjectTable(props: any) {
       }));
     }
   }, [projectsFetch]);
-
-  useEffect(() => {
-    if (statusFetch?.error) {
-      toast.error('Could not load statuses, ' + statusFetch!.error, {});
-    } else {
-      const status = statusFetch?.body ?? [];
-      setStatuses(status);
-    }
-  }, [statusFetch]);
 
   useEffect(() => {
     if (updateFetch?.error) {

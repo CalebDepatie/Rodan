@@ -3,8 +3,6 @@ import path from 'path'
 
 import { Sound } from "../Components";
 
-declare const __static:string;
-
 function Home() {
   let radioWaveMonster = useRef<any>(null);
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
+import { ipcRenderer } from 'electron';
 import { useFetch } from '../../Hooks';
-import g from 'guark';
 
 import { Button, InputText, Dropdown } from '../../Components';
 import TaskForm from './taskForm';
@@ -14,7 +14,6 @@ import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
 function Tasks(props:any) {
   const [tasksFetch, tasksSignal]     = useFetch("get_tasks");
-  const [statusFetch, statusSignal]   = useFetch("get_statuses");
   const [ updateFetch, updateSignal ] = useFetch("update_task");
 
   const [ statuses, setStatuses ] = useState([]);
@@ -27,11 +26,21 @@ function Tasks(props:any) {
   const refresh = () => {
     // signal all fetch commands
     tasksSignal({});
-    statusSignal({section:"task"});
   };
 
   useEffect(() => {
     refresh();
+
+    const fn = async () => {
+      const res = await ipcRenderer.invoke('statuses-get', {section:"task"});
+
+      if (res.error != undefined) {
+        toast.error('Could not load statuses: ' + res.error)
+      }
+
+      setStatuses(res.body);
+    };
+    fn();
   }, []);
 
   useEffect(() => {
