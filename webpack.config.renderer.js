@@ -34,19 +34,13 @@ module.exports = {
     module: {
         rules: [
             {
-              // Sass loader
+              // Style loader
               test: /\.(css|scss)$/,
-              exclude: /(node_modules)/,
               use: [
                 'style-loader',
                 'css-loader',
                 'sass-loader'
               ]
-            },
-            {
-              // CSS loader for inside node_modules
-              test: /\.css$/,
-              use: ['style-loader', 'css-loader'],
             },
             {
               // Babel loader configuration. Performs the JSX and ES6 to JS transformations.

@@ -21,8 +21,6 @@ function Header(props: any) {
         <Nav>
           <NavDropdown title="Finances" id="collasible-nav-dropdown">
             <NavDropdown.Item href="/finances/overview">Overview</NavDropdown.Item>
-            {/*<NavDropdown.Item href="/finances/raw">Raw Data</NavDropdown.Item>*/}
-            <NavDropdown.Item href="/finances/payments">Payments</NavDropdown.Item>
           </NavDropdown>
         </Nav>
         <Nav>
