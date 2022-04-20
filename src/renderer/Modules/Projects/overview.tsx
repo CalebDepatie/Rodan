@@ -97,7 +97,8 @@ function ProjectTable(props: any) {
     const res = await ipcRenderer.invoke('projects-update',{updateCol: field, updateVal: value.toString(), ...(proj ? {projID: id} : {iniID: id} )});
 
     if (res.error != undefined) {
-      toast.error('Could not update value, ' + updateFetch!.error, {});
+      toast.error('Could not update value: ' + updateFetch!.error, {});
+      return
     }
 
     // update table data

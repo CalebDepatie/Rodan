@@ -13,9 +13,6 @@ import { Column } from 'primereact/column';
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
 function Tasks(props:any) {
-  const [tasksFetch, tasksSignal]     = useFetch("get_tasks");
-  const [ updateFetch, updateSignal ] = useFetch("update_task");
-
   const [ statuses, setStatuses ] = useState([]);
   const [ tasks, setTasks ] = useState<any[]>([]);
   const [ show, setShow ]   = useState<boolean>(false);
@@ -23,9 +20,15 @@ function Tasks(props:any) {
   const handleShow  = () => setShow(true);
   const handleClose = () => setShow(false);
 
-  const refresh = () => {
+  const refresh = async () => {
     // signal all fetch commands
-    tasksSignal({});
+    const res = await ipcRenderer.invoke('tasks-get', {});
+
+    if (res.error != undefined) {
+      toast.error('Could not load tasks: ' + res.error)
+    }
+
+    setTasks(res.body.filter((el:any) => el.status != 13));
   };
 
   useEffect(() => {
@@ -43,37 +46,20 @@ function Tasks(props:any) {
     fn();
   }, []);
 
-  useEffect(() => {
-    if (statusFetch?.error) {
-      toast.error('Could not load statuses, ' + statusFetch!.error, {});
-    } else {
-      const status = statusFetch?.body ?? [];
-      setStatuses(status);
+  const onEditorValueChange = async (props: any, field:string, value: string, id: string) => {
+    const res = await ipcRenderer.invoke('tasks-update', {updateCol: field, updateVal: value.toString(), taskID: id});
+    if (res.error != undefined) {
+      toast.error("Could not update task: " + res.error)
+      return
     }
-  }, [statusFetch]);
 
-  useEffect(() => {
-    if (tasksFetch?.error) {
-      toast.error('Could not load Tasks, ' + tasksFetch!.error, {});
-    } else {
-      const tasks = tasksFetch?.body ?? [];
-      setTasks(tasks.filter((el:any) => el.status != 13));
-    }
-  }, [tasksFetch]);
-
-  useEffect(() => {
-    if (updateFetch?.error) {
-      toast.error('Could not update value, ' + updateFetch!.error, {});
-    }
-  }, [updateFetch]);
-
-  const onEditorValueChange = (props: any, field:string, value: string, id: string) => {
-    updateSignal({body: JSON.stringify({updateCol: field, updateVal: value.toString(), taskID: id})});
     // update table data
-    let newData = JSON.parse(JSON.stringify(tasks)); // deep copy
-    let editedNode = newData.find((row:any) => row.id === id);
-    editedNode[field] = value;
-    setTasks(newData);
+    setTasks(curData => {
+      let editedNode = curData.find((row:any) => row.id === id);
+      editedNode[field] = value;
+
+      return JSON.parse(JSON.stringify(curData))
+    });
   };
 
   const statusEditor = (props: any) => {
