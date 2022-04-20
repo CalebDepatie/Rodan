@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-
-import { useFetch } from '../../Hooks';
+import { ipcRenderer } from 'electron';
 
 import PageViewer from './pageViewer';
 
@@ -19,58 +18,19 @@ function PageContainer(props:{}) {
   const [ showForm, setShowForm ] = useState(false);
   const [ form, setForm ] = useState<any>({});
 
-  const [ pageFetch, pageSignal ] = useFetch("get_pages");
-  const [updatePageFetch,updatePageSignal] = useFetch("update_page");
-  const [createPageFetch, createPageSignal] = useFetch("create_page");
+  const refresh = async () => {
+    const res = await ipcRenderer.invoke('pages-get', {});
+
+    if (res.error != undefined) {
+      toast.error("Could not load pages: " + res.error)
+    }
+
+    setNodes(res.body);
+  }
 
   useEffect(() => {
-    pageSignal({});
+    refresh();
   }, [])
-
-  useEffect(() => {
-    if (pageFetch?.error) {
-      toast.error('Could not Load Pages, ' + pageFetch!.error, {});
-    } else {
-      const pages = pageFetch?.body ?? [];
-
-      const create_children = (key: string, parent: string) => {
-        return pages.filter((itm:any) => itm.parent === parent).map((itm:any) => {
-          return {
-            key: key + '~' + itm.id,
-            icon: itm.icon,
-            label: itm.name,
-            data: itm,
-            children: create_children(key + '~' + itm.id, itm.id),
-          };
-        });
-      };
-
-      setNodes(pages.filter((itm:any) => itm.parent === '').map((itm:any) => {
-        return {
-          key: itm.id,
-          icon: itm.icon,
-          label: itm.name,
-          data: itm,
-          children: create_children(itm.id, itm.id),
-        };
-      }));
-    }
-  }, [pageFetch]);
-
-  useEffect(() => {
-    if (updatePageFetch?.error) {
-      toast.error('Could not update page, ' + updatePageFetch!.error, {});
-    }
-  }, [updatePageFetch]);
-
-  useEffect(() => {
-    if (createPageFetch?.error) {
-      toast.error('Could not create page, ' + createPageFetch!.error, {});
-    } else {
-      toast.success('New Page created');
-      setForm({})
-    }
-  }, [createPageFetch]);
 
   // lift up
   const findNodeByKey = (nodes:TreeNode[], key:string): TreeNode|null => {
@@ -86,9 +46,13 @@ function PageContainer(props:{}) {
     return node;
   }
 
-  const publish = (newText:string) => {
+  const publish = async (newText:string) => {
     const id = selectedKey.split('~')[selectedKey.split('~').length-1];
-    updatePageSignal({body: JSON.stringify({id:id, updateCol:"content", updateVal:newText})});
+    const res = await ipcRenderer.invoke('pages-update', {id:id, updateCol:"content", updateVal:newText});
+    if (res.error != undefined) {
+      toast.error("Could not update page: " + res.error)
+      return
+    }
 
     setNodes((curNodes:any) => {
       let newNodes = JSON.parse(JSON.stringify(curNodes));
@@ -130,7 +94,15 @@ function PageContainer(props:{}) {
     <Dialog header="Create a Page" visible={showForm} onHide={()=>setShowForm(false)} position='center' modal style={{width: '70vw'}} footer={(
       <>
         <Button label='Submit' className='r-button-success' onClick={(e:any) => {
-          createPageSignal({body: JSON.stringify({...form, parent: selectedKey.split('~')[selectedKey.split('~').length-1]})});
+          ipcRenderer.invoke('pages-create', {...form, parent: selectedKey.split('~')[selectedKey.split('~').length-1]})
+            .then(res => {
+              if (res.error != undefined) {
+                toast.error("Could not create page: " + res.error)
+                return
+              }
+
+              toast.success("Created Page");
+            })
         }} />
       </>
     )}>

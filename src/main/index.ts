@@ -67,3 +67,4 @@ app.on('ready', () => {
 // loading event handlers
 import "./statuses.ts";
 import "./projects";
+import "./pages.ts";
