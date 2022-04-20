@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import fetch from 'electron-fetch'
+import fetch from 'electron-fetch';
 
 ipcMain.handle('statuses-get', async (e, req) => {
   try {

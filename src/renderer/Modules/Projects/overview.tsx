@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ipcRenderer } from 'electron';
-import { useFetch } from '../../Hooks';
 
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
@@ -15,16 +14,11 @@ import { Column } from 'primereact/column';
 import { InputTextarea } from 'primereact/inputtextarea';
 
 function ProjectTable(props: any) {
-  const [projectsFetch, projectsSignal] = useFetch("get_projects");
-  const [ updateFetch, updateSignal ]   = useFetch("update_project");
-  const [ createFetch, createSignal ]   = useFetch("create_project");
-
-  const [ projectData, setProjectsdata ] = useState<TreeNode[]>();
   const [ statuses, setStatuses ]    = useState([]);
   const [ show, setShow ]            = useState<boolean>(false);
   const [ showMove, setShowMove ]    = useState<boolean>(false);
   const [ form, setForm ]            = useState<{[key: string]: any}>({});
-  const [ projects, setProjects]     = useState([]);
+  const [ projects, setProjects]     = useState([[], [], []]);
 
   const handleShow  = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -32,9 +26,15 @@ function ProjectTable(props: any) {
   const handleShowMove  = () => setShowMove(true);
   const handleCloseMove = () => setShowMove(false);
 
-  const refresh = () => {
-    // signal all fetch commands
-    projectsSignal({});
+  const refresh = async () => {
+    // get projects
+    const res = await ipcRenderer.invoke('projects-get');
+
+    if (res.error != undefined) {
+      toast.error('Could not load projects: ' + res.error)
+    }
+
+    setProjects(res.body)
   };
 
   useEffect(() => {
@@ -52,51 +52,6 @@ function ProjectTable(props: any) {
     fn();
 
   }, []);
-
-  /* Load Data */
-  useEffect(() => {
-    if (projectsFetch?.error) {
-      toast.error('Could not load projects, ' + projectsFetch!.error, {});
-    } else {
-      const projdata = projectsFetch?.body ?? [];
-
-      const initiatives = projdata.filter((itm:any) => itm.parent !== 0);
-      const projects    = projdata.filter((itm:any) => itm.parent === 0);
-      setProjects(projects.concat([{id: 0, name:"None"}]));
-
-      const ini = initiatives.map((itm: any) => {
-        return {
-          key: itm.parent + '-' + itm.id,
-          data: itm,
-          children: null,
-        };
-      });
-
-      setProjectsdata(projects.map((proj: any) => {
-        return {
-          key: proj.id.toString(),
-          data: proj,
-          children: ini.filter((i: any) => i.data.parent === proj.id),
-        }
-      }));
-    }
-  }, [projectsFetch]);
-
-  useEffect(() => {
-    if (updateFetch?.error) {
-      toast.error('Could not update value, ' + updateFetch!.error, {});
-    } else {
-      toast.success('Updated value', {});
-    }
-  }, [updateFetch]);
-
-  useEffect(() => {
-    if (createFetch?.error) {
-      toast.error('Could not create project, ' + createFetch!.error, {});
-    } else if (createFetch?.body) {
-      toast.success('Project Created', {});
-    };
-  }, [createFetch]);
 
   const statusFormat = (node: TreeNode) => {
     const status = statuses.filter((i:any) => parseInt(i.id) === parseInt(node.data.status))[0]?.["name"];
@@ -138,13 +93,20 @@ function ProjectTable(props: any) {
     return node;
   }
 
-  const onEditorValueChange = (props: any, field:string, value: string, proj: boolean, id: number) => {
-    updateSignal({updateCol: field, updateVal: value.toString(), ...(proj ? {projID: id} : {iniID: id} )})
+  const onEditorValueChange = async (props: any, field:string, value: string, proj: boolean, id: number) => {
+    const res = await ipcRenderer.invoke('projects-update',{updateCol: field, updateVal: value.toString(), ...(proj ? {projID: id} : {iniID: id} )});
+
+    if (res.error != undefined) {
+      toast.error('Could not update value, ' + updateFetch!.error, {});
+    }
+
     // update table data
-    let newNodes = JSON.parse(JSON.stringify(projectData)); // deep copy
-    let editedNode = findNodeByKey(newNodes, props.node.key);
-    editedNode.data[props.field] = value;
-    setProjectsdata(newNodes);
+    setProjects(curProjects => { // deep copy
+      let editedNode = findNodeByKey(curProjects[2], props.node.key);
+      editedNode.data[props.field] = value;
+
+      return JSON.parse(JSON.stringify(curProjects));
+    });
   };
 
   const statusEditor = (props: any) => {
@@ -177,7 +139,7 @@ function ProjectTable(props: any) {
 
   return (
     <>
-      <TreeTable value={projectData} header={header} tableClassName="proj-table" style={{paddingBottom:"30px"}}>
+      <TreeTable value={projects[2]} header={header} tableClassName="proj-table" style={{paddingBottom:"30px"}}>
         <Column field="name" header="Name" expander/>
         <Column field="descrip" header="Description" editor={descripEditor} bodyClassName ="big-text"/>
         <Column field="status" header="Status" body={statusFormat} editor={statusEditor} style={{width:"100px"}} />
@@ -187,7 +149,14 @@ function ProjectTable(props: any) {
       <Dialog header="Create a Project" visible={show} onHide={handleClose} style={{width: '70vw'}} footer={(
         <>
           <Button label='Submit' className='r-button-success' onClick={(e:any) => {
-            createSignal({...form});
+            ipcRenderer.invoke('projects-create', {...form})
+              .then(res => {
+                if (res.error != undefined) {
+                  toast.error("Could not create project: " + res.error)
+                  return
+                }
+                toast.success("New project created");
+              })
           }} />
         </>
       )}>
@@ -204,7 +173,7 @@ function ProjectTable(props: any) {
 
           <div className="r-field r-col-6">
             <label htmlFor="par">Parent</label>
-            <Dropdown id="par" options={projects} optionValue='id' optionLabel='name' {...formDropdown('parent')}/>
+            <Dropdown id="par" options={[{id: 0, name:"None"},...projects[0]]} optionValue='id' optionLabel='name' {...formDropdown('parent')}/>
           </div>
         </div>
       </Dialog>
@@ -219,12 +188,12 @@ function ProjectTable(props: any) {
         <div className='r-form'>
           <div className="r-field r-col-6">
             <label htmlFor="status">Initiative</label>
-            <Dropdown id="status" options={projectsFetch?.body?.filter((itm:any) => itm.parent !== 0)} optionValue='id' optionLabel='name' {...formDropdown('iniID')}/>
+            <Dropdown id="status" options={projects[1]} optionValue='id' optionLabel='name' {...formDropdown('iniID')}/>
           </div>
 
           <div className="r-field r-col-6">
             <label htmlFor="par">To</label>
-            <Dropdown id="par" options={projectsFetch?.body?.filter((itm:any) => itm.parent === 0)} optionValue='id' optionLabel='name' {...formDropdown('updateVal')}/>
+            <Dropdown id="par" options={projects[0]} optionValue='id' optionLabel='name' {...formDropdown('updateVal')}/>
           </div>
         </div>
       </Dialog>
