@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 import { ipcRenderer } from 'electron';
-import { useFetch } from '../../Hooks';
 
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
@@ -16,14 +15,6 @@ import { Dialog } from 'primereact/dialog';
 import { InputSwitch } from 'primereact/inputswitch';
 
 function Boards(props:any) {
-  const [ boardHeadFetch, headSignal ]     = useFetch("get_board_heads");
-  const [projectsFetch, projectsSignal]    = useFetch("get_projects");
-  const [ fragFetch, fragSignal ]          = useFetch("get_board");
-  const [updateFragFetch,updateFragSignal] = useFetch("update_fragnet");
-  const [updateBoardFetch,updateBoardSignal] = useFetch("update_board");
-  const [createBoardFetch,createBoardSignal] = useFetch("create_board");
-  const [createFragFetch,createFragSignal] = useFetch("create_fragnet");
-
   const [ boardHeads, setBoardHeads ]  = useState<any[]>([]);
   const [ frags, setFrags ]            = useState([]);
   const [ statuses, setStatuses ]      = useState([]);
@@ -41,9 +32,14 @@ function Boards(props:any) {
   const handleShowFrag  = () => setShowFrag(true);
   const handleCloseFrag = () => setShowFrag(false);
 
-  const refresh = () => {
-    headSignal({});
-    projectsSignal({});
+  const refresh = async () => {
+    const res = await ipcRenderer.invoke('boards-get', {})
+    if (res.error != undefined) {
+      toast.error("Could not get boards: " + res.error)
+    }
+
+    setBoardHeads(res.body[0])
+    setIni(res.body[1])
   };
 
   useEffect(() => {
@@ -62,113 +58,6 @@ function Boards(props:any) {
     fn();
   }, []);
 
-  /* Load Data */
-  useEffect(() => {
-    if (statusFetch?.error) {
-      toast.error('Could not load statuses, ' + statusFetch!.error, {});
-    } else {
-      const status = statusFetch?.body ?? [];
-      setStatuses(status);
-    }
-  }, [statusFetch]);
-
-  useEffect(() => {
-    if (boardHeadFetch?.error) {
-      toast.error('Could not load board heads, ' + boardHeadFetch!.error, {});
-    } else {
-      const heads = boardHeadFetch?.body ?? [];
-
-      // transform board heads into the groupings of Template, Draft, Active
-      const grouped_heads = [
-        {
-          label:"Template", icon:"fa-bookmark",
-          items: heads.filter((head:any) => head.state === 0)
-        },
-        {
-          label:"Draft", icon:"fa-edit",
-          items: heads.filter((head:any) => head.state === 1)
-        },
-        {
-          label:"Active", icon:"fa-briefcase",
-          items: heads.filter((head:any) => head.state === 2)
-        },
-        {
-          label:"Complete", icon:"fa-check-circle",
-          items: heads.filter((head:any) => head.state === 3)
-        },
-      ];
-
-      setBoardHeads(grouped_heads);
-    }
-  }, [boardHeadFetch]);
-
-  useEffect(() => {
-    if (projectsFetch?.error) {
-      toast.error('Could not load projects data, ' + projectsFetch!.error, {});
-    } else {
-      const projdata = projectsFetch?.body ?? [];
-      const heads    = boardHeadFetch?.body ?? [];
-
-      setIni(projdata.filter((itm:any) => itm.parent !== 0) // filter for initiatives
-                     .filter((itm:any) => !heads.some((head:any) => head.initiative === itm.id)) // filter out inis with a board
-                     .filter((itm:any) => itm.status !== 4)); // filter out completed projects
-    }
-  }, [projectsFetch, boardHeadFetch]);
-
-  useEffect(() => {
-    if (fragFetch?.error) {
-      toast.error('Could not load fragnets, ' + fragFetch!.error, {});
-    } else {
-      const board_frags = fragFetch?.body ?? [];
-
-      const create_children = (key: string, parent: string) => {
-        return board_frags.filter((itm:any) => itm.parent === parent).map((itm:any) => {
-          return {
-            key: key + '~' + itm.id,
-            data: itm,
-            children: create_children(key + '~' + itm.id, itm.id),
-          };
-        });
-      };
-
-      setFrags(board_frags.filter((itm:any) => itm.parent === '').map((itm:any) => {
-        return {
-          key: itm.id,
-          data: itm,
-          children: create_children(itm.id, itm.id),
-        };
-      }));
-    }
-  }, [fragFetch]);
-
-  useEffect(() => {
-    if (updateFragFetch?.error) {
-      toast.error('Could not update value, ' + updateFragFetch!.error, {});
-    }
-  }, [updateFragFetch]);
-
-  useEffect(() => {
-    if (updateBoardFetch?.error) {
-      toast.error('Could not workflow board, ' + updateBoardFetch!.error, {});
-    }
-  }, [updateBoardFetch]);
-
-  useEffect(() => {
-    if (createFragFetch?.error) {
-      toast.error('Could not create fragnet, ' + createFragFetch!.error, {});
-    } else if (createFragFetch?.body) {
-      toast.success('Fragnet Created', {});
-    }
-  }, [createFragFetch]);
-
-  useEffect(() => {
-    if (createBoardFetch?.error) {
-      toast.error('Could not create board, ' + createBoardFetch!.error, {});
-    } else if (createBoardFetch?.body) {
-      toast.success('Board Created', {});
-    }
-  }, [createBoardFetch]);
-
   useEffect(() => {
     if (!form["template"] && form["initiative"]) {
       setForm({...form, title: (initiatives.filter((ini:any) => ini.id === parseInt(form["initiative"]))[0])["name"]});
@@ -180,7 +69,13 @@ function Boards(props:any) {
   useEffect(() => {
     setForm({...form, board_id: activeBoard})
     if (activeBoard && activeBoard !== '') {
-      fragSignal({board: activeBoard});
+      ipcRenderer.invoke('boards-frags', {board: activeBoard})
+        .then(res => {
+          if (res.error != undefined) {
+            toast.error("Could not load board frags: " + res.error)
+          }
+          setFrags(res.body);
+        });
     }
   }, [activeBoard]);
 
@@ -241,13 +136,19 @@ function Boards(props:any) {
     return node;
   }
 
-  const onEditorValueChange = (props: any, field:string, value: string, id: string) => {
-    updateFragSignal({body: JSON.stringify({updateCol: field, updateVal: value.toString(), fragID:id})});
+  const onEditorValueChange = async (props: any, field:string, value: string, id: string) => {
+    const res = await ipcRenderer.invoke('boards-frags-update', {updateCol: field, updateVal: value.toString(), fragID:id});
+    if (res.error != undefined) {
+      toast.error("Could not update fragnet: " + res.error)
+      return
+    }
     // update table data
-    let newNodes = JSON.parse(JSON.stringify(frags)); // deep copy
-    let editedNode = findNodeByKey(newNodes, props.node.key);
-    editedNode!.data[props.field] = value;
-    setFrags(newNodes);
+    setFrags(curNodes => {
+      let editedNode = findNodeByKey(curNodes, props.node.key);
+      editedNode!.data[props.field] = value;
+
+      return JSON.parse(JSON.stringify(curNodes))
+    });
   };
 
   const statusEditor = (props: any) => {
@@ -319,7 +220,10 @@ function Boards(props:any) {
     const state:number = getBoardState();
 
     const updateHead = async (state:number) => {
-      updateBoardSignal({body: JSON.stringify({updateCol: 'state', updateVal: state.toString(), boardID:activeBoard})});
+      const res = await ipcRenderer.invoke('boards-update', {updateCol: 'state', updateVal: state.toString(), boardID:activeBoard});
+      if (res.error != undefined) {
+        toast.error("Could not workflow board: " + res.error)
+      }
     };
 
     switch (state) {
@@ -387,7 +291,14 @@ function Boards(props:any) {
     <Dialog header="Create a Fragnet" visible={showFrag} onHide={handleCloseFrag} position='center' modal style={{width: '70vw'}} footer={(
       <>
         <Button label='Submit' className='r-button-success' onClick={(e:any) => {
-          createFragSignal({body: JSON.stringify(form)});
+          ipcRenderer.invoke('boards-frags-create', form)
+            .then(res => {
+              if (res.error != undefined) {
+                toast.error("Could not create fragnet: " + res.error)
+                return
+              }
+              toast.success("Fragnet Created")
+            });
         }} />
       </>
     )}>
@@ -424,7 +335,14 @@ function Boards(props:any) {
     <Dialog header="Create a Board" visible={showHead} onHide={handleCloseHead} position='center' modal style={{width: '70vw'}} footer={(
       <>
         <Button label='Submit' className='r-button-success' onClick={(e:any) => {
-          createBoardSignal({body: JSON.stringify({...form, initiative: parseInt(form["initiative"])})});
+          ipcRenderer.invoke('boards-create', {...form, initiative: parseInt(form["initiative"])})
+            .then(res => {
+              if (res.error != undefined) {
+                toast.error("Could not create board: " + res.error)
+                return
+              }
+              toast.success("Board Created")
+            });
         }} />
       </>
     )}>
