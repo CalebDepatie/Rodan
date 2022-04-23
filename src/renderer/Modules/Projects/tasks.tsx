@@ -76,6 +76,10 @@ function Tasks(props:any) {
     return <div className={`status-${row.status}`}>{status}</div>
   };
 
+  const onSubmit = (f: any) => {
+    refresh()
+  };
+
   const header = (
     <>
       <Button icon="fa fa-plus" label="Add Task" onClick={handleShow} />
@@ -92,7 +96,7 @@ function Tasks(props:any) {
       <Column field="activity" header="Fragnet" />
     </DataTable>
 
-    <TaskForm show={show} handleClose={handleClose} onSubmit={(f:any)=>setTasks([...tasks, f])} />
+    <TaskForm show={show} handleClose={handleClose} onSubmit={onSubmit} />
     </>
   );
 };

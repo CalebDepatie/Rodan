@@ -19,8 +19,6 @@ function TaskForm(props:{show:boolean, handleClose:()=>void, onSubmit?:(f:any)=>
         toast.error('Could not load boards: ', res.error)
       }
 
-      console.log(res)
-
       setActivities(res.body);
     }
     fn();
