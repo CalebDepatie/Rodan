@@ -3,16 +3,31 @@
 	"version": "1.0.0",
 	"private": true,
 	"author": "Caleb Depatie",
-	"description": "Front End interfact for SP",
+	"description": "Front End interface for SP",
+  "main": "build/electron.js",
 	"scripts": {
 		"dev": "yarn run build:dev && yarn run start",
 		"build:dev": "concurrently \"yarn run build:dev:main\" \"yarn run build:dev:renderer\"",
 		"build:dev:main": "webpack --config ./webpack.config.main.js --mode=development",
 		"build:dev:renderer": "webpack --config ./webpack.config.renderer.js --mode=development",
+    "build:prod": "concurrently \"yarn run build:prod:main\" \"yarn run build:prod:renderer\"",
+		"build:prod:main": "webpack --config ./webpack.config.main.js --mode=production",
+		"build:prod:renderer": "webpack --config ./webpack.config.renderer.js --mode=production",
+    "package": "yarn run build:prod && electron-builder",
 		"start": "concurrently \"yarn run start:main\" \"yarn run start:renderer\"",
-		"start:main": "electron build/main.bundle.js",
+		"start:main": "electron build/electron.js",
 		"start:renderer": "webpack serve --config ./webpack.config.renderer.js --mode=development"
 	},
+  "build": {
+    "asar": false,
+    "icon": "./src/renderer/Public/favicon.ico",
+    "files": [
+      "build/*"
+    ],
+    "win": {
+      "target": "nsis"
+    }
+  },
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^5.15.4",
 		"@popperjs/core": "^2.11.5",
@@ -52,6 +67,7 @@
 		"concurrently": "^7.1.0",
 		"css-loader": "^6.2.0",
 		"electron": "^18.0.4",
+		"electron-builder": "^23.0.3",
 		"electron-webpack": "^2.8.2",
 		"electron-webpack-ts": "^4.0.1",
 		"html-webpack-plugin": "^5.5.0",

@@ -8,6 +8,7 @@ import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeflex/primeflex.css';
 import 'react-toastify/dist/ReactToastify.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import 'primeicons/primeicons.css';
 

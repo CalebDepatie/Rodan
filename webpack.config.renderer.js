@@ -13,6 +13,7 @@ module.exports = {
         path: path.join(__dirname, 'build'),
         publicPath: "/",
         filename: "renderer.bundle.js",
+        assetModuleFilename: 'assets/[hash][ext][query]',
         libraryTarget: 'commonjs2'
     },
 
@@ -41,6 +42,15 @@ module.exports = {
                 'css-loader',
                 'sass-loader'
               ]
+            },
+            {
+              // Load file data
+              test: /\.(svg|eot|woff|woff2|ttf)$/,
+              type: 'asset/resource',
+            },
+            {
+              test: /\.(png|jpg|gif)$/i,
+              type: 'asset/inline', 
             },
             {
               // Babel loader configuration. Performs the JSX and ES6 to JS transformations.
