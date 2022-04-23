@@ -1,3 +1,3 @@
 export function getVersion(): string {
-  return process.env.npm_package_version;
+  return "1.0.0";
 }

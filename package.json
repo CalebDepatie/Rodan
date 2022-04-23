@@ -22,8 +22,12 @@
 		"asar": false,
 		"icon": "./src/renderer/Public/favicon.ico",
 		"files": [
-			"build/*"
+			"build/*",
+      "common/*"
 		],
+    "extraFiles": [
+      "*.env"
+    ],
 		"win": {
 			"target": "nsis"
 		}
@@ -66,6 +70,7 @@
 		"@babel/preset-typescript": "^7.16.7",
 		"@webpack-cli/serve": "^1.6.1",
 		"concurrently": "^7.1.0",
+		"copy-webpack-plugin": "^10.2.4",
 		"css-loader": "^6.2.0",
 		"electron": "^18.0.4",
 		"electron-builder": "^23.0.3",

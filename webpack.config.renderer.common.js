@@ -1,4 +1,5 @@
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   target: "electron-renderer",
@@ -44,6 +45,14 @@ module.exports = {
           }
         ]
   },
+
+  plugins: [
+    new CopyWebpackPlugin({
+        patterns: [
+          { from: './static', to: './assets' },
+        ]
+    })
+  ],
 
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx', '.scss'],
