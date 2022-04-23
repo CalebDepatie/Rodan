@@ -156,6 +156,7 @@ function ProjectTable(props: any) {
                   toast.error("Could not create project: " + res.error)
                   return
                 }
+                refresh()
                 toast.success("New project created");
               })
           }} />
