@@ -66,16 +66,18 @@ function Boards(props:any) {
     }
   }, [form["template"], form["initiative"]]);
 
+  const refreshFrags = async () => {
+    const res = await ipcRenderer.invoke('boards-frags', {board: activeBoard})
+    if (res.error != undefined) {
+      toast.error("Could not load board frags: " + res.error)
+    }
+    setFrags(res.body);
+  }
+
   useEffect(() => {
     setForm({...form, board_id: activeBoard})
     if (activeBoard && activeBoard !== '') {
-      ipcRenderer.invoke('boards-frags', {board: activeBoard})
-        .then(res => {
-          if (res.error != undefined) {
-            toast.error("Could not load board frags: " + res.error)
-          }
-          setFrags(res.body);
-        });
+      refreshFrags()
     }
   }, [activeBoard]);
 
@@ -276,7 +278,7 @@ function Boards(props:any) {
           <Button {...workflowState} style={{width:"100%"}} />
 
       </div>
-      <div style={{float: "left", width: "80%"}}>
+      <div style={{float: "left", width: "80%", height:"calc(100vh - 90px)", overflowY:"scroll"}}>
         <TreeTable value={frags} selectionMode="single" style={{paddingBottom:"30px"}}
           selectionKeys={selectedKey} onSelectionChange={(e:any) => setSelected(e.value)}>
           <Column field="title" header="Title" expander style={{width:"20rem"}} editor={titleEditor}/>
@@ -297,6 +299,7 @@ function Boards(props:any) {
                 toast.error("Could not create fragnet: " + res.error)
                 return
               }
+              refreshFrags();
               toast.success("Fragnet Created")
             });
         }} />
@@ -341,6 +344,7 @@ function Boards(props:any) {
                 toast.error("Could not create board: " + res.error)
                 return
               }
+              refresh()
               toast.success("Board Created")
             });
         }} />
