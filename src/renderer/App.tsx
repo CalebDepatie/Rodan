@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import { Header, Footer } from './Components';
 import { ToastContainer } from 'react-toastify';
 import { Home, ProjectTable, Boards, Tasks, PageContainer } from './Modules';
@@ -24,7 +24,7 @@ declare global {
 function App() {
   const routes = useMemo(() => [
       {
-        path: '/index.html',
+        path: '/',
         component: Home,
         exact: true,
       },

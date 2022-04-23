@@ -8,24 +8,24 @@ import NavDropdown from 'react-bootstrap/NavDropdown'
 function Header(props: any) {
 	return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-      <Navbar.Brand href="/index.html">Project Singular Point</Navbar.Brand>
+      <Navbar.Brand href="#/">Project Singular Point</Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav>
           <NavDropdown title="Projects" id="collasible-nav-dropdown">
-            <NavDropdown.Item href="/projects/raw">Overview</NavDropdown.Item>
-            <NavDropdown.Item href="/projects/boards">Boards</NavDropdown.Item>
-            <NavDropdown.Item href="/projects/tasks">Tasks</NavDropdown.Item>
+            <NavDropdown.Item href="#/projects/raw">Overview</NavDropdown.Item>
+            <NavDropdown.Item href="#/projects/boards">Boards</NavDropdown.Item>
+            <NavDropdown.Item href="#/projects/tasks">Tasks</NavDropdown.Item>
           </NavDropdown>
         </Nav>
         <Nav>
           <NavDropdown title="Finances" id="collasible-nav-dropdown">
-            <NavDropdown.Item href="/finances/overview">Overview</NavDropdown.Item>
+            <NavDropdown.Item href="#/finances/overview">Overview</NavDropdown.Item>
           </NavDropdown>
         </Nav>
         <Nav>
           <Nav.Item>
-            <Nav.Link title="Pages" href="/documentation">
+            <Nav.Link title="Pages" href="#/documentation">
               Pages
             </Nav.Link>
           </Nav.Item>
