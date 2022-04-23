@@ -100,7 +100,7 @@ function PageContainer(props:{}) {
                 toast.error("Could not create page: " + res.error)
                 return
               }
-
+              refresh()
               toast.success("Created Page");
             })
         }} />
