@@ -4,7 +4,7 @@
 	"private": true,
 	"author": "Caleb Depatie",
 	"description": "Front End interface for SP",
-  "main": "build/electron.js",
+  "main": "electron.js",
 	"scripts": {
 		"dev": "yarn run build:dev && yarn run start",
 		"build:dev": "concurrently \"yarn run build:dev:main\" \"yarn run build:dev:renderer\"",

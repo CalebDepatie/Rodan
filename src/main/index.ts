@@ -20,13 +20,15 @@ function createMainWindow() {
     }
   })
 
-  window.loadURL(`file://${process.cwd()}/src/renderer/Public/index.html`);
-
   if (isDevelopment) {
-    window.loadURL( `http://localhost:${ process.env.POST || 8182 }/index.html` )
+    window.loadURL( `http://localhost:${ process.env.PORT || 8182 }/index.html` )
     window.webContents.openDevTools()
   } else {
-
+    window.loadURL(formatUrl({
+    	pathname: path.join(__dirname, 'build', 'index.html'),
+    	protocol: 'file:',
+    	slashes: true,
+  }));
   }
 
   window.on('closed', () => {

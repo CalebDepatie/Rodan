@@ -50,7 +50,7 @@ module.exports = {
             },
             {
               test: /\.(png|jpg|gif)$/i,
-              type: 'asset/inline', 
+              type: 'asset/inline',
             },
             {
               // Babel loader configuration. Performs the JSX and ES6 to JS transformations.
