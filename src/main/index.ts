@@ -25,10 +25,10 @@ function createMainWindow() {
     window.webContents.openDevTools()
   } else {
     window.loadURL(formatUrl({
-    	pathname: path.join(__dirname, 'build', 'index.html'),
+    	pathname: path.join(__dirname, 'index.html'),
     	protocol: 'file:',
     	slashes: true,
-  }));
+    }));
   }
 
   window.on('closed', () => {
