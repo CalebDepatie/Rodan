@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
 
@@ -13,6 +14,16 @@ module.exports = {
     output: {
         path: path.join(__dirname, 'build'),
         filename: "electron.js"
+    },
+
+    optimization: {
+      usedExports: true,
+      minimize: true,
+      minimizer: [
+        new TerserPlugin({
+          parallel: true,
+        })
+      ]
     },
 
     module: {
