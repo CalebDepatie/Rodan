@@ -19,7 +19,7 @@
 		"start:renderer": "webpack serve --config ./webpack.config.renderer.dev.js --mode=development"
 	},
 	"build": {
-		"asar": false,
+		"asar": true,
 		"icon": "./src/renderer/Public/favicon.ico",
 		"files": [
 			"build/*",
