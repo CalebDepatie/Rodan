@@ -4,6 +4,7 @@ import { ipcRenderer } from 'electron';
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
 import { Button, InputText, Dropdown } from '../../Components';
+import { fieldGen } from '../../Helpers';
 
 import { toast } from 'react-toastify';
 
@@ -65,12 +66,7 @@ function ProjectTable(props: any) {
     return a.join('-');
   };
 
-  const formText = (field: string) => {
-    return {
-      value: form[field],
-      onChange: (e: any) => setForm({...form, [field]: e.target.value})
-    };
-  };
+  const formText = fieldGen(form, setForm);
 
   const formDropdown = (field: string) => {
     return {

@@ -14,6 +14,7 @@ function InputText(props:{value:any, onChange?:(e:any)=>void, type?:string, id?:
 InputText.defaultProps = {
   disabled: false,
   type: 'text',
+  value: '',
   className: 'r-inputtext'
 };
 

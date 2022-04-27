@@ -8,6 +8,7 @@ import { Tree } from 'primereact/tree';
 import TreeNode from 'primereact/treenode';
 import { Dialog } from 'primereact/dialog';
 import { Button, InputText } from '../../Components';
+import { fieldGen } from '../../Helpers';
 
 import './pages.scss';
 
@@ -63,12 +64,7 @@ function PageContainer(props:{}) {
     });
   }
 
-  const formText = (field: string) => {
-    return {
-      value: form[field],
-      onChange: (e: any) => setForm({...form, [field]: e.target.value})
-    };
-  };
+  const formText = fieldGen(form, setForm)
 
   const flatten = (acc:any, cur:any) => {
     return cur.children ? [...acc, cur, ...cur.children.reduce(flatten, [])]

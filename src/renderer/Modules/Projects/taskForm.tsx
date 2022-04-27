@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 're
 import { ipcRenderer } from 'electron';
 
 import { Button, InputText, Dropdown } from '../../Components';
+import { fieldGen } from '../../Helpers';
 
 import { toast } from 'react-toastify';
 
@@ -24,12 +25,7 @@ function TaskForm(props:{show:boolean, handleClose:()=>void, onSubmit?:(f:any)=>
     fn();
   }, [])
 
-  const formField = (field: string) => {
-    return {
-      value: form[field],
-      onChange: (e: any) => setForm({...form, [field]: e.target.value})
-    };
-  };
+  const formField = fieldGen(form, setForm);
 
   return (
     <>

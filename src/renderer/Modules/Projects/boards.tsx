@@ -4,6 +4,7 @@ import { ipcRenderer } from 'electron';
 import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
 import { Button, InputText, Dropdown } from '../../Components';
+import { fieldGen, fieldValGen } from '../../Helpers';
 
 import { toast } from 'react-toastify';
 
@@ -104,26 +105,9 @@ function Boards(props:any) {
     );
   };
 
-  const formText = (field: string) => {
-    return {
-      value: form[field],
-      onChange: (e: any) => setForm({...form, [field]: e.target.value})
-    };
-  };
-
-  const formDropdown = (field: string) => {
-    return {
-      value: form[field],
-      onChange: (e: any) => setForm({...form, [field]: e.target.value})
-    };
-  };
-
-  const formSwitch = (field: string) => {
-    return {
-      checked: form[field],
-      onChange: (e: any) => setForm({...form, [field]: e.value})
-    };
-  };
+  const formText     = fieldGen(form, setForm);
+  const formDropdown = fieldGen(form, setForm);
+  const formSwitch   = fieldValGen(form, setForm);
 
   const findNodeByKey = (nodes:TreeNode[], key:string): TreeNode|null => {
     const path:string[]    = key.split('~');
