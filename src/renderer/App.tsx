@@ -85,17 +85,17 @@ function App() {
 	<div className="App">
       <Router>
         <Header />
-
-        <Switch>
-          {routes.map((route, i) => (
-            <Route key={i} {...route} />
-          ))}
-        </Switch>
+        <div className="r-content-window">
+          <Switch>
+            {routes.map((route, i) => (
+              <Route key={i} {...route} />
+            ))}
+          </Switch>
+        </div>
+        <Footer />
 
         <ToastContainer position="top-right" autoClose={5000} rtl={false} theme='dark'
           hideProgressBar={false} newestOnTop={true} closeOnClick pauseOnHover />
-
-        <Footer />
       </Router>
     </div>
     </>

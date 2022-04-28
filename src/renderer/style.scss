@@ -8,18 +8,26 @@
 $font-families: Verdana, sans-serif;
 
 $colour-primary: #546866;
-$colour-primary-text: white;
-$colour-secondary-text: grey;
 $colour-secondary: #E4DFDA;
 $colour-tertiary: #800080;
+
+$colour-primary-text: white;
+$colour-secondary-text: grey;
+
 $colour-success: #60993E;
-$colour-accent: #840B0F;
 $colour-border: #D3D3D3;
 
 $standard-transition: 0.4s;
 
 :root {
   font-family: $font-families
+}
+
+.r-content-window {
+  width: 100vw;
+  height: calc(100vh - (56px + 30px));
+  overflow-y: auto;
+  overflow-x: auto;
 }
 
 .r-form {

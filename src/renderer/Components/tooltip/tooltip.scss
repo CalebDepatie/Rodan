@@ -3,7 +3,8 @@
 
 .r-tooltip {
   border-radius: 4px;
-  background-color: style.$colour-tertiary;
+  background-color: style.$colour-primary;
+  border-color: style.$colour-border;
   color: style.$colour-primary-text;
   padding: 4px 8px;
   text-align: center;
