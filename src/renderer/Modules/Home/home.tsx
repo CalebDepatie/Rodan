@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
 import path from 'path'
 
-import { Sound } from "../Components";
+import { Sound } from "../../Components";
 
-function Home() {
+export function Home() {
   let radioWaveMonster = useRef<any>(null);
 
 	return (
@@ -13,5 +13,3 @@ function Home() {
   </div>
 	);
 }
-
-export default Home;
