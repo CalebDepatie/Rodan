@@ -1,9 +1,9 @@
-/*$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
 @import '~@fortawesome/fontawesome-free/scss/solid';
 @import '~@fortawesome/fontawesome-free/scss/brands';
-@import '~@fortawesome/fontawesome-free/scss/regular';*/
+@import '~@fortawesome/fontawesome-free/scss/regular';
 
 $font-families: Verdana, sans-serif;
 
@@ -20,12 +20,19 @@ $colour-border: #D3D3D3;
 $standard-transition: 0.4s;
 
 :root {
-  font-family: $font-families
+  font-family: $font-families;
+  margin: 0;
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
 }
 
 .r-content-window {
   width: 100vw;
-  height: calc(100vh - (56px + 30px));
+  height: calc(100vh - (46.5px + 30px));
   overflow-y: auto;
   overflow-x: auto;
 }

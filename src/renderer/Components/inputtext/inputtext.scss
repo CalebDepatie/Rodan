@@ -9,6 +9,7 @@
   border-width: thin;
   border-style: solid;
   border-radius: 4px;
+  font-size: inherit;
 
   &:hover {
     border-color: style.$colour-tertiary;

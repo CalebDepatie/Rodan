@@ -3,6 +3,8 @@
 .r-footer {
   text-align: left;
   align-content: center;
+  display: flex;
+  align-items: center;
   padding-left: 5px;
   background-color: style.$colour-primary;
   color: style.$colour-primary-text;
@@ -10,6 +12,6 @@
   bottom: 0;
   height: 30px;
   width: 100vw;
-  border-top: 1px;
-  border-color: style.$colour-border;
+  border-top: 1px solid style.$colour-border;
+  font-size: inherit;
 }
