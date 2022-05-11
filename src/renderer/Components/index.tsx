@@ -1,4 +1,4 @@
-export { default as Header }  from "./header";
+export * from "./header";
 export * from "./footer";
 export { default as Sound } from "./sound";
 export * from "./button";

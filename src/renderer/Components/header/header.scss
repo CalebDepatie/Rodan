@@ -1,0 +1,56 @@
+@use '../../style.scss';
+@use 'sass:color';
+
+.r-header {
+  width: 100vw;
+  overflow: hidden;
+  background-color: style.$colour-primary;
+  color: style.$colour-primary-text;
+  border-bottom: 1px solid style.$colour-border;
+  padding: 10px 10px;
+  font-size: inherit;
+  display: flex;
+
+  #title {
+    font-size: 17px;
+    font-weight: bold;
+  }
+
+  & a {
+    text-decoration: none;
+    color: style.$colour-primary-text;
+  }
+
+  & .header-right {
+    padding-left: 40px;
+
+    & > * {
+      padding-right: 8px;
+    }
+  }
+
+  & .header-nest {
+    margin-left: 5px;
+    padding: 8px;
+    background-color: color.adjust(style.$colour-primary, $lightness: -15%);
+    border: none;
+    border-radius: 10px;
+
+    & > *:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    display: block;
+
+    & a {
+      float: none;
+      display: block;
+      text-align: left;
+    }
+    & .header-right {
+      float: none;
+    }
+  }
+}
