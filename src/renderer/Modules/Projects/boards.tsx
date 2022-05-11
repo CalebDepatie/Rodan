@@ -252,8 +252,6 @@ function Boards(props:any) {
       style = {...style, "r-completed": true}
     }
 
-    console.log(row.data.title, style);
-
     return style
   }
 
