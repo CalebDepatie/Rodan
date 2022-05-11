@@ -245,6 +245,18 @@ function Boards(props:any) {
     setWorkflow(workflow());
   }, [activeBoard]);
 
+  const rowStyler = (row:any) => {
+    let style = {}
+
+    if (row.data.status == 9 || row.data.status == 8) {
+      style = {...style, "r-completed": true}
+    }
+
+    console.log(row.data.title, style);
+
+    return style
+  }
+
   return (
     <>
     <div>
@@ -257,13 +269,13 @@ function Boards(props:any) {
         <ListBox value={activeBoard} options={boardHeads} optionLabel="title"
           optionValue="id" optionGroupLabel="label" optionGroupChildren="items"
           optionGroupTemplate={groupTemplate}
-          onChange={(e) => setActiveBoard(e.value)} listStyle={{height:"calc(100vh - 166px)"}} style={{width:'100%'}} />
+          onChange={(e) => setActiveBoard(e.value)} listStyle={{height:"calc(100vh - 144px)"}} style={{width:'100%'}} />
 
           <Button {...workflowState} style={{width:"100%"}} />
 
       </div>
       <div style={{float: "left", width: "80%", height:"calc(100vh - 90px)", overflowY:"scroll"}}>
-        <TreeTable value={frags} selectionMode="single" style={{paddingBottom:"30px"}}
+        <TreeTable value={frags} selectionMode="single" rowClassName={rowStyler} style={{paddingBottom:"30px"}}
           selectionKeys={selectedKey} onSelectionChange={(e:any) => setSelected(e.value)}>
           <Column field="title" header="Title" expander style={{width:"20rem"}} editor={titleEditor}/>
           <Column field="status" header="Status" body={statusFormat} style={{width:"100px"}} editor={statusEditor}/>

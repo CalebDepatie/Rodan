@@ -37,6 +37,10 @@ body {
   overflow-x: auto;
 }
 
+.r-completed > td {
+  //text-decoration: line-through 5px;
+}
+
 .r-form {
   display: flex;
   flex-wrap: wrap;
