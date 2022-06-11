@@ -67,6 +67,7 @@ app.on('ready', () => {
 })
 
 // loading event handlers
-import "./statuses.ts";
+import "./statuses";
 import "./projects";
-import "./pages.ts";
+import "./pages";
+import "./finances";
