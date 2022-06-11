@@ -15,6 +15,7 @@ function Header(props: {}) {
           <Link to="/projects/tasks">Tasks</Link>
         </HeaderNest>
 
+	<Link to="/finances/dashboard">Finances</Link>
         <Link to="/documentation">Pages</Link>
       </div>
     </div>

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import { Header, Footer } from './Components';
 import { ToastContainer } from 'react-toastify';
-import { Home, ProjectTable, Boards, Tasks, PageContainer } from './Modules';
+import { Home, ProjectTable, Boards, Tasks, PageContainer, FinanceDashboard } from './Modules';
 
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -42,6 +42,11 @@ function App() {
         path:'/projects/tasks',
         component: Tasks,
         exact: true,
+      },
+      {
+	path:'/finances/dashboard',
+	component: FinanceDashboard,
+	exact: true,
       },
       {
         path:'/documentation',
