@@ -46,7 +46,7 @@ ipcMain.handle('liquid-get', async (e, req) => {
 
   } catch (err) {
     return {
-      body: [],
+      body: [[], []],
       error: err
     }
   }

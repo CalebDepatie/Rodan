@@ -24,12 +24,13 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-
+  margin-bottom: 8px;
+  height: 28px;
 }
 
 .r-fin-header {
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   border-bottom: 3px solid style.$colour-border;
 }
 
