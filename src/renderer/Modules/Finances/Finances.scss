@@ -5,6 +5,17 @@
   justify-content: center;
   flex-direction: column;
   align-items: center;
+
+  & > .p-tabview > * > * > .p-tabview-nav {
+    display: flex;
+    justify-content: center;
+    border: 0;
+
+    & > * > .p-tabview-nav-link {
+      border-bottom-width: 3px;
+      margin-bottom: 0;
+    }
+  }
 }
 
 .r-fin-row {
@@ -14,12 +25,12 @@
   align-items: center;
   width: 100%;
 
-  border-bottom-width: 10px;
-  border-color: style.$colour-border;
 }
 
 .r-fin-header {
   font-weight: bold;
+  margin-bottom: 10px;
+  border-bottom: 3px solid style.$colour-border;
 }
 
 .r-fin-content {

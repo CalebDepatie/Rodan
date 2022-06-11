@@ -9,7 +9,11 @@ export function FinanceDashboard(props:{}) {
 
        return <>
         <div className='r-dashboard-container'>
-          (Liquid + Illiquid Graph Goes Here)
+          (Liquid + Illiquid Graph)
+
+          <div className="r-fin-row">
+            (Current Total Values)
+          </div>
 
           <TabView style={{width:'90vw'}}>
             <TabPanel header="Liquid">
