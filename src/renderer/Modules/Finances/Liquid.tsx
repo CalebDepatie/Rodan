@@ -14,7 +14,7 @@ export function Liquid(props:{}) {
     const res = await ipcRenderer.invoke('liquid-get', {});
 
     if (res.error != undefined) {
-      toast.error("Could not load finance records: " + res.error)
+      toast.error("Could not load finance records: " + res.error.message)
     }
 
     setFinanceData(res.body);
@@ -44,24 +44,18 @@ export function Liquid(props:{}) {
     const dayOfTheWeek: number = (new Date()).getDay();
 
     const curWeekComplete: boolean = () => {
+      // if no data is returned
       if (financeData[1].length === 0) {
         return false
       }
 
       const curDateObj = new Date();
       const curDate = curDateObj.getDate();
-      const curDay = curDateObj.getDate();
-      const lastDate = new Date(financeData[1][0].date);
-
-      // get first date of week
-      const firstDayOfWeek = new Date(curDateObj.setDate(curDate - curDay));
-
-      // get last date of week
-      const lastDayOfWeek = new Date(firstDayOfWeek);
-      lastDayOfWeek.setDate(lastDayOfWeek.getDate() + 6);
+      const curDay = curDateObj.getDay();
+      const lastDate = new Date(financeData[1][0]?.date);
 
       // if date is equal or within the first and last dates of the week
-      return !((lastDate >= firstDayOfWeek) && (lastDate <= lastDayOfWeek));
+      return !((curDay >= 5) && (curDay <= 7));
     };
 
     // >= Monday && <= Thurday

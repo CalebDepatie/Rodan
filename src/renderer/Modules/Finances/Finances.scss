@@ -25,7 +25,8 @@
   align-items: center;
   width: 100%;
   margin-bottom: 8px;
-  height: 28px;
+  min-height: 28px;
+  max-height: fit-content;
 }
 
 .r-fin-header {
