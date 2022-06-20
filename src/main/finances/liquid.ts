@@ -51,3 +51,16 @@ ipcMain.handle('liquid-get', async (e, req) => {
     }
   }
 });
+
+ipcMain.handle('liquid-set', async (e, req) => {
+  try {
+
+    return {
+      error: null
+    }
+  } catch (err) {
+    return {
+      error: err
+    }
+  }
+});
