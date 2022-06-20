@@ -8,12 +8,12 @@ ipcMain.handle('liquid-get', async (e, req) => {
     const finance_json = await finance_res.json()
 
     // convert to desired layout
-    const finance_dyn = finance_json.reduce((curArray:any, curValue:any) => {
+    let finance_dyn = finance_json.reduce((curArray:any, curValue:any) => {
       const dayObj = curArray.find(el => el.date === curValue.date);
 
       if (dayObj === undefined) {
         // add day to the array
-        const newDay = {date: curValue.date, accounts: [
+        const newDay = {date: curValue.date, totalVal: +curValue.balance, accounts: [
           {name: curValue.name, balance: curValue.balance},
         ]};
 
@@ -24,9 +24,18 @@ ipcMain.handle('liquid-get', async (e, req) => {
 
       // add the extra account
       dayObj.accounts.push({name: curValue.name, balance: curValue.balance});
+      dayObj.totalVal += (+curValue.balance)
 
       return curArray;
     }, []);
+
+    finance_dyn = finance_dyn.map((el:any, idx:number) => {
+      if (idx !== finance_dyn.length-1) {
+        el = {...el, netVal: el.totalVal - finance_dyn[idx+1].totalVal}
+      }
+
+      return el;
+    });
 
     const account_names = finance_json.reduce((curArray:any, curValue:any) => {
       const exists = curArray.includes(curValue.name);
@@ -36,7 +45,7 @@ ipcMain.handle('liquid-get', async (e, req) => {
       }
 
       return curArray;
-    }, [])
+    }, []);
 
     account_names.sort();
 

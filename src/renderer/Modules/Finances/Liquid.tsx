@@ -17,6 +17,7 @@ export function Liquid(props:{}) {
       toast.error("Could not load finance records: " + res.error.message)
     }
 
+    console.log(res)
     setFinanceData(res.body);
   }
 
@@ -80,7 +81,6 @@ export function Liquid(props:{}) {
 
   const createRows = () => {
     const rows = financeData[1].map((el:any, idx:number) => {
-      const totalVal = el.accounts.reduce((total, cur) => total+(parseFloat(cur.balance)), 0)
 
       return <div className='r-fin-row'>
         <div className='r-fin-content' style={{width:equalPercent}}>{dateFormatter(new Date(el.date))}</div>
@@ -96,9 +96,9 @@ export function Liquid(props:{}) {
             </div>
           })}
 
-        <div className='r-fin-content' style={{width:equalPercent}}>{currencyFormatter(totalVal)}</div>
+        <div className='r-fin-content' style={{width:equalPercent}}>{currencyFormatter(el.totalVal)}</div>
 
-        <div className='r-fin-content' style={{width:equalPercent}}>N/A for testing</div>
+        <div className='r-fin-content' style={{width:equalPercent}}>{currencyFormatter(el.netVal)}</div>
       </div>
     });
 
