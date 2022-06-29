@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
 
@@ -47,7 +48,12 @@ module.exports = {
     },
 
     plugins: [
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new CopyWebpackPlugin({
+            patterns: [
+              { from: './zig-out/lib', to: './lib' },
+            ]
+        })
     ],
 
     resolve: {

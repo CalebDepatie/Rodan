@@ -2,6 +2,7 @@
 /dist
 /build
 /zig-cache
+/zig-out
 .env
 yarn-error.log
 *~
