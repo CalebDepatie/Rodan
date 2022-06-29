@@ -1,6 +1,7 @@
 /node_modules
 /dist
 /build
+/zig-cache
 .env
 yarn-error.log
 *~
