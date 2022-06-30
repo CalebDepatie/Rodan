@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
 
@@ -49,11 +48,6 @@ module.exports = {
 
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new CopyWebpackPlugin({
-            patterns: [
-              { from: './zig-out/lib', to: './lib' },
-            ]
-        })
     ],
 
     resolve: {
@@ -62,7 +56,8 @@ module.exports = {
         "path": require.resolve("path-browserify")
       },
       alias: {
-        "common": path.join(__dirname, 'src/common/')
+        "common": path.join(__dirname, 'src/common/'),
+        "rodan-native": path.join(__dirname, 'rodan-native.node')
       }
     }
 }

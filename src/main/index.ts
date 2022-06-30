@@ -66,6 +66,11 @@ app.on('ready', () => {
   dotenv.config();
 })
 
+// importing native bidings
+//import {test} from "./ssh.ts";
+
+//test();
+
 // loading event handlers
 import "./statuses";
 import "./projects";
