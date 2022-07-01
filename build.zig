@@ -22,10 +22,13 @@ pub fn build(b: *Builder) void {
             //lib.addLibPath("C:\\Users\\Caleb\\AppData\\Local\\node-gyp\\Cache\\14.17.1\\x64");
             //lib.linkSystemLibraryName("node");
 
-            lib.addIncludeDir("C:\\Users\\Caleb\\Documents\\vcpkg\\packages\\libssh_x86-windows\\include\\libssh");
+            lib.addIncludeDir("C:\\Users\\Caleb\\Documents\\vcpkg\\packages\\libssh_x86-windows\\include");
             lib.addLibPath("C:\\Users\\Caleb\\Documents\\vcpkg\\packages\\libssh_x86-windows\\bin");
             lib.addLibPath("C:\\Users\\Caleb\\Documents\\vcpkg\\packages\\libssh_x86-windows\\lib");
             lib.linkSystemLibraryName("ssh");
+        },
+        .linux => {
+            lib.linkSystemLibrary("ssh");
         },
         else => @compileError("OS not included in build script"),
     }
