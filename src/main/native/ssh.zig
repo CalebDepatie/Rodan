@@ -29,14 +29,24 @@ const SSHHostError = error{
     KeyNotFound,
     HostsFileMissing,
     UnknownServer,
-    ServerError
+    ServerError,
+    CantUpdateHost,
+    UnknownError
 };
+
+const SSHChanError = error {
+    OpeningFailed,
+    ForwardingFailed
+};
+
+const SSHError = SSHConError || SSHHostError || SSHChanError;
 
 const sshArgs = struct {
     hostname: []const u8,
     port: i16,
     username: []const u8,
     password: []const u8,
+    forwardedPort: i16
 };
 
 const ArgsErrors = process.ArgIterator.InitError || process.ArgIterator.NextError;
@@ -57,6 +67,9 @@ fn getArgs() !sshArgs {
     // get port
     const port = try args.next(allocator) orelse @panic("No Port Given");
 
+    // get port to foward
+    const fport = try args.next(allocator) orelse @panic("No Forwarding Port Given");
+
     // get username
     const user = try args.next(allocator) orelse @panic("No Username Given");
 
@@ -67,16 +80,54 @@ fn getArgs() !sshArgs {
         .hostname = hostname,
         .port = try std.fmt.parseInt(i16, port, 0),
         .username = user,
-        .password = pass
+        .password = pass,
+        .forwardedPort = try std.fmt.parseInt(i16, fport, 0)
     };
 }
 
 fn verifyHost(session: ssh.ssh_session) !void {
-    _ = session;
+    const state = ssh.ssh_session_is_known_server(session);
+
+    switch (state) {
+        ssh.SSH_KNOWN_HOSTS_OK => return,
+        ssh.SSH_KNOWN_HOSTS_CHANGED => return SSHHostError.KeyChanged,
+        ssh.SSH_KNOWN_HOSTS_OTHER => return SSHHostError.KeyNotFound,
+        ssh.SSH_KNOWN_HOSTS_NOT_FOUND, ssh.SSH_KNOWN_HOSTS_UNKNOWN => {
+            const stdin = std.io.getStdIn().reader();
+            const stdout = std.io.getStdOut().writer();
+
+            var buf: []u8 = undefined;
+
+            try stdout.print("Host is unknown\nAdd key to hosts file? [y/n]: ", .{});
+
+            var addFile: bool = undefined;
+
+            if (try stdin.readUntilDelimiterOrEof(buf, '\n')) |user_input| {
+                if (user_input[0] == 'y') {
+                    addFile = true;
+                } else {
+                    addFile = false;
+                }
+            } else {
+                addFile = false;
+            }
+
+            if (addFile) {
+                const err = ssh.ssh_session_update_known_hosts(session);
+                if (err < 0)
+                    return SSHHostError.UnknownServer;
+
+            } else {
+                return SSHHostError.UnknownServer;
+            }
+        },
+        ssh.SSH_KNOWN_HOSTS_ERROR => return SSHHostError.ServerError,
+        else => return SSHHostError.UnknownError
+    }
 }
 
 // open an ssh session
-fn openSession(env: sshArgs) SSHConError!ssh.ssh_session {
+fn openSession(env: sshArgs) !ssh.ssh_session {
     const session = ssh.ssh_new();
 
     if (session == null)
@@ -111,6 +162,11 @@ fn openSession(env: sshArgs) SSHConError!ssh.ssh_session {
     return session;
 }
 
+// function to keep the process alive
+fn keepAlive() void {
+    while (true) {}
+}
+
 // create a ssh tunnel
 pub fn main() !void {
     const env = getArgs() catch @panic("f for the args");
@@ -120,8 +176,20 @@ pub fn main() !void {
     defer ssh.ssh_free(session);
 
     // setup forwarding channel
-    //var channel = ssh.ssh_channel_new(session);
-    //defer ssh.ssh_channel_free(channel);
+    const channel = ssh.ssh_channel_new(session);
+    defer ssh.ssh_channel_free(channel);
+
+    if (channel == null)
+        return SSHChanError.OpeningFailed;
+
+    var err = ssh.ssh_channel_open_forward(channel,
+                                        "localhost", env.forwardedPort, //client forward
+                                        "localhost", env.forwardedPort); // server forward
+
+    if (err != ssh.SSH_OK)
+        return SSHChanError.ForwardingFailed;
+
+    keepAlive();
 
     return;
 }
