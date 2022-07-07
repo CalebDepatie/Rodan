@@ -12,10 +12,13 @@
 
 const std = @import("std");
 const process = std.process;
+const network = @import("network"); // using library for cross platform sockets
 
 const ssh = @cImport({
     @cInclude("libssh/libssh.h");
 });
+
+//pub const io_mode = .evented;
 
 const SSHConError = error{
     OpeningFailed,
@@ -169,6 +172,9 @@ fn keepAlive() void {
 
 // create a ssh tunnel
 pub fn main() !void {
+    try network.init();
+    defer network.deinit();
+
     const env = getArgs() catch @panic("f for the args");
 
     const session = try openSession(env);
@@ -177,17 +183,29 @@ pub fn main() !void {
 
     // setup forwarding channel
     const channel = ssh.ssh_channel_new(session);
+    defer _ = ssh.ssh_channel_close(channel);
     defer ssh.ssh_channel_free(channel);
 
     if (channel == null)
         return SSHChanError.OpeningFailed;
 
     var err = ssh.ssh_channel_open_forward(channel,
-                                        "localhost", env.forwardedPort, //client forward
-                                        "localhost", env.forwardedPort); // server forward
+                "localhost", env.forwardedPort, //client forward
+                "localhost", 0); // server forward
 
     if (err != ssh.SSH_OK)
         return SSHChanError.ForwardingFailed;
+
+    // setup socket
+    var sock = try network.Socket.create(.ipv4, .tcp);
+    defer sock.close();
+
+    try sock.bind(.{
+        .address = .{ .ipv4 = network.Address.IPv4.any },
+        .port = @intCast(u16, env.forwardedPort),
+    });
+
+    try sock.listen();
 
     keepAlive();
 
