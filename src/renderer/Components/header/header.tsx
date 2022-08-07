@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import HeaderNest from "./headerNest";
 
 import "./header.scss";
@@ -15,10 +15,11 @@ function Header(props: {}) {
           <Link to="/projects/tasks">Tasks</Link>
         </HeaderNest>
 
+	      <Link to="/finances/dashboard">Finances</Link>
         <Link to="/documentation">Pages</Link>
       </div>
     </div>
 	);
 }
 
-export default withRouter(Header);
+export default Header;

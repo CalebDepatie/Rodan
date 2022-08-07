@@ -1,0 +1,40 @@
+@use '../../style.scss';
+
+.r-dashboard-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  & > .p-tabview > * > * > .p-tabview-nav {
+    display: flex;
+    justify-content: center;
+    border: 0;
+
+    & > * > .p-tabview-nav-link {
+      border-bottom-width: 3px;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.r-fin-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 8px;
+  min-height: 28px;
+  max-height: fit-content;
+}
+
+.r-fin-header {
+  font-weight: bold;
+  margin-bottom: 15px;
+  border-bottom: 3px solid style.$colour-border;
+}
+
+.r-fin-content {
+  text-align: center;
+}

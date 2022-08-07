@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import { Header, Footer } from './Components';
 import { ToastContainer } from 'react-toastify';
-import { Home, ProjectTable, Boards, Tasks, PageContainer } from './Modules';
+import { Home, ProjectTable, Boards, Tasks, PageContainer, FinanceDashboard } from './Modules';
 
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -25,27 +25,32 @@ function App() {
   const routes = useMemo(() => [
       {
         path: '/',
-        component: Home,
+        element: <Home/>,
         exact: true,
       },
       {
         path:'/projects/raw',
-        component: ProjectTable,
+        element: <ProjectTable/>,
         exact: true,
       },
       {
         path:'/projects/boards',
-        component: Boards,
+        element: <Boards/>,
         exact: true,
       },
       {
         path:'/projects/tasks',
-        component: Tasks,
+        element: <Tasks/>,
         exact: true,
       },
       {
+	      path:'/finances/dashboard',
+	      element: <FinanceDashboard/>,
+	      exact: true,
+      },
+      {
         path:'/documentation',
-        component: PageContainer,
+        element: <PageContainer/>,
         exact: true,
       }
   ], []);
@@ -86,11 +91,11 @@ function App() {
       <Router>
         <Header />
         <div className="r-content-window">
-          <Switch>
+          <Routes>
             {routes.map((route, i) => (
               <Route key={i} {...route} />
             ))}
-          </Switch>
+          </Routes>
         </div>
         <Footer />
 

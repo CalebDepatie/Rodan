@@ -5,6 +5,7 @@ import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
 import { Button, InputText, Dropdown } from '../../Components';
 import { fieldGen } from '../../Helpers';
+import { dateFormatter } from 'common';
 
 import { toast } from 'react-toastify';
 
@@ -61,9 +62,7 @@ function ProjectTable(props: any) {
 
   const dateFormat = (node: TreeNode) => {
     const d = new Date((node.data.created as unknown as number) * 1000);
-    d.setDate(d.getDate() + 1);
-    const a = d.toLocaleString('default', {day:'numeric', month:'short', year:'2-digit'}).split(' ');
-    return a.join('-');
+    return dateFormatter(d);
   };
 
   const formText = fieldGen(form, setForm);

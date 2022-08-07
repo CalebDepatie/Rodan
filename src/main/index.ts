@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, session } from 'electron'
 import * as path from 'path'
 import { format as formatUrl } from 'url'
 import dotenv from "dotenv"
@@ -8,13 +8,15 @@ import dotenv from "dotenv"
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
-let mainWindow
+let mainWindow;
 
 function createMainWindow() {
   const window = new BrowserWindow({
     width: 1360,
     height: 800,
     webPreferences: {
+      allowRunningInsecureContent: false,
+      experimentalFeatures: false,
       nodeIntegration: true,
       contextIsolation: false,
     }
@@ -64,9 +66,20 @@ app.on('activate', () => {
 app.on('ready', () => {
   mainWindow = createMainWindow()
   dotenv.config();
+
+  // setup content security policy
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': ['default-src \'self\'; style-src \'unsafe-inline\'']
+      }
+    })
+  });
 })
 
 // loading event handlers
-import "./statuses.ts";
+import "./statuses";
 import "./projects";
-import "./pages.ts";
+import "./pages";
+import "./finances";
