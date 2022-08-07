@@ -23,11 +23,11 @@
 		"icon": "./src/renderer/Public/favicon.ico",
 		"files": [
 			"build/*",
-      "common/*"
+			"common/*"
 		],
-    "extraFiles": [
-      "*.env"
-    ],
+		"extraFiles": [
+			"*.env"
+		],
 		"win": {
 			"target": "nsis"
 		}
@@ -44,6 +44,7 @@
 		"@types/react-router-dom": "^5.3.3",
 		"chart.js": "^3.5.0",
 		"core-js": "^3.21.1",
+		"dayjs": "^1.11.4",
 		"dotenv": "^16.0.0",
 		"electron-fetch": "^1.7.4",
 		"path-browserify": "^1.0.1",

@@ -50,7 +50,7 @@ ipcMain.handle('liquid-get', async (e, req) => {
     account_names.sort();
 
     return {
-      body: [account_names, finance_dyn]
+      body: [account_names, finance_dyn.slice(0, finance_dyn.length-1)]
     };
 
   } catch (err) {
@@ -63,6 +63,20 @@ ipcMain.handle('liquid-get', async (e, req) => {
 
 ipcMain.handle('liquid-set', async (e, req) => {
   try {
+    // temporarily looping over sql requests until they can be bulked
+    for (const account in req) {
+      const value = req[account];
+
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({name: account, balance: value})
+      }
+
+      const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/create_balance`, options);
+    }
 
     return {
       error: null
