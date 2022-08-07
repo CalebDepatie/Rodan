@@ -5,6 +5,8 @@ import * as path from 'path'
 import { format as formatUrl } from 'url'
 import dotenv from "dotenv"
 
+import {openSSH, closeSSH} from "./ssh.ts";
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
@@ -49,6 +51,7 @@ function createMainWindow() {
 
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
+  closeSSH();
   // on macOS it is common for applications to stay open until the user explicitly quits
   if (process.platform !== 'darwin') {
     app.quit()
@@ -66,6 +69,7 @@ app.on('activate', () => {
 app.on('ready', () => {
   mainWindow = createMainWindow()
   dotenv.config();
+  openSSH();
 
   // setup content security policy
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
@@ -78,10 +82,6 @@ app.on('ready', () => {
   });
 })
 
-// importing native bidings
-//import {test} from "./ssh.ts";
-
-//test();
 
 // loading event handlers
 import "./statuses";
