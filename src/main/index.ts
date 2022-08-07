@@ -70,6 +70,7 @@ app.on('ready', () => {
   mainWindow = createMainWindow()
   dotenv.config();
   openSSH();
+  // console.log(process.platform)
 
   // setup content security policy
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {

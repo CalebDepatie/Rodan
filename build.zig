@@ -15,7 +15,7 @@ pub fn build(b: *Builder) void {
 
     // link libs
     lib.linkLibC();
-    lib.addPackagePath("network", "../zig-network/network.zig");
+    //lib.addPackagePath("network", "../zig-network/network.zig");
 
     switch (builtin.os.tag) {
         .windows => {

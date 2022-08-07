@@ -7,7 +7,7 @@
 	"main": "electron.js",
 	"scripts": {
 		"dev": "yarn build:dev && yarn start",
-		"build:dev": "yarn build:dev:main && yarn run build:dev:renderer",
+		"build:dev": "yarn build:zig && yarn build:dev:main && yarn run build:dev:renderer",
 		"build:dev:main": "webpack --config ./webpack.config.main.js --mode=development",
 		"build:dev:renderer": "webpack --config ./webpack.config.renderer.dev.js --mode=development",
 		"build:prod": "yarn build:zig && yarn build:prod:main && yarn build:prod:renderer",
