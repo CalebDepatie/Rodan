@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { ipcRenderer } from 'electron';
 
+import * as dayjs from 'dayjs';
+const weekOfYear = require('dayjs/plugin/weekOfYear');
+dayjs.extend(weekOfYear);
+
 import { toast } from 'react-toastify';
 
-import { InputText } from '../../Components';
+import { InputText, Button } from '../../Components';
 import { dateFormatter, currencyFormatter } from 'common';
 
 export function Liquid(props:{}) {
@@ -17,7 +21,6 @@ export function Liquid(props:{}) {
       toast.error("Could not load finance records: " + res.error.message)
     }
 
-    console.log(res)
     setFinanceData(res.body);
   }
 
@@ -26,6 +29,16 @@ export function Liquid(props:{}) {
   }, []);
 
   const equalPercent = (100 / (financeData[0].length + 3)) + "%"
+
+  const submitValues = async () => {
+    console.log(tempData)
+    const res = await ipcRenderer.invoke('liquid-set', tempData);
+    if (res.error != undefined) {
+      toast.error("Could not save finance records: " + res.error.message)
+    }
+
+    refresh();
+  }
 
   // functions to enable creating a 'minimalist' and dynamic table
   const createHeader = () => {
@@ -50,17 +63,14 @@ export function Liquid(props:{}) {
         return false
       }
 
-      const curDateObj = new Date();
-      const curDate = curDateObj.getDate();
-      const curDay = curDateObj.getDay();
-      const lastDate = new Date(financeData[1][0]?.date);
+      const curWeek = dayjs().week();
+      const prevRecordWeek = dayjs(financeData[0][0].date).week();
 
-      // if date is equal or within the first and last dates of the week
-      return !((curDay >= 5) && (curDay <= 7));
+      return curWeek == prevRecordWeek;
     };
 
-    // >= Monday && <= Thurday
-    if (((dayOfTheWeek >= 1) && (dayOfTheWeek <= 4)) || curWeekComplete()) {
+    // >= Sunday && <= Wednsday
+    if (((dayOfTheWeek >= 0) && (dayOfTheWeek <= 3)) || curWeekComplete()) {
       return null
     }
 
@@ -72,8 +82,9 @@ export function Liquid(props:{}) {
           onChange={e => setTempData(cur => ({...cur, [el]: e.target.value}))}/>
         </div>
       ),
-      <div className='r-fin-content' style={{width:equalPercent}}>N/A (calculated)</div>,
-      <div className='r-fin-content' style={{width:equalPercent}}>N/A (calculated)</div>,
+      <div className='r-fin-content' style={{width:`calc(${equalPercent} + ${equalPercent})`}}>
+        <Button icon={"fa fa-upload"} label="Submit Values" onClick={submitValues}></Button>
+      </div>,
     ];
 
     return <div className="r-fin-row">{row}</div>
