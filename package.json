@@ -70,7 +70,7 @@
 		"copy-webpack-plugin": "^10.2.4",
 		"css-loader": "^6.2.0",
 		"electron": "^20.0.1",
-		"electron-builder": "^23.0.3",
+		"electron-builder": "^23.3.3",
 		"electron-webpack": "^2.8.2",
 		"electron-webpack-ts": "^4.0.1",
 		"html-webpack-plugin": "^5.5.0",
