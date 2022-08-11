@@ -31,7 +31,6 @@ export function Liquid(props:{}) {
   const equalPercent = (100 / (financeData[0].length + 3)) + "%"
 
   const submitValues = async () => {
-    console.log(tempData)
     const res = await ipcRenderer.invoke('liquid-set', tempData);
     if (res.error != undefined) {
       toast.error("Could not save finance records: " + res.error.message)
@@ -64,7 +63,7 @@ export function Liquid(props:{}) {
       }
 
       const curWeek = dayjs().week();
-      const prevRecordWeek = dayjs(financeData[0][0].date).week();
+      const prevRecordWeek = dayjs(financeData[1][0].date).week();
 
       return curWeek == prevRecordWeek;
     };
