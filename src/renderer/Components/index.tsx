@@ -6,3 +6,4 @@ export * from "./inputtext";
 export * from "./dropdown";
 export * from "./modal";
 export * from "./tooltip";
+export * from "./table";
