@@ -10,7 +10,7 @@ function Row(props:{data:any[], onClick?:(e:any)=>void,
   const equalPercent = (100 / props.data.length) + "%";
 
   return (
-    <div className={'r-fin-row' + ' ' + (props.className ?? '')}>
+    <div className={'r-table-row' + ' ' + (props.className ?? '')}>
       {props.children ??
         props.data.map(el => <Cell style={{width: equalPercent}}>{el}</Cell>)}
     </div>

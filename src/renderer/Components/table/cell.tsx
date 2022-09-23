@@ -14,7 +14,7 @@ function Cell(props:{className?:string, editor?:JSX.Element,
   }
 
   return (
-    <div tabIndex={1} className={props.className ?? 'r-fin-content'} style={props.style}
+    <div tabIndex={1} className={props.className ?? 'r-table-content'} style={props.style}
       onFocus={()=>setActive(true)} onBlur={handleBlur}>
       {(isActive && props.editor != undefined) ? <props.editor />
         : props.children}

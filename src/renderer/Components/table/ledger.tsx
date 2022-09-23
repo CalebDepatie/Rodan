@@ -8,7 +8,7 @@ function Ledger(props:{columns:JSX.Element[], children?: any}) {
 
   return (
     <div>
-      <Row className='r-fin-header' data={props.columns} />
+      <Row className='r-table-header' data={props.columns} />
 
       {props.children}
     </div>

@@ -1,22 +1,39 @@
 @use '../../style.scss';
 
-.r-fin-row {
+.r-table-row {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   min-height: 28px;
   max-height: fit-content;
 }
 
-.r-fin-header {
+.r-table-content {
+  text-align: center;
+}
+
+.r-table-header {
   font-weight: bold;
   margin-bottom: 15px;
   border-bottom: 3px solid style.$colour-border;
 }
 
-.r-fin-content {
-  text-align: center;
+.r-table-top {
+  padding: 15px;
+  background: style.$colour-secondary-background;
+}
+
+.r-table {
+  & .r-table-header {
+    background: style.$colour-secondary-background;
+  }
+
+  & .r-table-row {
+    border-bottom: 1px solid style.$colour-border;
+    padding-bottom: 8px;
+    padding-top: 8px;
+  }
 }

@@ -20,8 +20,8 @@ function Table(props:{pk:string, columns:Column[], data:any[],
   const equalPercent = (100 / props.columns.length) + "%";
 
   return (
-    <div>
-      {props.header}
+    <div className="r-table">
+      <div className="r-table-top">{props.header}</div>
 
       <Ledger columns={props.columns.map(col => col.header)}>
 
