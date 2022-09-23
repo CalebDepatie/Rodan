@@ -71,7 +71,7 @@
 		"@babel/preset-react": "^7.18.6",
 		"@babel/preset-typescript": "^7.18.6",
 		"@webpack-cli/serve": "^1.7.0",
-		"concurrently": "^7.3.0",
+		"concurrently": "^7.4.0",
 		"copy-webpack-plugin": "^11.0.0",
 		"css-loader": "^6.2.0",
 		"electron": "^20.2.0",
