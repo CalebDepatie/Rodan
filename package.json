@@ -21,7 +21,6 @@
 	},
 	"build": {
 		"asar": true,
-		"icon": "./src/renderer/Public/favicon.ico",
 		"files": [
 			"build/*",
 			"common/*"
@@ -32,7 +31,13 @@
       "*.pdb"
 		],
 		"win": {
+			"icon": "./src/renderer/Public/favicon.ico",
 			"target": "nsis"
+		},
+		"linux": {
+			"icon": "./src/static/icon.png",
+			"target": "AppImage",
+			"category": "Office"
 		}
 	},
 	"dependencies": {
