@@ -62,14 +62,14 @@ export function Liquid(props:{}) {
     }
 
     const row = [
-      <Cell style={{width:equalPercent}}>{dateFormatter(new Date())}</Cell>,
+      <Cell key="blank-date" style={{width:equalPercent}}>{dateFormatter(new Date())}</Cell>,
       ...financeData[0].map(el =>
-        <Cell style={{width:equalPercent}}>
+        <Cell key={"blank-" + el} style={{width:equalPercent}}>
           <InputText value={tempData[el]} style={{width:"80%", height:"98%"}}
             onChange={e => setTempData(cur => ({...cur, [el]: e.target.value}))}/>
         </Cell>
       ),
-      <Cell style={{width:`calc(${equalPercent} + ${equalPercent})`}}>
+      <Cell key="blank-submit" style={{width:`calc(${equalPercent} + ${equalPercent})`}}>
         <Button icon={"fa fa-upload"} label="Submit Values" onClick={submitValues}></Button>
       </Cell>,
     ];
@@ -94,7 +94,7 @@ export function Liquid(props:{}) {
         currencyFormatter(el.netVal)
       ]
 
-      return <Row data={data}/>
+      return <Row key={data.date} data={data}/>
     });
   };
 
