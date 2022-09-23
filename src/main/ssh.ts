@@ -9,6 +9,10 @@ export async function openSSH() {
       command = `Start-Process -FilePath \"powershell\" -ArgumentList \"/c ssh -L ${process.env.PORT}:localhost:${process.env.PORT} ${process.env.REMOTE_USER}@${process.env.REMOTE_HOST}\"`
       break;
     }
+    case "linux": {
+      command = `kitty ssh -L ${process.env.PORT}:localhost:${process.env.PORT} ${process.env.REMOTE_USER}@${process.env.REMOTE_HOST}`
+      break;
+    }
     default: throw new Error("Cannot open tunnel, undefined platform")
   }
 

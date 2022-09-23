@@ -1,3 +1,3 @@
 export function getVersion(): string {
-  return "1.1.1";
+  return "1.1.2";
 }
