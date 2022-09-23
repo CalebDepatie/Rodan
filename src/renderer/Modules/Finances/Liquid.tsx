@@ -7,7 +7,7 @@ dayjs.extend(weekOfYear);
 
 import { toast } from 'react-toastify';
 
-import { InputText, Button } from '../../Components';
+import { InputText, Button, Row, Cell, Ledger } from '../../Components';
 import { dateFormatter, currencyFormatter } from 'common';
 
 export function Liquid(props:{}) {
@@ -39,18 +39,6 @@ export function Liquid(props:{}) {
     refresh();
   }
 
-  // functions to enable creating a 'minimalist' and dynamic table
-  const createHeader = () => {
-
-    const names = ["Week Ending", ...financeData[0], "Total", "Net"].map(el => {
-      return <div className="r-fin-content" style={{width:equalPercent}}>{el}</div>
-    });
-
-    return <div className='r-fin-row r-fin-header'>
-      {names}
-    </div>
-  };
-
   // creates the top 'blank' row IIF its a Friday to Sunday
   // TODO: make this show up past sunday if prev week doesn't exist
   const createBlankRow = () => {
@@ -74,50 +62,46 @@ export function Liquid(props:{}) {
     }
 
     const row = [
-      <div className='r-fin-content' style={{width:equalPercent}}>{dateFormatter(new Date())}</div>,
+      <Cell style={{width:equalPercent}}>{dateFormatter(new Date())}</Cell>,
       ...financeData[0].map(el =>
-        <div className='r-fin-content' style={{width:equalPercent}}>
-        <InputText value={tempData[el]} style={{width:"80%", height:"98%"}}
-          onChange={e => setTempData(cur => ({...cur, [el]: e.target.value}))}/>
-        </div>
+        <Cell style={{width:equalPercent}}>
+          <InputText value={tempData[el]} style={{width:"80%", height:"98%"}}
+            onChange={e => setTempData(cur => ({...cur, [el]: e.target.value}))}/>
+        </Cell>
       ),
-      <div className='r-fin-content' style={{width:`calc(${equalPercent} + ${equalPercent})`}}>
+      <Cell style={{width:`calc(${equalPercent} + ${equalPercent})`}}>
         <Button icon={"fa fa-upload"} label="Submit Values" onClick={submitValues}></Button>
-      </div>,
+      </Cell>,
     ];
 
-    return <div className="r-fin-row">{row}</div>
+    return <Row>{row}</Row>
   };
 
   const createRows = () => {
-    const rows = financeData[1].map((el:any, idx:number) => {
+    return financeData[1].map((el:any, idx:number) => {
 
-      return <div className='r-fin-row'>
-        <div className='r-fin-content' style={{width:equalPercent}}>{dateFormatter(new Date(el.date))}</div>
+      const accountData = financeData[0].map(acctName => {
+        const account = el.accounts.find(account => account.name === acctName);
+        return account != undefined
+                        ? currencyFormatter(account!.balance)
+                        : 'N/A'
+      })
 
-          {financeData[0].map(acctName => {
-            const account = el.accounts.find(account => account.name === acctName);
-            const value = account != undefined
-                            ? currencyFormatter(account!.balance)
-                            : 'N/A'
+      const data = [
+        dateFormatter(new Date(el.date)),
+        ...accountData,
+        currencyFormatter(el.totalVal),
+        currencyFormatter(el.netVal)
+      ]
 
-            return <div className='r-fin-content' style={{width:equalPercent}}>
-              {value}
-            </div>
-          })}
-
-        <div className='r-fin-content' style={{width:equalPercent}}>{currencyFormatter(el.totalVal)}</div>
-
-        <div className='r-fin-content' style={{width:equalPercent}}>{currencyFormatter(el.netVal)}</div>
-      </div>
+      return <Row data={data}/>
     });
-
-    return <>{rows}</>
   };
 
   return <div className="r-dashboard-container">
-    {createHeader()}
-    {createBlankRow()}
-    {createRows()}
+    <Ledger columns={["Week Ending", ...financeData[0], "Total", "Net"]}>
+      {createBlankRow()}
+      {createRows()}
+    </Ledger>
   </div>
 }
