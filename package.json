@@ -72,7 +72,7 @@
 		"concurrently": "^7.4.0",
 		"copy-webpack-plugin": "^11.0.0",
 		"css-loader": "^6.2.0",
-		"electron": "^20.2.0",
+		"electron": "^21.0.1",
 		"electron-builder": "^23.3.3",
 		"electron-webpack": "^2.8.2",
 		"electron-webpack-ts": "^4.0.1",
