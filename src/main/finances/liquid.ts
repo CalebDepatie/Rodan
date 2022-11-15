@@ -87,3 +87,28 @@ ipcMain.handle('liquid-set', async (e, req) => {
     }
   }
 });
+
+ipcMain.handle('finance-summary-get', async (e, req) => {
+  try {
+    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/get_finance_summary`);
+    const data = await res.json()
+
+    const monthly = data.map((el:any, idx:number) => {
+      if (idx !== 0) {
+        el = {...el, netVal: el.balance - data[idx-1].balance}
+      }
+
+      return el;
+    });
+
+    return {
+      body: {
+        monthly: monthly,
+      }
+    }
+  } catch (err) {
+    return {
+      error: err
+    }
+  }
+});
