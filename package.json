@@ -1,16 +1,16 @@
 {
 	"name": "Rodan",
-	"version": "1.1.2",
+	"version": "1.2.0",
 	"private": true,
 	"author": "Caleb Depatie",
 	"description": "Front End interface for SP",
 	"main": "electron.js",
 	"scripts": {
 		"dev": "yarn build:dev && yarn start",
-		"build:dev": "yarn build:zig && yarn build:dev:main && yarn run build:dev:renderer",
+		"build:dev": "yarn build:dev:main && yarn run build:dev:renderer",
 		"build:dev:main": "webpack --config ./webpack.config.main.js --mode=development",
 		"build:dev:renderer": "webpack --config ./webpack.config.renderer.dev.js --mode=development",
-		"build:prod": "yarn build:zig && yarn build:prod:main && yarn build:prod:renderer",
+		"build:prod": "yarn build:prod:main && yarn build:prod:renderer",
 		"build:prod:main": "webpack --config ./webpack.config.main.js --mode=production",
 		"build:prod:renderer": "webpack --config ./webpack.config.renderer.prod.js --mode=production",
 		"build:zig": "zig build",
@@ -27,8 +27,8 @@
 		],
 		"extraFiles": [
 			"*.env",
-      "*.node",
-      "*.pdb"
+			"*.node",
+			"*.pdb"
 		],
 		"win": {
 			"icon": "./src/renderer/Public/favicon.ico",
@@ -47,6 +47,7 @@
 		"@types/react": "^18.0.21",
 		"@types/react-dom": "^18.0.6",
 		"@types/react-router-dom": "^5.3.3",
+		"chart.js": "^4.0.1",
 		"dayjs": "^1.11.5",
 		"dotenv": "^16.0.2",
 		"electron-fetch": "^1.7.4",
@@ -54,6 +55,7 @@
 		"primeflex": "^3.2.1",
 		"primeicons": "^5.0.0",
 		"primereact": "^8.3.0",
+		"react-chartjs-2": "^4.3.1",
 		"react-markdown": "^8.0.3",
 		"react-popper": "^2.3.0",
 		"react-router-dom": "^6.4.1",
@@ -84,15 +86,15 @@
 		"react-scripts": "^5.0.1",
 		"sass": "^1.55.0",
 		"sass-loader": "^13.0.2",
+		"source-map-support": "^0.5.21",
 		"style-loader": "^3.3.1",
 		"style-resources-loader": "^1.4.1",
+		"terser-webpack-plugin": "^5.3.6",
 		"ts-loader": "~9.4.1",
 		"typescript": "^4.8.3",
 		"webpack": "^5.74.0",
 		"webpack-cli": "^4.10.0",
 		"webpack-dev-server": "^4.11.1",
-		"webpack-merge": "^5.8.0",
-		"source-map-support": "^0.5.21",
-		"terser-webpack-plugin": "^5.3.6"
+		"webpack-merge": "^5.8.0"
 	}
 }
