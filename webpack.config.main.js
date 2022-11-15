@@ -47,7 +47,7 @@ module.exports = {
     },
 
     plugins: [
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
     ],
 
     resolve: {
@@ -56,7 +56,8 @@ module.exports = {
         "path": require.resolve("path-browserify")
       },
       alias: {
-        "common": path.join(__dirname, 'src/common/')
+        "common": path.join(__dirname, 'src/common/'),
+        "rodan-native": path.join(__dirname, 'rodan-native.node')
       }
     }
 }

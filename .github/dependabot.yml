@@ -6,11 +6,7 @@
 version: 2
 updates:
   - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/ui" # Location of package manifests
-    schedule:
-      interval: "monthly"
-
-  - package-ecosystem: "gomod"
-    directory: "/"
+    directory: "/" # Location of package manifests
+    target-branch: "polish-staging"
     schedule:
       interval: "monthly"
