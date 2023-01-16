@@ -1,15 +1,13 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 import { ipcRenderer } from 'electron';
 
-import { Button, InputText, Dropdown } from '../../Components';
+import { Button, InputText, Dropdown, Table } from '../../Components';
+import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
+
 import TaskForm from './taskForm';
 
 import { toast } from 'react-toastify';
 
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-
-import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
 function Tasks(props:any) {
   const [ statuses, setStatuses ] = useState([]);
@@ -62,8 +60,8 @@ function Tasks(props:any) {
   };
 
   const statusEditor = (props: any) => {
-    const data = props.rowData.status;
-    const id   = props.rowData.id;
+    const data = props.status;
+    const id   = props.id;
     return (
       <Dropdown value={data} onChange={(e) => onEditorValueChange(props, 'status', e.target.value, id)}
                 options={statuses} optionValue='id' optionLabel='name'
@@ -86,15 +84,35 @@ function Tasks(props:any) {
     </>
   );
 
+  const columns = [
+  {
+    field: "title",
+    header: "Title",
+  },
+  {
+    field: "descrip",
+    header: "Description",
+  },
+  {
+    field: "status",
+    header: "Status",
+    body: statusFormat,
+    editor: statusEditor,
+  },
+  {
+    field: "initiative",
+    header: "Initiative",
+  },
+  {
+    field: "activity",
+    header: "Fragnet"
+  }
+  ];
+
   return (
     <>
-    <DataTable header={header} value={tasks} editMode="cell" style={{paddingBottom:"30px"}} >
-      <Column field="title" header="Title" />
-      <Column field="descrip" header="Description" />
-      <Column field="status" header="Status" body={statusFormat} editor={statusEditor} style={{width:"100px"}} />
-      <Column field="initiative" header="Initiative" />
-      <Column field="activity" header="Fragnet" />
-    </DataTable>
+    <Table pk="id" columns={columns} header={header}
+      data={tasks} style={{paddingBottom:"30px"}} />
 
     <TaskForm show={show} handleClose={handleClose} onSubmit={onSubmit} />
     </>

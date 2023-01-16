@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 import { ipcRenderer } from 'electron';
 
-import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
-
 import { Button, InputText, Dropdown } from '../../Components';
-import { fieldGen, fieldValGen } from '../../Helpers';
+import { fieldGen, fieldValGen, statusItemTemplate, statusValueTemplate } from '../../Helpers';
+import { dateFormatter } from 'common';
 
 import { toast } from 'react-toastify';
 
@@ -168,9 +167,7 @@ function Boards(props:any) {
       return '';
     }
     const d = new Date((node.data.tcd as unknown as number) * 1000);
-    d.setDate(d.getDate() + 1);
-    const a = d.toLocaleString('default', {day:'numeric', month:'short', year:'2-digit'}).split(' ');
-    return a.join('-');
+    return dateFormatter(d)
   };
 
   const tasksFormat = (node: TreeNode) => {
@@ -209,6 +206,8 @@ function Boards(props:any) {
       const res = await ipcRenderer.invoke('boards-update', {updateCol: 'state', updateVal: state.toString(), boardID:activeBoard});
       if (res.error != undefined) {
         toast.error("Could not workflow board: " + res.error)
+      } else {
+        refresh()
       }
     };
 
@@ -225,7 +224,7 @@ function Boards(props:any) {
       };
       case 1: return {
         icon: "fa fa-lock",
-        label: "Scope Lock | Set to Active",
+        label: "Set to Active",
         onClick: () => { updateHead(2) },
       };
       case 2: return {
@@ -251,8 +250,6 @@ function Boards(props:any) {
     if (row.data.status == 9 || row.data.status == 8) {
       style = {...style, "r-completed": true}
     }
-
-    console.log(row.data.title, style);
 
     return style
   }
