@@ -46,7 +46,6 @@ export function FinanceDashboard(props:{}) {
             toast.error("Could not load finance summary: " + res.error.message)
           }
 
-          console.log(res.body)
           set_summary(res.body ?? {monthly: []});
         }
 
@@ -94,9 +93,11 @@ export function FinanceDashboard(props:{}) {
             <Line data={delta_chart_data} options={options} style={{height: "250px"}} />
           </div>
 
-          <div className="r-fin-row">
-            (Current Total Values)
-          </div>
+          {
+          // <div className="r-fin-row">
+          //   (Current Total Values)
+          // </div>
+          }
 
           <TabView style={{width:'90vw'}}>
             <TabPanel header="Liquid">
