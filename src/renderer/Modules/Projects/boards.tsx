@@ -209,6 +209,8 @@ function Boards(props:any) {
       const res = await ipcRenderer.invoke('boards-update', {updateCol: 'state', updateVal: state.toString(), boardID:activeBoard});
       if (res.error != undefined) {
         toast.error("Could not workflow board: " + res.error)
+      } else {
+        refresh()
       }
     };
 
@@ -225,7 +227,7 @@ function Boards(props:any) {
       };
       case 1: return {
         icon: "fa fa-lock",
-        label: "Scope Lock | Set to Active",
+        label: "Set to Active",
         onClick: () => { updateHead(2) },
       };
       case 2: return {
@@ -251,8 +253,6 @@ function Boards(props:any) {
     if (row.data.status == 9 || row.data.status == 8) {
       style = {...style, "r-completed": true}
     }
-
-    console.log(row.data.title, style);
 
     return style
   }

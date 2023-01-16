@@ -92,7 +92,7 @@ function ProjectTable(props: any) {
     const res = await ipcRenderer.invoke('projects-update',{updateCol: field, updateVal: value.toString(), ...(proj ? {projID: id} : {iniID: id} )});
 
     if (res.error != undefined) {
-      toast.error('Could not update value: ' + updateFetch!.error, {});
+      toast.error('Could not update value: ' + res.error, {});
       return
     }
 
@@ -177,8 +177,20 @@ function ProjectTable(props: any) {
 
       <Dialog header="Move Project" visible={showMove} onHide={handleCloseMove} style={{width: '70vw'}} footer={(
         <>
-          <Button label='Submit' className='r-button-success' onClick={(e:any) => {
-            updateSignal({...form, updateCol:"parent", updateVal: form.updateVal.toString()});
+          <Button label='Submit' className='r-button-success' onClick={async (e:any) => {
+            const res = await ipcRenderer.invoke('projects-update', {
+              updateCol: 'parent',
+              updateVal: form.updateVal.toString(),
+              iniID: form.iniID,
+            });
+
+            if (res.error != undefined) {
+              toast.error('Could not move initiative: ' + res.error, {});
+              return
+            }
+
+            refresh()
+            handleCloseMove()
           }} />
         </>
       )}>
