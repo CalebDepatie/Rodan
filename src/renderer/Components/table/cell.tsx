@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import './table.scss';
 
-function Cell(props:{className?:string, editor?:JSX.Element,
+function Cell(props:{className?:string, editor?:ReactElement,
     style?:{[key:string]: string}, children?:any}) {
 
   const [isActive, setActive] = useState(false);
@@ -10,13 +10,16 @@ function Cell(props:{className?:string, editor?:JSX.Element,
   const handleBlur = (e:any) => {
     if (!e.currentTarget.contains(e.relatedTarget) || e.relatedTarget == null) {
         setActive(false)
+    } else if (e.currentTarget.contains(e.relatedTarget)) {
+      e.relatedTarget.onblur = handleBlur
     }
   }
 
   return (
-    <div tabIndex={1} className={props.className ?? 'r-table-content'} style={props.style}
+    <div tabIndex={0} className={props.className ?? 'r-table-content'} style={props.style}
       onFocus={()=>setActive(true)} onBlur={handleBlur}>
-      {(isActive && props.editor != undefined) ? <props.editor />
+      {(isActive && props.editor != undefined)
+        ? <props.editor />
         : props.children}
     </div>
   );

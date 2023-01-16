@@ -6,10 +6,9 @@ function Dropdown<ItemType>(props:{id?: string, value:ItemType, options:ItemType
     disabled?:boolean, className?:string, style?:{[key:string]: string}}) {
 
   return (
-    <select id={props.id} className={props.className} value={props.value}
-      onChange={props.onChange}
-      disabled={props.disabled} style={props.style} >
-      {props.options?.map((opt:any, idx:number) =>
+    <select id={props.id} tabIndex={-1} className={props.className} value={props.value}
+      onChange={props.onChange} disabled={props.disabled} style={props.style} >
+      {props.options?.map((opt:ItemType, idx:number) =>
         <option key={opt[props.optionValue!]}
           value={opt[props.optionValue!]}>{opt[props.optionLabel!]}</option>
       )}
