@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 're
 import { ipcRenderer } from 'electron';
 
 import { Button, InputText, Dropdown, Table } from '../../Components';
+import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
+
 import TaskForm from './taskForm';
 
 import { toast } from 'react-toastify';
 
-import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
 function Tasks(props:any) {
   const [ statuses, setStatuses ] = useState([]);

@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 import { ipcRenderer } from 'electron';
 
-import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
-
 import { Button, InputText, Dropdown } from '../../Components';
-import { fieldGen, fieldValGen } from '../../Helpers';
+import { fieldGen, fieldValGen, statusItemTemplate, statusValueTemplate } from '../../Helpers';
+import { dateFormatter } from 'common';
 
 import { toast } from 'react-toastify';
 
@@ -168,9 +167,7 @@ function Boards(props:any) {
       return '';
     }
     const d = new Date((node.data.tcd as unknown as number) * 1000);
-    d.setDate(d.getDate() + 1);
-    const a = d.toLocaleString('default', {day:'numeric', month:'short', year:'2-digit'}).split(' ');
-    return a.join('-');
+    return dateFormatter(d)
   };
 
   const tasksFormat = (node: TreeNode) => {
