@@ -74,7 +74,7 @@
 		"@webpack-cli/serve": "^1.7.0",
 		"concurrently": "^7.4.0",
 		"copy-webpack-plugin": "^11.0.0",
-		"css-loader": "^6.2.0",
+		"css-loader": "^6.7.3",
 		"electron": "^22.0.0",
 		"electron-builder": "^23.3.3",
 		"electron-webpack": "^2.8.2",
