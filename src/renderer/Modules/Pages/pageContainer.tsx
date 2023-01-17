@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { Tree } from 'primereact/tree';
 import TreeNode from 'primereact/treenode';
 import { Dialog } from 'primereact/dialog';
-import { Button, InputText } from '../../Components';
+import { Button, InputText, IconPicker } from '../../Components';
 import { fieldGen } from '../../Helpers';
 
 import './pages.scss';
@@ -23,7 +23,7 @@ function PageContainer(props:{}) {
     const res = await ipcRenderer.invoke('pages-get', {});
 
     if (res.error != undefined) {
-      toast.error("Could not load pages: " + res.error)
+      toast.error("Could not load pages: " + res.error.message)
     }
 
     setNodes(res.body);
@@ -51,7 +51,7 @@ function PageContainer(props:{}) {
     const id = selectedKey.split('~')[selectedKey.split('~').length-1];
     const res = await ipcRenderer.invoke('pages-update', {id:id, updateCol:"content", updateVal:newText});
     if (res.error != undefined) {
-      toast.error("Could not update page: " + res.error)
+      toast.error("Could not update page: " + res.error.message)
       return
     }
 
@@ -93,7 +93,7 @@ function PageContainer(props:{}) {
           ipcRenderer.invoke('pages-create', {...form, parent: selectedKey.split('~')[selectedKey.split('~').length-1]})
             .then(res => {
               if (res.error != undefined) {
-                toast.error("Could not create page: " + res.error)
+                toast.error("Could not create page: " + res.error.message)
                 return
               }
               refresh()
@@ -109,8 +109,8 @@ function PageContainer(props:{}) {
         </div>
 
         <div className="r-field r-col-6">
-          <label htmlFor="icon">Icon <i className={form['icon']} /></label>
-          <InputText id="icon" type="text" {...formText('icon')}/>
+          <label htmlFor="icon">Icon</label>
+          <IconPicker id="icon" {...formText('icon')}/>
         </div>
 
         <div className="r-field r-col-6">

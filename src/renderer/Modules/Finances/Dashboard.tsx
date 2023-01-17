@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { ipcRenderer } from 'electron';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect, useMemo } from 'react'
+import { ipcRenderer } from 'electron'
+import { toast } from 'react-toastify'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -26,12 +26,12 @@ import * as dayjs from 'dayjs';
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
 
-import { Line } from "react-chartjs-2";
+import { Line } from "react-chartjs-2"
 
-import { TabView, TabPanel } from 'primereact/tabview';
-import { Liquid } from "./Liquid";
+import { TabView, TabPanel } from '../../Components'
+import { Liquid } from "./Liquid"
 
-import "./Finances.scss";
+import "./Finances.scss"
 
 export function FinanceDashboard(props:{}) {
       const [ summary, set_summary ] = useState({
