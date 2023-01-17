@@ -26,7 +26,8 @@ pub fn build(b: *Builder) void {
             lib.addIncludePath("C:\\Users\\Caleb\\Documents\\vcpkg\\packages\\libssh_x86-windows\\include");
             lib.addLibraryPath("C:\\Users\\Caleb\\Documents\\vcpkg\\packages\\libssh_x86-windows\\bin");
             lib.addLibraryPath("C:\\Users\\Caleb\\Documents\\vcpkg\\packages\\libssh_x86-windows\\lib");
-            lib.linkSystemLibraryName("ssh");
+            lib.linkSystemLibrary("ssh");
+            lib.addObjectFile("C:\\Users\\Caleb\\Documents\\vcpkg\\packages\\libssh_x86-windows\\lib\\ssh.lib");
         },
         .linux => {
             lib.linkSystemLibrary("ssh");
