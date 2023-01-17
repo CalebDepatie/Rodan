@@ -1,0 +1,28 @@
+@use '../../style.scss';
+@use 'sass:color';
+
+.r-tabview-header {
+  font-weight: bold;
+  border-bottom: 3px solid style.$colour-border;
+  margin-right: 5px;
+  margin-left: 5px;
+  padding: 5px 10px;
+
+  &.active, &:hover {
+    border-color: style.$colour-tertiary;
+    color: style.$colour-tertiary;
+  }
+
+  &[disabled] {
+    border-color: color.adjust(style.$colour-border, $lightness: 8%);
+    color: color.adjust(style.$colour-border, $lightness: 8%);
+  }
+}
+
+.r-tabview-header-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
