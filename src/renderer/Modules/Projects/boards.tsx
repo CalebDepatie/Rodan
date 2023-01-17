@@ -50,7 +50,7 @@ function Boards(props:any) {
       const res = await ipcRenderer.invoke('statuses-get', {section:"board"});
 
       if (res.error != undefined) {
-        toast.error('Could not load statuses: ' + res.error)
+        toast.error('Could not load statuses: ' + res.error.message)
       }
 
       setStatuses(res.body);
@@ -69,7 +69,7 @@ function Boards(props:any) {
   const refreshFrags = async () => {
     const res = await ipcRenderer.invoke('boards-frags', {board: activeBoard})
     if (res.error != undefined) {
-      toast.error("Could not load board frags: " + res.error)
+      toast.error("Could not load board frags: " + res.error.message)
     }
     setFrags(res.body);
   }
@@ -124,7 +124,7 @@ function Boards(props:any) {
   const onEditorValueChange = async (props: any, field:string, value: string, id: string) => {
     const res = await ipcRenderer.invoke('boards-frags-update', {updateCol: field, updateVal: value.toString(), fragID:id});
     if (res.error != undefined) {
-      toast.error("Could not update fragnet: " + res.error)
+      toast.error("Could not update fragnet: " + res.error.message)
       return
     }
     // update table data
@@ -205,7 +205,7 @@ function Boards(props:any) {
     const updateHead = async (state:number) => {
       const res = await ipcRenderer.invoke('boards-update', {updateCol: 'state', updateVal: state.toString(), boardID:activeBoard});
       if (res.error != undefined) {
-        toast.error("Could not workflow board: " + res.error)
+        toast.error("Could not workflow board: " + res.error.message)
       } else {
         refresh()
       }
@@ -289,7 +289,7 @@ function Boards(props:any) {
           ipcRenderer.invoke('boards-frags-create', form)
             .then(res => {
               if (res.error != undefined) {
-                toast.error("Could not create fragnet: " + res.error)
+                toast.error("Could not create fragnet: " + res.error.message)
                 return
               }
               refreshFrags();
@@ -334,7 +334,7 @@ function Boards(props:any) {
           ipcRenderer.invoke('boards-create', {...form, initiative: parseInt(form["initiative"])})
             .then(res => {
               if (res.error != undefined) {
-                toast.error("Could not create board: " + res.error)
+                toast.error("Could not create board: " + res.error.message)
                 return
               }
               refresh()

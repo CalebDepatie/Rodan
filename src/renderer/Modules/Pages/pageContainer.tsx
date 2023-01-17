@@ -23,7 +23,7 @@ function PageContainer(props:{}) {
     const res = await ipcRenderer.invoke('pages-get', {});
 
     if (res.error != undefined) {
-      toast.error("Could not load pages: " + res.error)
+      toast.error("Could not load pages: " + res.error.message)
     }
 
     setNodes(res.body);
@@ -51,7 +51,7 @@ function PageContainer(props:{}) {
     const id = selectedKey.split('~')[selectedKey.split('~').length-1];
     const res = await ipcRenderer.invoke('pages-update', {id:id, updateCol:"content", updateVal:newText});
     if (res.error != undefined) {
-      toast.error("Could not update page: " + res.error)
+      toast.error("Could not update page: " + res.error.message)
       return
     }
 
@@ -93,7 +93,7 @@ function PageContainer(props:{}) {
           ipcRenderer.invoke('pages-create', {...form, parent: selectedKey.split('~')[selectedKey.split('~').length-1]})
             .then(res => {
               if (res.error != undefined) {
-                toast.error("Could not create page: " + res.error)
+                toast.error("Could not create page: " + res.error.message)
                 return
               }
               refresh()

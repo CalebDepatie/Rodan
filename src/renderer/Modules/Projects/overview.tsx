@@ -33,7 +33,7 @@ function ProjectTable(props: any) {
     const res = await ipcRenderer.invoke('projects-get');
 
     if (res.error != undefined) {
-      toast.error('Could not load projects: ' + res.error)
+      toast.error('Could not load projects: ' + res.error.message)
     }
 
     setProjects(res.body)
@@ -46,7 +46,7 @@ function ProjectTable(props: any) {
       const res = await ipcRenderer.invoke('statuses-get', {section:"project"});
 
       if (res.error != undefined) {
-        toast.error('Could not load statuses: ' + res.error)
+        toast.error('Could not load statuses: ' + res.error.message)
       }
 
       setStatuses(res.body);
@@ -92,7 +92,7 @@ function ProjectTable(props: any) {
     const res = await ipcRenderer.invoke('projects-update',{updateCol: field, updateVal: value.toString(), ...(proj ? {projID: id} : {iniID: id} )});
 
     if (res.error != undefined) {
-      toast.error('Could not update value: ' + res.error, {});
+      toast.error('Could not update value: ' + res.error.message);
       return
     }
 
@@ -148,7 +148,7 @@ function ProjectTable(props: any) {
             ipcRenderer.invoke('projects-create', {...form})
               .then(res => {
                 if (res.error != undefined) {
-                  toast.error("Could not create project: " + res.error)
+                  toast.error("Could not create project: " + res.error.message)
                   return
                 }
                 refresh()
@@ -185,7 +185,7 @@ function ProjectTable(props: any) {
             });
 
             if (res.error != undefined) {
-              toast.error('Could not move initiative: ' + res.error, {});
+              toast.error('Could not move initiative: ' + res.error.message);
               return
             }
 

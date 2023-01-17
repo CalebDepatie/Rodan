@@ -17,7 +17,7 @@ function TaskForm(props:{show:boolean, handleClose:()=>void, onSubmit?:(f:any)=>
     const fn = async () => {
       const res = await ipcRenderer.invoke("tasks-form-boards", {})
       if (res.error !== undefined) {
-        toast.error('Could not load boards: ', res.error)
+        toast.error('Could not load boards: ', res.error.message)
       }
 
       setActivities(res.body);
@@ -35,7 +35,7 @@ function TaskForm(props:{show:boolean, handleClose:()=>void, onSubmit?:(f:any)=>
           ipcRenderer.invoke('tasks-create', form)
             .then(res => {
               if (res.error != undefined) {
-                toast.error("Could not create task: " + res.error)
+                toast.error("Could not create task: " + res.error.message)
 
                 return
               }

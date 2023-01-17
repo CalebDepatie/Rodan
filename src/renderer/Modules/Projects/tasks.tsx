@@ -22,7 +22,7 @@ function Tasks(props:any) {
     const res = await ipcRenderer.invoke('tasks-get', {});
 
     if (res.error != undefined) {
-      toast.error('Could not load tasks: ' + res.error)
+      toast.error('Could not load tasks: ' + res.error.message)
     }
 
     setTasks(res.body.filter((el:any) => el.status != 13));
@@ -35,7 +35,7 @@ function Tasks(props:any) {
       const res = await ipcRenderer.invoke('statuses-get', {section:"task"});
 
       if (res.error != undefined) {
-        toast.error('Could not load statuses: ' + res.error)
+        toast.error('Could not load statuses: ' + res.error.message)
       }
 
       setStatuses(res.body);
@@ -46,7 +46,7 @@ function Tasks(props:any) {
   const onEditorValueChange = async (props: any, field:string, value: string, id: string) => {
     const res = await ipcRenderer.invoke('tasks-update', {updateCol: field, updateVal: value.toString(), taskID: id});
     if (res.error != undefined) {
-      toast.error("Could not update task: " + res.error)
+      toast.error("Could not update task: " + res.error.message)
       return
     }
 
