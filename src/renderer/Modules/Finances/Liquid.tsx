@@ -1,48 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { ipcRenderer } from 'electron';
+import React, { useState, useEffect } from 'react'
+import { ipcRenderer } from 'electron'
 
-import * as dayjs from 'dayjs';
-const weekOfYear = require('dayjs/plugin/weekOfYear');
-dayjs.extend(weekOfYear);
+import * as dayjs from 'dayjs'
+const weekOfYear = require('dayjs/plugin/weekOfYear')
+dayjs.extend(weekOfYear)
 
-import { toast } from 'react-toastify';
+import { toast } from 'react-toastify'
 
-import { InputText, Button, Row, Cell, Ledger } from '../../Components';
-import { dateFormatter, currencyFormatter } from 'common';
+import { InputText, Button, Row, Cell, Ledger } from '../../Components'
+import { dateFormatter, currencyFormatter } from 'common'
 
 export function Liquid(props:{}) {
-  const [financeData, setFinanceData] = useState([[], []]);
-  const [ tempData, setTempData ] = useState({});
+  const [ financeData, setFinanceData ] = useState([[], []])
+  const [ tempData, setTempData ] = useState({})
 
   const refresh = async () => {
-    const res = await ipcRenderer.invoke('liquid-get', {});
+    const res = await ipcRenderer.invoke('liquid-get', {})
 
     if (res.error != undefined) {
       toast.error("Could not load finance records: " + res.error.message)
     }
 
-    setFinanceData(res.body);
+    setFinanceData(res.body)
   }
 
   useEffect(() => {
-    refresh();
-  }, []);
+    refresh()
+  }, [])
 
   const equalPercent = (100 / (financeData[0].length + 3)) + "%"
 
   const submitValues = async () => {
-    const res = await ipcRenderer.invoke('liquid-set', tempData);
+    const res = await ipcRenderer.invoke('liquid-set', tempData)
     if (res.error != undefined) {
       toast.error("Could not save finance records: " + res.error.message)
     }
 
-    refresh();
+    refresh()
   }
 
   // creates the top 'blank' row IIF its a Friday to Sunday
   // TODO: make this show up past sunday if prev week doesn't exist
   const createBlankRow = () => {
-    const dayOfTheWeek: number = (new Date()).getDay();
+    const dayOfTheWeek: number = (new Date()).getDay()
 
     const curWeekComplete: boolean = () => {
       // if no data is returned
@@ -51,9 +51,9 @@ export function Liquid(props:{}) {
       }
 
       const curWeek = dayjs().week();
-      const prevRecordWeek = dayjs(financeData[1][0].date).week();
+      const prevRecordWeek = dayjs(financeData[1][0].date).week()
 
-      return curWeek == prevRecordWeek;
+      return curWeek == prevRecordWeek
     };
 
     // >= Sunday && <= Wednsday
@@ -74,14 +74,15 @@ export function Liquid(props:{}) {
       </Cell>,
     ];
 
-    return <Row>{row}</Row>
+    return <Row key="blank-row">{row}</Row>
   };
 
   const createRows = () => {
     return financeData[1].map((el:any, idx:number) => {
 
       const accountData = financeData[0].map(acctName => {
-        const account = el.accounts.find(account => account.name === acctName);
+        const account = el.accounts.find(account => account.name === acctName)
+
         return account != undefined
                         ? currencyFormatter(account!.balance)
                         : 'N/A'
