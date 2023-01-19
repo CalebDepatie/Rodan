@@ -1,17 +1,25 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import path from 'path'
-
-import { Sound } from "../Components";
+import { ipcRenderer } from 'electron'
+import { Sound, InputText, Button } from "../Components"
 
 function Home() {
   let radioWaveMonster = useRef<any>(null);
+  const [ pass, setPass ] = useState<string>('')
+
+  const submit = async () => {
+    ipcRenderer.invoke('ssh-open', {password:pass})
+  }
 
 	return (
 	<div className="r-home">
     <i className="fa fa-hard-hat"/>
     This page is under construction
+
+    <InputText type="password" value={pass} onChange={(e) => setPass(e.target.value)} />
+    <Button label="Submit" onClick={submit} />
   </div>
-	);
+	)
 }
 
-export default Home;
+export default Home
