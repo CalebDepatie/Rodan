@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { HashRouter as Router, Route, Routes } from 'react-router-dom'
 import { Header, Footer } from './Components'
 import { ToastContainer } from 'react-toastify'
-import { Home, ProjectTable, Boards, Tasks, PageContainer, FinanceDashboard, Login } from './Modules'
+import { Home, ProjectTable, Boards, Tasks, PageContainer, FinanceDashboard } from './Modules'
 import { BrowserWindow } from 'electron'
 
 import 'primereact/resources/themes/saga-blue/theme.css'
@@ -53,11 +53,6 @@ function App() {
       {
         path:'/documentation',
         element: <PageContainer/>,
-        exact: true,
-      },
-      {
-        path:'/login',
-        element: <Login/>,
         exact: true,
       },
   ], []);

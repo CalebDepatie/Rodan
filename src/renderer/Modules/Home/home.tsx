@@ -1,14 +1,9 @@
 import React, { useRef, useState } from 'react';
 import path from 'path'
-<<<<<<< HEAD:src/renderer/Modules/Home/home.tsx
-
-import { Sound } from "../../Components";
-=======
 import { ipcRenderer } from 'electron'
-import { Sound, InputText, Button } from "../Components"
->>>>>>> 8cc0118e24a2858d594566e26b8c630a20e8feab:src/renderer/Modules/home.tsx
+import { Sound, InputText, Button } from "../../Components"
 
-export function Home() {
+export const Home = () => {
   let radioWaveMonster = useRef<any>(null);
   const [ pass, setPass ] = useState<string>('')
 
@@ -26,8 +21,3 @@ export function Home() {
   </div>
 	)
 }
-<<<<<<< HEAD:src/renderer/Modules/Home/home.tsx
-=======
-
-export default Home
->>>>>>> 8cc0118e24a2858d594566e26b8c630a20e8feab:src/renderer/Modules/home.tsx
