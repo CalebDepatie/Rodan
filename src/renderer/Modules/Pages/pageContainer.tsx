@@ -103,7 +103,7 @@ function PageContainer(props:{}) {
 
         <div className="r-field r-col-6">
           <label htmlFor="parent">Parent</label>
-          <InputText id="parent" type="text" disabled={true} value={selectedKey}/>
+          <InputText id="parent" type="text" disabled={true} value={pageName}/>
         </div>
       </div>
     </Dialog>

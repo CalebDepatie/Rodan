@@ -16,10 +16,10 @@ import { InputSwitch } from 'primereact/inputswitch';
 
 function Boards(props:any) {
   const [ boardHeads, setBoardHeads ]  = useState<any[]>([]);
-  const [ frags, setFrags ]            = useState([]);
+  const [ frags, setFrags ]            = useState<TreeNode[]>([]);
   const [ statuses, setStatuses ]      = useState([]);
   const [ initiatives, setIni]         = useState([]);
-  const [ activeBoard, setActiveBoard] = useState('');
+  const [ activeBoard, setActiveBoard] = useState<string>('');
   const [ form, setForm ]              = useState<{[key: string]: any}>({});
   const [ showHead, setShowHead ]      = useState<boolean>(false);
   const [ showFrag, setShowFrag ]      = useState<boolean>(false);
@@ -73,19 +73,6 @@ function Boards(props:any) {
     }
     setFrags(res.body);
   }
-
-  useEffect(() => {
-    setForm({...form, board_id: activeBoard})
-    if (activeBoard && activeBoard !== '') {
-      refreshFrags()
-    }
-  }, [activeBoard]);
-
-  useEffect(() => {
-    const keys = selectedKey.split('~');
-    const id = keys[keys.length-1];
-    setForm({...form, parent: id});
-  }, [selectedKey]);
 
   const moscow = [
     {label:"Nothing Selected", value:null},
@@ -227,9 +214,35 @@ function Boards(props:any) {
     };
   }
 
-  useEffect(()=>{
+  let board_name = "No board selected"
+  const parent_name = findNodeByKey(frags, selectedKey)?.data?.title ?? ""
+
+  board_search:
+  for (let head in boardHeads) {
+    for (let board in boardHeads[head].items) {
+      if (boardHeads[head].items[board].id != activeBoard)
+        continue
+
+      board_name = boardHeads[head].items[board].title
+
+      break board_search
+    }
+  }
+
+  useEffect(() => {
+    setForm({...form, board_id: activeBoard})
+    if (activeBoard && activeBoard !== '') {
+      refreshFrags()
+    }
+
     setWorkflow(workflow());
   }, [activeBoard]);
+
+  useEffect(() => {
+    const keys = selectedKey.split('~');
+    const id = keys[keys.length-1];
+    setForm({...form, parent: id});
+  }, [selectedKey]);
 
   const rowStyler = (row:any) => {
     let style = {}
@@ -287,23 +300,23 @@ function Boards(props:any) {
     )}>
       <div className='r-form'>
         <div className="r-field r-col-6">
-          <label htmlFor="board">Board ID</label>
-          <InputText id="board" type="text" disabled={true} {...formText('board_id')}/>
+          <label htmlFor="board">Board</label>
+          <InputText id="board" type="text" disabled={true} value={board_name}/>
         </div>
 
-        <div className="r-field r-col-6">
+        <div className="r-field r-col-4">
           <label htmlFor="parent">Parent Fragnet</label>
-          <InputText id="parent" type="text" disabled={true} {...formText('parent')}/>
+          <InputText id="parent" type="text" disabled={true} value={parent_name}/>
+        </div>
+
+        <div className="r-field r-col-2">
+          <label htmlFor="clear">Clear</label>
+          <Button id="clear" icon="fa fa-x" onClick={()=>setSelected('')}/>
         </div>
 
         <div className="r-field r-col-6">
           <label htmlFor="name">Title</label>
           <InputText id="name" type="text" {...formText('title')}/>
-        </div>
-
-        <div className="r-field r-col-6">
-          <label htmlFor="effort">Effort</label>
-          <InputText id="effort" type="number" {...formText('effort')}/>
         </div>
 
         <div className="r-field r-col-6">
