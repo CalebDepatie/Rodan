@@ -10,9 +10,11 @@ function TabView(props:{children?:ReactNode, className?:string, style?:{[key:str
     return React.Children.map(props.children,
       (tab:ReactNode, index:number) => {
         const className = 'r-tabview-header' + (activeTab===index ? ' active' : '')
+        const disabled = tab.props.disabled ?? false
+        const onClick = disabled ? null : () => setActiveTab(index)
         return (
-          <div className={className} disabled={tab.props.disabled ?? false}
-            onClick={() => setActiveTab(index)}>
+          <div className={className} disabled={disabled}
+            onClick={onClick}>
             {tab.props.header}
           </div>
       )
