@@ -1,5 +1,10 @@
 /node_modules
 /dist
 /build
+/zig-cache
+/zig-out
+*.node
+*.pdb
 .env
 yarn-error.log
+*~

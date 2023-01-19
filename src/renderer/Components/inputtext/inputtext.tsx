@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 import "./inputtext.scss";
 
-function InputText(props:{value:any, onChange?:(e:any)=>void, type?:string, id?:string,
+function InputText<ValueType>(props:{value:ValueType, onChange?:(e:ChangeEvent)=>void, type?:string, id?:string,
     className?:string, disabled?:boolean, style?:{[key:string]: string}}) {
 
   return (

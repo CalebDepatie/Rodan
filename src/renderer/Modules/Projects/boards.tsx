@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 import { ipcRenderer } from 'electron';
 
-import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
-
 import { Button, InputText, Dropdown } from '../../Components';
-import { fieldGen, fieldValGen } from '../../Helpers';
+import { fieldGen, fieldValGen, statusItemTemplate, statusValueTemplate, findNodeByKey } from '../../Helpers';
+import { dateFormatter } from 'common';
 
 import { toast } from 'react-toastify';
 
@@ -17,10 +16,10 @@ import { InputSwitch } from 'primereact/inputswitch';
 
 function Boards(props:any) {
   const [ boardHeads, setBoardHeads ]  = useState<any[]>([]);
-  const [ frags, setFrags ]            = useState([]);
+  const [ frags, setFrags ]            = useState<TreeNode[]>([]);
   const [ statuses, setStatuses ]      = useState([]);
   const [ initiatives, setIni]         = useState([]);
-  const [ activeBoard, setActiveBoard] = useState('');
+  const [ activeBoard, setActiveBoard] = useState<string>('');
   const [ form, setForm ]              = useState<{[key: string]: any}>({});
   const [ showHead, setShowHead ]      = useState<boolean>(false);
   const [ showFrag, setShowFrag ]      = useState<boolean>(false);
@@ -51,7 +50,7 @@ function Boards(props:any) {
       const res = await ipcRenderer.invoke('statuses-get', {section:"board"});
 
       if (res.error != undefined) {
-        toast.error('Could not load statuses: ' + res.error)
+        toast.error('Could not load statuses: ' + res.error.message)
       }
 
       setStatuses(res.body);
@@ -70,23 +69,10 @@ function Boards(props:any) {
   const refreshFrags = async () => {
     const res = await ipcRenderer.invoke('boards-frags', {board: activeBoard})
     if (res.error != undefined) {
-      toast.error("Could not load board frags: " + res.error)
+      toast.error("Could not load board frags: " + res.error.message)
     }
     setFrags(res.body);
   }
-
-  useEffect(() => {
-    setForm({...form, board_id: activeBoard})
-    if (activeBoard && activeBoard !== '') {
-      refreshFrags()
-    }
-  }, [activeBoard]);
-
-  useEffect(() => {
-    const keys = selectedKey.split('~');
-    const id = keys[keys.length-1];
-    setForm({...form, parent: id});
-  }, [selectedKey]);
 
   const moscow = [
     {label:"Nothing Selected", value:null},
@@ -109,23 +95,10 @@ function Boards(props:any) {
   const formDropdown = fieldGen(form, setForm);
   const formSwitch   = fieldValGen(form, setForm);
 
-  const findNodeByKey = (nodes:TreeNode[], key:string): TreeNode|null => {
-    const path:string[]    = key.split('~');
-    let node:TreeNode|null = null;
-
-    while (path.length) {
-      let list:TreeNode[] = node?.children ?? nodes;
-      node = list.filter((i:TreeNode) => i.data.id == path[0])[0];
-      path.shift();
-    }
-
-    return node;
-  }
-
   const onEditorValueChange = async (props: any, field:string, value: string, id: string) => {
     const res = await ipcRenderer.invoke('boards-frags-update', {updateCol: field, updateVal: value.toString(), fragID:id});
     if (res.error != undefined) {
-      toast.error("Could not update fragnet: " + res.error)
+      toast.error("Could not update fragnet: " + res.error.message)
       return
     }
     // update table data
@@ -168,9 +141,7 @@ function Boards(props:any) {
       return '';
     }
     const d = new Date((node.data.tcd as unknown as number) * 1000);
-    d.setDate(d.getDate() + 1);
-    const a = d.toLocaleString('default', {day:'numeric', month:'short', year:'2-digit'}).split(' ');
-    return a.join('-');
+    return dateFormatter(d)
   };
 
   const tasksFormat = (node: TreeNode) => {
@@ -208,7 +179,9 @@ function Boards(props:any) {
     const updateHead = async (state:number) => {
       const res = await ipcRenderer.invoke('boards-update', {updateCol: 'state', updateVal: state.toString(), boardID:activeBoard});
       if (res.error != undefined) {
-        toast.error("Could not workflow board: " + res.error)
+        toast.error("Could not workflow board: " + res.error.message)
+      } else {
+        refresh()
       }
     };
 
@@ -225,7 +198,7 @@ function Boards(props:any) {
       };
       case 1: return {
         icon: "fa fa-lock",
-        label: "Scope Lock | Set to Active",
+        label: "Set to Active",
         onClick: () => { updateHead(2) },
       };
       case 2: return {
@@ -241,9 +214,35 @@ function Boards(props:any) {
     };
   }
 
-  useEffect(()=>{
+  let board_name = "No board selected"
+  const parent_name = findNodeByKey(frags, selectedKey)?.data?.title ?? ""
+
+  board_search:
+  for (let head in boardHeads) {
+    for (let board in boardHeads[head].items) {
+      if (boardHeads[head].items[board].id != activeBoard)
+        continue
+
+      board_name = boardHeads[head].items[board].title
+
+      break board_search
+    }
+  }
+
+  useEffect(() => {
+    setForm({...form, board_id: activeBoard})
+    if (activeBoard && activeBoard !== '') {
+      refreshFrags()
+    }
+
     setWorkflow(workflow());
   }, [activeBoard]);
+
+  useEffect(() => {
+    const keys = selectedKey.split('~');
+    const id = keys[keys.length-1];
+    setForm({...form, parent: id});
+  }, [selectedKey]);
 
   const rowStyler = (row:any) => {
     let style = {}
@@ -290,7 +289,7 @@ function Boards(props:any) {
           ipcRenderer.invoke('boards-frags-create', form)
             .then(res => {
               if (res.error != undefined) {
-                toast.error("Could not create fragnet: " + res.error)
+                toast.error("Could not create fragnet: " + res.error.message)
                 return
               }
               refreshFrags();
@@ -301,23 +300,23 @@ function Boards(props:any) {
     )}>
       <div className='r-form'>
         <div className="r-field r-col-6">
-          <label htmlFor="board">Board ID</label>
-          <InputText id="board" type="text" disabled={true} {...formText('board_id')}/>
+          <label htmlFor="board">Board</label>
+          <InputText id="board" type="text" disabled={true} value={board_name}/>
         </div>
 
-        <div className="r-field r-col-6">
+        <div className="r-field r-col-4">
           <label htmlFor="parent">Parent Fragnet</label>
-          <InputText id="parent" type="text" disabled={true} {...formText('parent')}/>
+          <InputText id="parent" type="text" disabled={true} value={parent_name}/>
+        </div>
+
+        <div className="r-field r-col-2">
+          <label htmlFor="clear">Clear</label>
+          <Button id="clear" icon="fa fa-x" onClick={()=>setSelected('')}/>
         </div>
 
         <div className="r-field r-col-6">
           <label htmlFor="name">Title</label>
           <InputText id="name" type="text" {...formText('title')}/>
-        </div>
-
-        <div className="r-field r-col-6">
-          <label htmlFor="effort">Effort</label>
-          <InputText id="effort" type="number" {...formText('effort')}/>
         </div>
 
         <div className="r-field r-col-6">
@@ -335,7 +334,7 @@ function Boards(props:any) {
           ipcRenderer.invoke('boards-create', {...form, initiative: parseInt(form["initiative"])})
             .then(res => {
               if (res.error != undefined) {
-                toast.error("Could not create board: " + res.error)
+                toast.error("Could not create board: " + res.error.message)
                 return
               }
               refresh()

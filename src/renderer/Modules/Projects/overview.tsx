@@ -5,6 +5,7 @@ import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
 
 import { Button, InputText, Dropdown } from '../../Components';
 import { fieldGen } from '../../Helpers';
+import { dateFormatter } from 'common';
 
 import { toast } from 'react-toastify';
 
@@ -32,7 +33,7 @@ function ProjectTable(props: any) {
     const res = await ipcRenderer.invoke('projects-get');
 
     if (res.error != undefined) {
-      toast.error('Could not load projects: ' + res.error)
+      toast.error('Could not load projects: ' + res.error.message)
     }
 
     setProjects(res.body)
@@ -45,7 +46,7 @@ function ProjectTable(props: any) {
       const res = await ipcRenderer.invoke('statuses-get', {section:"project"});
 
       if (res.error != undefined) {
-        toast.error('Could not load statuses: ' + res.error)
+        toast.error('Could not load statuses: ' + res.error.message)
       }
 
       setStatuses(res.body);
@@ -61,9 +62,7 @@ function ProjectTable(props: any) {
 
   const dateFormat = (node: TreeNode) => {
     const d = new Date((node.data.created as unknown as number) * 1000);
-    d.setDate(d.getDate() + 1);
-    const a = d.toLocaleString('default', {day:'numeric', month:'short', year:'2-digit'}).split(' ');
-    return a.join('-');
+    return dateFormatter(d);
   };
 
   const formText = fieldGen(form, setForm);
@@ -93,7 +92,7 @@ function ProjectTable(props: any) {
     const res = await ipcRenderer.invoke('projects-update',{updateCol: field, updateVal: value.toString(), ...(proj ? {projID: id} : {iniID: id} )});
 
     if (res.error != undefined) {
-      toast.error('Could not update value: ' + updateFetch!.error, {});
+      toast.error('Could not update value: ' + res.error.message);
       return
     }
 
@@ -149,7 +148,7 @@ function ProjectTable(props: any) {
             ipcRenderer.invoke('projects-create', {...form})
               .then(res => {
                 if (res.error != undefined) {
-                  toast.error("Could not create project: " + res.error)
+                  toast.error("Could not create project: " + res.error.message)
                   return
                 }
                 refresh()
@@ -178,8 +177,20 @@ function ProjectTable(props: any) {
 
       <Dialog header="Move Project" visible={showMove} onHide={handleCloseMove} style={{width: '70vw'}} footer={(
         <>
-          <Button label='Submit' className='r-button-success' onClick={(e:any) => {
-            updateSignal({...form, updateCol:"parent", updateVal: form.updateVal.toString()});
+          <Button label='Submit' className='r-button-success' onClick={async (e:any) => {
+            const res = await ipcRenderer.invoke('projects-update', {
+              updateCol: 'parent',
+              updateVal: form.updateVal.toString(),
+              iniID: form.iniID,
+            });
+
+            if (res.error != undefined) {
+              toast.error('Could not move initiative: ' + res.error.message);
+              return
+            }
+
+            refresh()
+            handleCloseMove()
           }} />
         </>
       )}>

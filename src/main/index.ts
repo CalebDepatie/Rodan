@@ -1,27 +1,31 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, session, ipcMain } from 'electron'
 import * as path from 'path'
 import { format as formatUrl } from 'url'
 import dotenv from "dotenv"
 
+import {openSSH, closeSSH} from "./ssh.ts";
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
-let mainWindow
+let mainWindow;
 
 function createMainWindow() {
   const window = new BrowserWindow({
     width: 1360,
     height: 800,
     webPreferences: {
+      allowRunningInsecureContent: false,
+      experimentalFeatures: false,
       nodeIntegration: true,
       contextIsolation: false,
     }
   })
 
   if (isDevelopment) {
-    window.loadURL( `http://localhost:${ process.env.PORT || 8182 }/index.html` )
+    window.loadURL( `http://localhost:${ 8182 }/index.html` )
     window.webContents.openDevTools()
   } else {
     window.loadURL(formatUrl({
@@ -47,6 +51,7 @@ function createMainWindow() {
 
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
+  closeSSH();
   // on macOS it is common for applications to stay open until the user explicitly quits
   if (process.platform !== 'darwin') {
     app.quit()
@@ -64,9 +69,24 @@ app.on('activate', () => {
 app.on('ready', () => {
   mainWindow = createMainWindow()
   dotenv.config();
+
+  // setup content security policy
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': ['default-src \'self\'; style-src \'unsafe-inline\'; script-src  \'self\' \'unsafe-inline\'']
+      }
+    })
+  });
+})
+
+ipcMain.handle("ssh-open", async (e, req) => {
+  await openSSH(req.password)
 })
 
 // loading event handlers
-import "./statuses.ts";
+import "./statuses";
 import "./projects";
-import "./pages.ts";
+import "./pages";
+import "./finances";
