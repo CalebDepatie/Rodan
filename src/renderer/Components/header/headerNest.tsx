@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 
-export default function HeaderNest(props: {header: React.ReactNode, children: React.ReactNode}) {
+export default function HeaderNest(props: {header: ReactNode, children: ReactNode}) {
   const [show, setShow] = useState<boolean>(false)
 
   return <>

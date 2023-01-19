@@ -1,11 +1,11 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, ReactNode } from 'react';
 
 import { usePopper } from 'react-popper'
 
 import './tooltip.scss';
 
-function Tooltip(props:{id?:string, content:any,
-    children:any, className?:string, arrowClassName?:string, style?:{[key:string]: string}}) {
+function Tooltip(props:{id?:string, content:ReactNode,
+    children:ReactNode, className?:string, arrowClassName?:string, style?:{[key:string]: string}}) {
 
   const refElement    = useRef<any>(null);
   const popperElement = useRef<any>(null);
