@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import path from 'path'
 import { Sound, Card } from "../../Components"
 import { Login } from "./login"
+import { FinanceCard } from "../Finances"
 
 import "./home.scss"
 
@@ -11,6 +12,7 @@ export const Home = () => {
 	return (
 	<div className="r-home">
     <Login />
+    <FinanceCard />
 
     <Card>
       <Sound ref={radioWaveMonster} soundFile="assets/RODAN RODAN RADIO WAVE MONSTER.mp3" />
