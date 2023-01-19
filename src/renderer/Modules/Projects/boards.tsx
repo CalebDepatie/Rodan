@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 're
 import { ipcRenderer } from 'electron';
 
 import { Button, InputText, Dropdown } from '../../Components';
-import { fieldGen, fieldValGen, statusItemTemplate, statusValueTemplate } from '../../Helpers';
+import { fieldGen, fieldValGen, statusItemTemplate, statusValueTemplate, findNodeByKey } from '../../Helpers';
 import { dateFormatter } from 'common';
 
 import { toast } from 'react-toastify';
@@ -107,19 +107,6 @@ function Boards(props:any) {
   const formText     = fieldGen(form, setForm);
   const formDropdown = fieldGen(form, setForm);
   const formSwitch   = fieldValGen(form, setForm);
-
-  const findNodeByKey = (nodes:TreeNode[], key:string): TreeNode|null => {
-    const path:string[]    = key.split('~');
-    let node:TreeNode|null = null;
-
-    while (path.length) {
-      let list:TreeNode[] = node?.children ?? nodes;
-      node = list.filter((i:TreeNode) => i.data.id == path[0])[0];
-      path.shift();
-    }
-
-    return node;
-  }
 
   const onEditorValueChange = async (props: any, field:string, value: string, id: string) => {
     const res = await ipcRenderer.invoke('boards-frags-update', {updateCol: field, updateVal: value.toString(), fragID:id});
