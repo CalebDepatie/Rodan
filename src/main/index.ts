@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, session } from 'electron'
+import { app, BrowserWindow, session, ipcMain } from 'electron'
 import * as path from 'path'
 import { format as formatUrl } from 'url'
 import dotenv from "dotenv"
@@ -25,7 +25,7 @@ function createMainWindow() {
   })
 
   if (isDevelopment) {
-    window.loadURL( `http://localhost:${ process.env.PORT || 8182 }/index.html` )
+    window.loadURL( `http://localhost:${ 8182 }/index.html` )
     window.webContents.openDevTools()
   } else {
     window.loadURL(formatUrl({
@@ -69,20 +69,21 @@ app.on('activate', () => {
 app.on('ready', () => {
   mainWindow = createMainWindow()
   dotenv.config();
-  openSSH();
-  // console.log(process.platform)
 
   // setup content security policy
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
       responseHeaders: {
         ...details.responseHeaders,
-        'Content-Security-Policy': ['default-src \'self\'; style-src \'unsafe-inline\'']
+        'Content-Security-Policy': ['default-src \'self\'; style-src \'unsafe-inline\'; script-src  \'self\' \'unsafe-inline\'']
       }
     })
   });
 })
 
+ipcMain.handle("ssh-open", async (e, req) => {
+  await openSSH(req.password)
+})
 
 // loading event handlers
 import "./statuses";

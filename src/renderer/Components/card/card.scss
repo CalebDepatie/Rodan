@@ -1,0 +1,23 @@
+@use '../../style.scss';
+
+.r-card {
+  border-width: 3px;
+  border-color: style.$colour-border;
+  background-color: style.$colour-secondary-background;
+  border-style: solid;
+  border-radius: 5px;
+  margin: 15px;
+  padding: 5px;
+
+  .r-title {
+    text-align: center;
+    font-style: italic;
+  }
+
+  .r-content {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+  }
+}

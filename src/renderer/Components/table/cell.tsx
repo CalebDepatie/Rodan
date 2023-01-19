@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 
 import './table.scss';
 
-function Cell(props:{className?:string, editor?:ReactElement,
-    style?:{[key:string]: string}, children?:any}) {
+function Cell(props:{className?:string, editor?:ReactNode,
+    style?:{[key:string]: string}, children?:ReactNode}) {
 
   const [isActive, setActive] = useState(false);
 

@@ -8,7 +8,7 @@ import { Tree } from 'primereact/tree';
 import TreeNode from 'primereact/treenode';
 import { Dialog } from 'primereact/dialog';
 import { Button, InputText, IconPicker } from '../../Components';
-import { fieldGen } from '../../Helpers';
+import { fieldGen, findNodeByKey } from '../../Helpers';
 
 import './pages.scss';
 
@@ -33,20 +33,6 @@ function PageContainer(props:{}) {
     refresh();
   }, [])
 
-  // lift up
-  const findNodeByKey = (nodes:TreeNode[], key:string): TreeNode|null => {
-    const path:string[]    = key.split('~');
-    let node:TreeNode|null = null;
-
-    while (path.length) {
-      let list:TreeNode[] = node?.children ?? nodes;
-      node = list.filter((i:TreeNode) => i.data.id == path[0])[0];
-      path.shift();
-    }
-
-    return node;
-  }
-
   const publish = async (newText:string) => {
     const id = selectedKey.split('~')[selectedKey.split('~').length-1];
     const res = await ipcRenderer.invoke('pages-update', {id:id, updateCol:"content", updateVal:newText});
@@ -70,6 +56,8 @@ function PageContainer(props:{}) {
     return cur.children ? [...acc, cur, ...cur.children.reduce(flatten, [])]
                         : [...acc, cur];
   };
+
+  const pageName = findNodeByKey(nodes, selectedKey)?.data?.name ?? ""
 
   return (
     <>
@@ -115,7 +103,7 @@ function PageContainer(props:{}) {
 
         <div className="r-field r-col-6">
           <label htmlFor="parent">Parent</label>
-          <InputText id="parent" type="text" disabled={true} value={selectedKey}/>
+          <InputText id="parent" type="text" disabled={true} value={pageName}/>
         </div>
       </div>
     </Dialog>

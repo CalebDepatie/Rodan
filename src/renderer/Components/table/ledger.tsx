@@ -4,7 +4,7 @@ import Row from "./row";
 
 import './table.scss';
 
-function Ledger(props:{columns:JSX.Element[], children?: ReactNode}) {
+function Ledger(props:{columns:ReactNode[], children?: ReactNode}) {
 
   return (
     <div>

@@ -1,18 +1,20 @@
-import React, { useMemo } from 'react';
-import { HashRouter as Router, Route, Routes } from 'react-router-dom';
-import { Header, Footer } from './Components';
-import { ToastContainer } from 'react-toastify';
-import { Home, ProjectTable, Boards, Tasks, PageContainer, FinanceDashboard } from './Modules';
+import React, { useMemo } from 'react'
+import ReactDOM from 'react-dom'
+import { HashRouter as Router, Route, Routes } from 'react-router-dom'
+import { Header, Footer } from './Components'
+import { ToastContainer } from 'react-toastify'
+import { Home, ProjectTable, Boards, Tasks, PageContainer, FinanceDashboard } from './Modules'
+import { BrowserWindow } from 'electron'
 
-import 'primereact/resources/themes/saga-blue/theme.css';
-import 'primereact/resources/primereact.min.css';
-import 'primeflex/primeflex.css';
-import 'react-toastify/dist/ReactToastify.min.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'primereact/resources/themes/saga-blue/theme.css'
+import 'primereact/resources/primereact.min.css'
+import 'primeflex/primeflex.css'
+import 'react-toastify/dist/ReactToastify.min.css'
 
-import 'primeicons/primeicons.css';
+import '@fortawesome/fontawesome-free/css/all.min.css'
+import 'primeicons/primeicons.css'
 
-import './style.scss';
+import './style.scss'
 
 declare global {
   interface Array<T> {
@@ -52,7 +54,7 @@ function App() {
         path:'/documentation',
         element: <PageContainer/>,
         exact: true,
-      }
+      },
   ], []);
 
 

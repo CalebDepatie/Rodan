@@ -11,6 +11,7 @@ $colour-primary: #546866;
 $colour-secondary: #E4DFDA;
 $colour-tertiary: #800080;
 
+$colour-primary-background: white;
 $colour-secondary-background: #E6E6E3;
 
 $colour-primary-text: white;
@@ -26,6 +27,7 @@ $standard-transition: 0.4s;
   margin: 0;
   line-height: 1.5;
   font-size: 16px;
+  background-color: $colour-primary-background;
 }
 
 body {

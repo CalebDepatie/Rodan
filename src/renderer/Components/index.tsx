@@ -9,3 +9,4 @@ export * from "./tooltip"
 export * from "./table"
 export * from "./tabview"
 export * from "./iconpicker"
+export * from "./card";
