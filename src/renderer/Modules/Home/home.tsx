@@ -1,13 +1,14 @@
 import React, { useRef } from 'react';
 import path from 'path'
-import { Sound, Card } from "../../Components"
+import { Card } from "../../Components"
 import { Login } from "./login"
 import { FinanceCard } from "../Finances"
+import { useSound } from "../../Hooks"
 
 import "./home.scss"
 
 export const Home = () => {
-  let radioWaveMonster = useRef<any>(null);
+  const radioWaveMonster = useSound("assets/RODAN RODAN RADIO WAVE MONSTER.mp3")
 
 	return (
 	<div className="r-home">
@@ -15,10 +16,9 @@ export const Home = () => {
     <FinanceCard />
 
     <Card>
-      <Sound ref={radioWaveMonster} soundFile="assets/RODAN RODAN RADIO WAVE MONSTER.mp3" />
       <img src="assets/icon.png" style={{width:"230px", height:"230px"}}
               onClick={() => {
-                radioWaveMonster.current!.play()
+                radioWaveMonster.play()
               }}/>
     </Card>
   </div>

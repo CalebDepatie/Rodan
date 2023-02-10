@@ -8,7 +8,6 @@ function useShortcut(codes:string[], callback:()=>void, depends:any[]) {
         evt.preventDefault()
         callback()
       }
-
     }
 
     document.addEventListener("keydown", listener)
