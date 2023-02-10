@@ -39,8 +39,7 @@ export function Liquid(props:{}) {
     refresh()
   }
 
-  // creates the top 'blank' row IIF its a Friday to Sunday
-  // TODO: make this show up past sunday if prev week doesn't exist
+  // creates the top 'blank' row IIF the current calander week has no record
   const createBlankRow = () => {
     const dayOfTheWeek: number = (new Date()).getDay()
 
@@ -56,8 +55,7 @@ export function Liquid(props:{}) {
       return curWeek == prevRecordWeek
     };
 
-    // >= Sunday && <= Wednsday
-    if (((dayOfTheWeek >= 0) && (dayOfTheWeek <= 3)) || curWeekComplete()) {
+    if (curWeekComplete()) {
       return null
     }
 
