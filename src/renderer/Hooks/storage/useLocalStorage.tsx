@@ -1,41 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
-
-// -- New Event --
-const LOCAL_STORAGE_CHANGED_EVENT_NAME = "local_storage_changed"
+import { useStorage } from "./storageSkeleton";
+import type { storageInterface, storageReturn } from "./storageSkeleton"
 
 // -- Storage Wrappers --
-function writeStorage<T>(key: string, value: T) {
-  localStorage.setItem(key,
-    typeof value === 'object' ? JSON.stringify(value) : `${value}`)
-
-  window.dispatchEvent(new CustomEvent(
-    LOCAL_STORAGE_CHANGED_EVENT_NAME,
-    {
-      detail: { key, value },
-    }
-  ))
-}
-
-function deleteFromStorage(key: string) {
-  localStorage.removeItem(key)
-
-  window.dispatchEvent(new CustomEvent(
-    LOCAL_STORAGE_CHANGED_EVENT_NAME,
-    {
-      detail: { key, value: null},
-    }
-  ))
-}
-
-// -- Return Interface --
-interface localStorageReturn<Type> {
-  state: Type | null,
-  write: (value: Type) => void,
-  delete: (key: string) => void,
-}
-
-// -- Hook --
-
 function tryParse(value: string) {
   try {
     return JSON.parse(value);
@@ -44,58 +11,29 @@ function tryParse(value: string) {
   }
 }
 
-function useLocalStorage<Type>(key: string, defaultValue?: Type): localStorageReturn<Type> {
-  const [localState, updateState] = useState<Type | null>(
-    localStorage.getItem(key) === null
-      ? defaultValue
-      : tryParse(localStorage.getItem(key)!)
-  )
+class localStorageC<T> implements storageInterface<T> {
+  updateEventName = "local_storage_changed";
 
-  const onLocalStorageChange = useCallback((event: any | StorageEvent) => {
-    if (!!event && event.type === LOCAL_STORAGE_CHANGED_EVENT_NAME) {
-      if (event.detail.key === key) {
-        updateState(event.detail.value)
-      }
-    } else {
-      if (event.key === key) {
-        updateState(event.newValue === null ? null : tryParse(event.newValue))
-      }
-    }
-  }, [updateState, key])
+  getState = (key: string) => {
+    const el = localStorage.getItem(key)
+    return tryParse(el)
+  };
 
-  useEffect(() => {
-    const listener = (e: Event) => {
-      onLocalStorageChange(e)
-    };
+  writeStorage = (key: string, val: T) => {
+    localStorage.setItem(key,
+      typeof val === 'object' ? JSON.stringify(val) : `${val}`)
+  };
 
-    window.addEventListener(LOCAL_STORAGE_CHANGED_EVENT_NAME, listener);
-    window.addEventListener('storage', listener);
+  deleteFromStorage = (key: string) => {
+    localStorage.removeItem(key)
+  };
+}
 
-    if (localStorage.getItem(key) === null && defaultValue !== null) {
-      writeStorage(key, defaultValue);
-    }
+// -- Hook --
 
-    return () => {
-      window.removeEventListener(LOCAL_STORAGE_CHANGED_EVENT_NAME, listener);
-      window.removeEventListener('storage', listener);
-    };
-  }, [key, defaultValue, onLocalStorageChange]);
-
-  const writeState = useCallback(
-    (value: Type) => writeStorage(key, value),
-  [key])
-
-  const deleteState = useCallback(
-    () => deleteFromStorage(key),
-  [key])
-
-  const state: TValue | null = localState ?? defaultValue;
-
-  return {
-    value: state,
-    write: writeState,
-    delete: deleteState,
-  }
+function useLocalStorage<Type>(key: string, defaultValue?: Type): storageReturn<Type> {
+  const storage = new localStorageC<Type>();
+  return useStorage<localStorageC<Type>>(storage, key, defaultValue);
 }
 
 export default useLocalStorage
