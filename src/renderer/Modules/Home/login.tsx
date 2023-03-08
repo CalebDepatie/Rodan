@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { ipcRenderer } from 'electron'
+import { toast } from 'react-toastify'
 import { InputText, Button, Card } from '../../Components'
 import { useShortcut } from '../../Hooks'
 
@@ -10,7 +11,11 @@ export function Login(props:{}) {
   const [ isSubmitted, setIsSubmitted ] = useState(submitted)
 
   const submit = async () => {
-    const res = await ipcRenderer.invoke('ssh-open', {password:pass})
+    const res = await ipcRenderer.invoke('ssh-open', {password:pass});
+    if (res.error != null) {
+      toast.error("Could not connect: " + res.error.message)
+      return;
+    }
     submitted = true
     setIsSubmitted(submitted)
   }

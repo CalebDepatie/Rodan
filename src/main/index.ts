@@ -82,7 +82,8 @@ app.on('ready', () => {
 })
 
 ipcMain.handle("ssh-open", async (e, req) => {
-  await openSSH(req.password)
+  const res = await openSSH(req.password)
+  return res
 })
 
 // loading event handlers
