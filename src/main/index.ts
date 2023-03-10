@@ -87,7 +87,8 @@ ipcMain.handle("ssh-open", async (e, req) => {
 })
 
 // loading event handlers
-import "./statuses";
-import "./projects";
-import "./pages";
-import "./finances";
+import "./statuses"
+import "./projects"
+import "./pages"
+import "./finances"
+import "./fileStorage"

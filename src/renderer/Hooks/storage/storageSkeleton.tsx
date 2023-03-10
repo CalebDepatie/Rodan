@@ -8,9 +8,9 @@ interface storageReturn<Type> {
 }
 
 interface storageInterface<T> {
-  getState: (key: string) => T,
-  writeStorage: (key: string, val: T) => void,
-  deleteFromStorage: (key: string) => void,
+  getState: (key: string) => Promise<T>,
+  writeStorage: (key: string, val: T) => Promise<void>,
+  deleteFromStorage: (key: string) => Promise<void>,
   updateEventName: string,
 }
 
@@ -18,11 +18,16 @@ interface storageInterface<T> {
 function useStorage<Type, StorageType extends storageInterface>(storage: StorageType,
   key: string, defaultValue?: Type): localStorageReturn<Type> {
 
-  const [localState, updateState] = useState<Type | null>(
-    storage.getState(key) === null
-      ? defaultValue
-      : storage.getState(key)!
-  )
+  const [localState, updateState] = useState<Type | null>()
+
+  // initialization
+  useEffect(() => {
+    const fn = async () => {
+      const data = await storage.getState(key)
+      updateState(data == {} ? defaultValue : data!)
+    }
+    fn()
+  }, [])
 
   const onStorageChange = useCallback((event: any | StorageEvent) => {
     if (!!event && event.type === storage.updateEventName) {
@@ -55,8 +60,8 @@ function useStorage<Type, StorageType extends storageInterface>(storage: Storage
   }, [key, defaultValue, onStorageChange]);
 
   const writeState = useCallback(
-    (value: Type) => {
-      storage.writeStorage(key, value)
+    async (value: Type) => {
+      await storage.writeStorage(key, value)
 
       window.dispatchEvent(new CustomEvent(
         storage.updateEventName,
@@ -68,8 +73,8 @@ function useStorage<Type, StorageType extends storageInterface>(storage: Storage
   [key])
 
   const deleteState = useCallback(
-    () => {
-      storage.deleteFromStorage(key)
+    async () => {
+      await storage.deleteFromStorage(key)
 
       window.dispatchEvent(new CustomEvent(
         storage.updateEventName,

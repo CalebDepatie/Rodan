@@ -16,16 +16,16 @@ let memory = new Map<string, string>();
 class memoryStorage<T> implements storageInterface<T> {
   updateEventName = "memory_storage_changed";
 
-  getState = (key: string) => {
+  getState = async (key: string) => {
     const el = memory.get(key)
     return tryParse(el)
   };
 
-  writeStorage = (key: string, val: T) => {
+  writeStorage = async (key: string, val: T) => {
     memory.set(key, (typeof val === 'object' ? JSON.stringify(val) : `${val}`))
   };
 
-  deleteFromStorage = (key: string) => {
+  deleteFromStorage = async (key: string) => {
     memory.delete(key)
   };
 }
