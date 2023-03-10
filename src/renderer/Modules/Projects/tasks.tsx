@@ -1,47 +1,48 @@
-import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
-import { ipcRenderer } from 'electron';
+import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react'
+import { ipcRenderer } from 'electron'
 
-import { Button, InputText, Dropdown, Table } from '../../Components';
-import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
+import { Button, InputText, Dropdown, Table } from '../../Components'
+import { statusItemTemplate, statusValueTemplate } from '../../Helpers'
+import { useCache } from "../../Hooks"
 
-import TaskForm from './taskForm';
+import TaskForm from './taskForm'
 
-import { toast } from 'react-toastify';
+import { toast } from 'react-toastify'
 
 
 function Tasks(props:any) {
-  const [ statuses, setStatuses ] = useState([]);
-  const [ tasks, setTasks ] = useState<any[]>([]);
-  const [ show, setShow ]   = useState<boolean>(false);
+  const [ statuses, setStatuses ] = useState([])
+  const [ tasks, setTasks ] = useState<any[]>([])
+  const [ show, setShow ]   = useState<boolean>(false)
 
-  const handleShow  = () => setShow(true);
-  const handleClose = () => setShow(false);
+  const [ tasks_cache, tasks_signal ] = useCache('tasks-get')
+  const [ status_cache, status_signal ] = useCache('statuses-get', {section:"task"})
 
-  const refresh = async () => {
-    // signal all fetch commands
-    const res = await ipcRenderer.invoke('tasks-get', {});
+  const handleShow  = () => setShow(true)
+  const handleClose = () => setShow(false)
 
-    if (res.error != undefined) {
-      toast.error('Could not load tasks: ' + res.error.message)
-    }
-
-    setTasks(res.body.filter((el:any) => el.status != 13));
-  };
+  const refresh = () => {
+    tasks_signal()
+  }
 
   useEffect(() => {
-    refresh();
+    if (tasks_cache.error != undefined) {
+      toast.error('Could not load tasks: ' + tasks_cache.error.message)
+    }
+    if (tasks_cache.body != undefined) {
+      setTasks(tasks_cache.body.filter((el:any) => el.status != 13))
+    }
+  }, [tasks_cache])
 
-    const fn = async () => {
-      const res = await ipcRenderer.invoke('statuses-get', {section:"task"});
+  useEffect(() => {
+    if (status_cache.error != undefined) {
+      toast.error('Could not load statuses: ' + status_cache.error.message)
+    }
 
-      if (res.error != undefined) {
-        toast.error('Could not load statuses: ' + res.error.message)
-      }
-
-      setStatuses(res.body);
-    };
-    fn();
-  }, []);
+    if (status_cache.body != undefined) {
+      setStatuses(status_cache.body);
+    }
+  }, [status_cache])
 
   const onEditorValueChange = async (props: any, field:string, value: string, id: string) => {
     const res = await ipcRenderer.invoke('tasks-update', {updateCol: field, updateVal: value.toString(), taskID: id});

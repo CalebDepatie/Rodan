@@ -4,6 +4,7 @@ import { app, BrowserWindow, session, ipcMain } from 'electron'
 import * as path from 'path'
 import { format as formatUrl } from 'url'
 import dotenv from "dotenv"
+import { mkdirSync } from 'node:fs'
 
 import {openSSH, closeSSH} from "./ssh.ts";
 
@@ -62,6 +63,10 @@ app.on('activate', () => {
   // on macOS it is common to re-create a window even after all windows have been closed
   if (mainWindow === null) {
     mainWindow = createMainWindow()
+
+    // create directories for storage in appdata
+    const userData = (app || remote.app).getPath('userData')
+    mkdirSync(path.join(userData, "FileStorage"), { recursive: true })
   }
 })
 

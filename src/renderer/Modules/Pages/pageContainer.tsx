@@ -1,14 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { ipcRenderer } from 'electron';
+import React, { useState, useRef, useEffect } from 'react'
+import { ipcRenderer } from 'electron'
 
-import PageViewer from './pageViewer';
+import PageViewer from './pageViewer'
 
-import { toast } from 'react-toastify';
-import { Tree } from 'primereact/tree';
-import TreeNode from 'primereact/treenode';
-import { Dialog } from 'primereact/dialog';
-import { Button, InputText, IconPicker } from '../../Components';
-import { fieldGen, findNodeByKey } from '../../Helpers';
+import { toast } from 'react-toastify'
+import { Tree } from 'primereact/tree'
+import TreeNode from 'primereact/treenode'
+import { Dialog } from 'primereact/dialog'
+import { Button, InputText, IconPicker } from '../../Components'
+import { useCache } from '../../Hooks'
+import { fieldGen, findNodeByKey } from '../../Helpers'
 
 import './pages.scss';
 
@@ -19,19 +20,17 @@ function PageContainer(props:{}) {
   const [ showForm, setShowForm ] = useState(false);
   const [ form, setForm ] = useState<any>({});
 
-  const refresh = async () => {
-    const res = await ipcRenderer.invoke('pages-get', {});
-
-    if (res.error != undefined) {
-      toast.error("Could not load pages: " + res.error.message)
-    }
-
-    setNodes(res.body);
-  }
+  const [pages_cache, pages_signal] = useCache('pages-get', {})
 
   useEffect(() => {
-    refresh();
-  }, [])
+    if (pages_cache.error != undefined) {
+      toast.error("Could not load pages: " + pages_cache.error.message)
+    }
+
+    if (pages_cache.body != undefined) {
+      setNodes(pages_cache.body)
+    }
+  }, [pages_cache])
 
   const publish = async (newText:string) => {
     const id = selectedKey.split('~')[selectedKey.split('~').length-1];
@@ -84,7 +83,7 @@ function PageContainer(props:{}) {
                 toast.error("Could not create page: " + res.error.message)
                 return
               }
-              refresh()
+              pages_signal()
               toast.success("Created Page");
             })
         }} />

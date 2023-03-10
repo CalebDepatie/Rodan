@@ -1,6 +1,6 @@
-import { ipcRenderer } from 'electron';
-import { useEffect, useState, useCallback } from 'react';
-import { useStorage } from "./storageSkeleton";
+import { ipcRenderer } from 'electron'
+import { useEffect, useState, useCallback } from 'react'
+import { useStorage } from "./storageSkeleton"
 import type { storageInterface, storageReturn } from "./storageSkeleton"
 
 // -- Storage Wrappers --

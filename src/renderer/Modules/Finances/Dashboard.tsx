@@ -29,28 +29,21 @@ dayjs.extend(customParseFormat)
 import { Line } from "react-chartjs-2"
 
 import { TabView, TabPanel } from '../../Components'
+import { useCache } from '../../Hooks'
 import { Liquid } from "./Liquid"
 
 import "./Finances.scss"
 
 export function FinanceDashboard(props:{}) {
-      const [ summary, set_summary ] = useState({
-        monthly: [],
-      });
+      const [ finance_res, finance_signal ] = useCache('finance-summary-get', {})
+
+      const summary = finance_res.body ?? {monthly: []}
 
       useEffect(() => {
-        const fn = async () => {
-          const res = await ipcRenderer.invoke('finance-summary-get', {});
-
-          if (res.error != undefined) {
-            toast.error("Could not load finance summary: " + res.error.message)
-          }
-
-          set_summary(res.body ?? {monthly: []});
+        if (finance_res.error != undefined) {
+          toast.error("Could not load finance summary: " + finance_res.error.message)
         }
-
-        fn();
-      }, []);
+      }, [finance_res])
 
       const monthly_chart_data = useMemo(() => ({
         labels: summary.monthly.map(el => dayjs(`${('0' + el.month).slice(-2)}-${el.year}`, "MM-YYYY").format('MMM-YY')),

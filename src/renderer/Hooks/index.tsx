@@ -3,3 +3,4 @@ export { default as useStateWithPromise } from './useStateWithPromise'
 export { default as useShortcut } from "./useShortcut"
 export { default as useSound } from "./useSound"
 export * from "./storage"
+export { default as useCache } from "./useCache"
