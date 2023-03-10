@@ -14,20 +14,20 @@ const parseFile = async (path) => {
 }
 
 ipcMain.handle("file-save", async (e, req) => {
-  const userDataPath = join(userData, req.key + ".json")
+  const userDataPath = join(userData, "FileStorage", req.key + ".json")
   const data = await parseFile(userDataPath)
 
   await writeFile(userDataPath, JSON.stringify(req.value))
 })
 
 ipcMain.handle("file-get", async (e, req) => {
-  const userDataPath = join(userData, req.key + ".json")
+  const userDataPath = join(userData, "FileStorage", req.key + ".json")
 
   return await parseFile(userDataPath)
 })
 
 ipcMain.handle("file-del", async (e, req) => {
-  const userDataPath = join(userData, req.key + ".json")
+  const userDataPath = join(userData, "FileStorage", req.key + ".json")
 
   await rm(userDataPath)
 })

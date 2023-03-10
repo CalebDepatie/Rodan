@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { Card } from "../../Components"
+import { useCache } from "../../Hooks"
 import { ipcRenderer } from 'electron'
 import {
   Chart as ChartJS,
@@ -29,23 +30,9 @@ dayjs.extend(customParseFormat)
 import { Line } from "react-chartjs-2"
 
 export const FinanceCard = (props:{}) => {
-  const [ summary, set_summary ] = useState({
-    monthly: [],
-  })
+  const [ finance_res, finance_signal ] = useCache('finance-summary-get', {})
 
-  useEffect(() => {
-    const fn = async () => {
-      const res = await ipcRenderer.invoke('finance-summary-get', {})
-
-      if (res.error != undefined) {
-        // toast.error("Could not load finance summary: " + res.error.message)
-      }
-
-      set_summary(res.body ?? {monthly: []})
-    }
-
-    fn()
-  }, [])
+  const summary = finance_res.body ?? {monthly: []}
 
   const delta_chart_data = useMemo(() => {
     const data = summary.monthly.slice(1,summary.monthly.length)

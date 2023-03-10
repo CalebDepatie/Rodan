@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 // -- Interfaces --
 interface storageReturn<Type> {
@@ -21,12 +21,16 @@ function useStorage<Type, StorageType extends storageInterface>(storage: Storage
   const [localState, updateState] = useState<Type | null>()
 
   // initialization
+  const mounted = useRef(false)
   useEffect(() => {
-    const fn = async () => {
-      const data = await storage.getState(key)
-      updateState(data == {} ? defaultValue : data!)
+    if (!mounted.current) {
+      const fn = async () => {
+        const data = await storage.getState(key)
+        updateState(data == {} ? defaultValue : data!)
+      }
+      fn()
+      mounted.current = true;
     }
-    fn()
   }, [])
 
   const onStorageChange = useCallback((event: any | StorageEvent) => {
@@ -47,7 +51,6 @@ function useStorage<Type, StorageType extends storageInterface>(storage: Storage
     };
 
     window.addEventListener(storage.updateEventName, listener);
-    window.addEventListener('storage', listener);
 
     if (storage.getState(key) === null && defaultValue !== null) {
       storage.writeStorage(key, defaultValue);
@@ -55,7 +58,6 @@ function useStorage<Type, StorageType extends storageInterface>(storage: Storage
 
     return () => {
       window.removeEventListener(storage.updateEventName, listener);
-      window.removeEventListener('storage', listener);
     };
   }, [key, defaultValue, onStorageChange]);
 

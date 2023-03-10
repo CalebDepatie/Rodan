@@ -1,19 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ipcRenderer } from 'electron';
+import React, { useState, useEffect, useRef } from 'react'
+import { ipcRenderer } from 'electron'
 
-import { statusItemTemplate, statusValueTemplate } from '../../Helpers';
+import { statusItemTemplate, statusValueTemplate, fieldGen } from '../../Helpers'
+import { Button, InputText, Dropdown } from '../../Components'
+import { useCache } from '../../Hooks'
+import { dateFormatter } from 'common'
 
-import { Button, InputText, Dropdown } from '../../Components';
-import { fieldGen } from '../../Helpers';
-import { dateFormatter } from 'common';
+import { toast } from 'react-toastify'
 
-import { toast } from 'react-toastify';
-
-import { TreeTable } from 'primereact/treetable';
-import { Dialog } from 'primereact/dialog';
-import TreeNode from 'primereact/treenode';
-import { Column } from 'primereact/column';
-import { InputTextarea } from 'primereact/inputtextarea';
+import { TreeTable } from 'primereact/treetable'
+import { Dialog } from 'primereact/dialog'
+import TreeNode from 'primereact/treenode'
+import { Column } from 'primereact/column'
+import { InputTextarea } from 'primereact/inputtextarea'
 
 function ProjectTable(props: any) {
   const [ statuses, setStatuses ]    = useState([]);
@@ -22,38 +21,34 @@ function ProjectTable(props: any) {
   const [ form, setForm ]            = useState<{[key: string]: any}>({});
   const [ projects, setProjects]     = useState([[], [], []]);
 
+  const [ projects_cache, projects_signal ] = useCache('projects-get', {})
+  const [ status_cache, status_signal ] = useCache('statuses-get', {section:"project"})
+
   const handleShow  = () => setShow(true);
   const handleClose = () => setShow(false);
 
   const handleShowMove  = () => setShowMove(true);
   const handleCloseMove = () => setShowMove(false);
 
-  const refresh = async () => {
-    // get projects
-    const res = await ipcRenderer.invoke('projects-get');
-
-    if (res.error != undefined) {
-      toast.error('Could not load projects: ' + res.error.message)
-    }
-
-    setProjects(res.body)
+  const refresh = () => {
+    projects_signal()
   };
 
   useEffect(() => {
-    refresh();
+    if (projects_cache.error != undefined) {
+      toast.error('Could not load projects: ' + res.error.message)
+    }
 
-    const fn = async () => {
-      const res = await ipcRenderer.invoke('statuses-get', {section:"project"});
+    setProjects(projects_cache.body ?? [[], [], []])
+  }, [projects_cache])
 
-      if (res.error != undefined) {
-        toast.error('Could not load statuses: ' + res.error.message)
-      }
+  useEffect(() => {
+    if (status_cache.error != undefined) {
+      toast.error('Could not load statuses: ' + status_cache.error.message)
+    }
 
-      setStatuses(res.body);
-    };
-    fn();
-
-  }, []);
+    setStatuses(status_cache.body ?? [])
+  }, [status_cache])
 
   const statusFormat = (node: TreeNode) => {
     const status = statuses.filter((i:any) => parseInt(i.id) === parseInt(node.data.status))[0]?.["name"];

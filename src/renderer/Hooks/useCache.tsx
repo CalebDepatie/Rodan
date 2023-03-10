@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useFileStorage } from './storage'
 
 // useCache will automatically cache the data returned from network request,
@@ -21,13 +21,18 @@ function useCache(endpoint:string, args?:{[key:string]: any}) {
     fileWrite(data)
   }
 
+
   // initialization
+  const mounted = useRef(false)
   useEffect(() => {
-    signal()
-  }, [endpoint, args])
+    if (!mounted.current) {
+      signal()
+      mounted.current = true;
+    }
+  }, [])
 
   return [
-    localVal,
+    fileVal,
     signal,
   ]
 }
