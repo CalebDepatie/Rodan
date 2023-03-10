@@ -6,7 +6,7 @@ import { format as formatUrl } from 'url'
 import dotenv from "dotenv"
 import { mkdirSync } from 'node:fs'
 
-import {openSSH, closeSSH} from "./ssh.ts";
+import {openSSH, closeSSH} from "./ssh"
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -63,10 +63,6 @@ app.on('activate', () => {
   // on macOS it is common to re-create a window even after all windows have been closed
   if (mainWindow === null) {
     mainWindow = createMainWindow()
-
-    // create directories for storage in appdata
-    const userData = (app || remote.app).getPath('userData')
-    mkdirSync(path.join(userData, "FileStorage"), { recursive: true })
   }
 })
 
@@ -74,6 +70,10 @@ app.on('activate', () => {
 app.on('ready', () => {
   mainWindow = createMainWindow()
   dotenv.config();
+
+  // create directories for storage in appdata
+  const userData = app.getPath('userData')
+  mkdirSync(path.join(userData, "FileStorage"), { recursive: true })
 
   // setup content security policy
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {

@@ -1,10 +1,10 @@
-import { ipcMain, app, remote } from 'electron'
+import { ipcMain, app } from 'electron'
 import { join } from 'path'
 import { readFile, writeFile, rm } from 'node:fs/promises'
 
-const userData = (app || remote.app).getPath('userData')
+const userData = app.getPath('userData')
 
-const parseFile = async (path) => {
+const parseFile = async (path: string) => {
   try {
     return JSON.parse(await readFile(path))
   } catch (error) {
@@ -15,7 +15,6 @@ const parseFile = async (path) => {
 
 ipcMain.handle("file-save", async (e, req) => {
   const userDataPath = join(userData, "FileStorage", req.key + ".json")
-  const data = await parseFile(userDataPath)
 
   await writeFile(userDataPath, JSON.stringify(req.value))
 })
