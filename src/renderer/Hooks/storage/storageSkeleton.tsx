@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 
 // -- Interfaces --
 interface storageReturn<Type> {
-  state: Type | null,
+  value: Type | null,
   write: (value: Type) => void,
   delete: (key: string) => void,
 }
