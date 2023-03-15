@@ -3,7 +3,7 @@ import fetch from 'electron-fetch';
 
 ipcMain.handle("pages-get", async (e, req) => {
   try {
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/get_pages`);
+    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_pages`);
     const json = await res.json();
 
     const create_children = (key: string, parent: string) => {
@@ -51,7 +51,7 @@ ipcMain.handle("pages-update", async (e, req) => {
       body: JSON.stringify(req)
     }
 
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/update_page`, options);
+    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/update_page`, options);
 
     return {}
 
@@ -73,7 +73,7 @@ ipcMain.handle("pages-create", async (e, req) => {
       body: JSON.stringify(req)
     }
 
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/create_page`, options);
+    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/create_page`, options);
 
     return {}
 

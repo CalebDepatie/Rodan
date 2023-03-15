@@ -3,7 +3,7 @@ import fetch from 'electron-fetch';
 
 ipcMain.handle('projects-get', async (e, req) => {
   try {
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/get_projects`);
+    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_projects`);
     const json = await res.json();
 
     const initiatives = json.filter((itm:any) => itm.parent !== 0);
@@ -46,7 +46,7 @@ ipcMain.handle('projects-update', async (e, req) => {
       body: JSON.stringify(req)
     }
 
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/update_project`, options);
+    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/update_project`, options);
 
     return {}
 
@@ -72,7 +72,7 @@ ipcMain.handle('projects-create', async (e, req) => {
       body: JSON.stringify(req)
     }
 
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/create_project`, options);
+    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/create_project`, options);
 
     return {}
 
