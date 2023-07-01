@@ -54,7 +54,7 @@
 		"node-ssh-forward": "^0.7.2",
 		"path-browserify": "^1.0.1",
 		"primeflex": "^3.2.1",
-		"primeicons": "^5.0.0",
+		"primeicons": "^6.0.1",
 		"primereact": "^8.3.0",
 		"react-chartjs-2": "^4.3.1",
 		"react-markdown": "^8.0.5",
