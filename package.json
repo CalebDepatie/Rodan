@@ -65,7 +65,7 @@
 	},
 	"peerDependencies": {},
 	"devDependencies": {
-		"@babel/core": "^7.22.5",
+		"@babel/core": "^7.22.9",
 		"@babel/plugin-syntax-flow": "^7.21.4",
 		"@babel/plugin-transform-react-jsx": "^7.22.5",
 		"@babel/plugin-transform-runtime": "^7.21.0",
