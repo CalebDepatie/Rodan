@@ -1,6 +1,6 @@
 import { SSHConnection } from 'node-ssh-forward'
 
-let sshConnection
+let sshConnection: SSHConnection
 
 export async function openSSH(password:string) {
   try {

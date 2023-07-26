@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import path from 'path'
 import { Card } from "../../Components"
 import { Login } from "./login"
+import { ClimateClock } from './climate_clock';
 import { FinanceCard } from "../Finances"
 import { useSound, useMemoryStorage } from "../../Hooks"
 
@@ -17,9 +18,13 @@ export const Home = () => {
 
     {
       (loggedIn) ?
+      <>
         <FinanceCard />
+      </>
       : null
     }
+    
+    <ClimateClock />
 
     <Card>
       <img src="assets/icon.png" style={{width:"230px", height:"230px"}}

@@ -6,7 +6,7 @@ import { format as formatUrl } from 'url'
 import dotenv from "dotenv"
 import { mkdirSync } from 'node:fs'
 
-import {openSSH, closeSSH} from "./ssh"
+import {openSSH, closeSSH} from "./home"
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
