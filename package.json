@@ -76,7 +76,7 @@
 		"copy-webpack-plugin": "^11.0.0",
 		"css-loader": "^6.8.1",
 		"electron": "^22.1.0",
-		"electron-builder": "^23.3.3",
+		"electron-builder": "^24.6.4",
 		"electron-webpack": "^2.8.2",
 		"electron-webpack-ts": "^4.0.1",
 		"html-webpack-plugin": "^5.5.0",
