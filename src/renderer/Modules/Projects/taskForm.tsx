@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 import { ipcRenderer } from 'electron';
 
-import { Button, InputText, Dropdown, Modal } from '../../Components';
+import { Button, InputText, Modal, TreeSelect } from '../../Components';
 import { fieldGen } from '../../Helpers';
 
 import { toast } from 'react-toastify';
-
-import { TreeSelect } from 'primereact/treeselect';
 
 function TaskForm(props:{show:boolean, handleClose:()=>void, onSubmit?:(f:any)=>void}) {
   const [ form, setForm ] = useState<{[key: string]: any}>({});

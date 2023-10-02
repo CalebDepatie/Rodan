@@ -2,14 +2,13 @@ import React, { useState, useEffect, useRef } from 'react'
 import { ipcRenderer } from 'electron'
 
 import { statusItemTemplate, statusValueTemplate, fieldGen } from '../../Helpers'
-import { Button, InputText, Dropdown } from '../../Components'
+import { Button, InputText, Dropdown, Modal } from '../../Components'
 import { useCache } from '../../Hooks'
 import { dateFormatter } from 'common'
 
 import { toast } from 'react-toastify'
 
 import { TreeTable } from 'primereact/treetable'
-import { Dialog } from 'primereact/dialog'
 import TreeNode from 'primereact/treenode'
 import { Column } from 'primereact/column'
 import { InputTextarea } from 'primereact/inputtextarea'
@@ -137,7 +136,7 @@ function ProjectTable(props: any) {
         <Column field="created" header="Created" body={dateFormat} style={{width:"110px"}} />
       </TreeTable>
 
-      <Dialog header="Create a Project" visible={show} onHide={handleClose} style={{width: '70vw'}} footer={(
+      <Modal header="Create a Project" visible={show} onHide={handleClose} style={{width: '70vw'}} footer={(
         <>
           <Button label='Submit' className='r-button-success' onClick={(e:any) => {
             ipcRenderer.invoke('projects-create', {...form})
@@ -168,9 +167,9 @@ function ProjectTable(props: any) {
             <Dropdown id="par" options={[{id: 0, name:"None"},...projects[0]]} optionValue='id' optionLabel='name' {...formDropdown('parent')}/>
           </div>
         </div>
-      </Dialog>
+      </Modal>
 
-      <Dialog header="Move Project" visible={showMove} onHide={handleCloseMove} style={{width: '70vw'}} footer={(
+      <Modal header="Move Project" visible={showMove} onHide={handleCloseMove} style={{width: '70vw'}} footer={(
         <>
           <Button label='Submit' className='r-button-success' onClick={async (e:any) => {
             const res = await ipcRenderer.invoke('projects-update', {
@@ -200,7 +199,7 @@ function ProjectTable(props: any) {
             <Dropdown id="par" options={projects[0]} optionValue='id' optionLabel='name' {...formDropdown('updateVal')}/>
           </div>
         </div>
-      </Dialog>
+      </Modal>
     </>
   );
 };

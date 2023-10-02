@@ -9,16 +9,23 @@ function Modal(props:{id?:string, header?:any, visible:boolean, onHide:any,
 
   const dialog_ref = useRef(null);
 
+  const handleClose = () => {
+    props.onHide();
+    dialog_ref.current?.close();
+  }
+
+  useEffect(() => {
+    if (dialog_ref.current) {
+      dialog_ref.current.addEventListener('close', handleClose);
+    }
+
+  }, [dialog_ref.current])
+
   useEffect(() => {
     if (props.visible)
       dialog_ref.current?.showModal();
 
   }, [props.visible])
-
-  const handleClose = () => {
-    props.onHide();
-    dialog_ref.current?.close();
-  }
 
   const className = props.className ?? "r-modal";
 
