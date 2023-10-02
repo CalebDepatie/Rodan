@@ -1,2 +1,23 @@
 @use '../../style.scss';
 @use 'sass:color';
+
+.r-modal {
+	border-color: style.$colour-border;
+	border-radius: 5px;
+	border-width: 3px;
+  border-style: solid;
+	background-color: style.$colour-primary-background;
+
+	.r-modal-header {
+		
+	}
+
+	.r-modal-body {
+		padding-top: 15px;
+		padding-bottom: 18px;
+	}
+
+	.r-modal-footer {
+		float: right
+	}
+}

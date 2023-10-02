@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react'
 import { ipcRenderer } from 'electron'
 
-import { Button, InputText, Dropdown } from '../../Components'
+import { Button, InputText, Dropdown, Modal } from '../../Components'
 import { useCache } from '../../Hooks'
 import { fieldGen, fieldValGen, statusItemTemplate, statusValueTemplate, findNodeByKey } from '../../Helpers'
 import { dateFormatter } from 'common'
@@ -12,7 +12,6 @@ import { TreeTable } from 'primereact/treetable'
 import TreeNode from 'primereact/treenode'
 import { Column } from 'primereact/column'
 import { ListBox } from 'primereact/listbox'
-import { Dialog } from 'primereact/dialog'
 import { InputSwitch } from 'primereact/inputswitch'
 
 function Boards(props:any) {
@@ -290,7 +289,7 @@ function Boards(props:any) {
       </div>
     </div>
     {/* Board Frags */}
-    <Dialog header="Create a Fragnet" visible={showFrag} onHide={handleCloseFrag} position='center' modal style={{width: '70vw'}} footer={(
+    <Modal header="Create a Fragnet" visible={showFrag} onHide={handleCloseFrag} style={{width: '70vw'}} footer={(
       <>
         <Button label='Submit' className='r-button-success' onClick={(e:any) => {
           ipcRenderer.invoke('boards-frags-create', form)
@@ -332,10 +331,10 @@ function Boards(props:any) {
         </div>
 
       </div>
-    </Dialog>
+    </Modal>
 
     {/* Board Heads */}
-    <Dialog header="Create a Board" visible={showHead} onHide={handleCloseHead} position='center' modal style={{width: '70vw'}} footer={(
+    <Modal header="Create a Board" visible={showHead} onHide={handleCloseHead} style={{width: '70vw'}} footer={(
       <>
         <Button label='Submit' className='r-button-success' onClick={(e:any) => {
           ipcRenderer.invoke('boards-create', {...form, initiative: parseInt(form["initiative"])})
@@ -368,7 +367,7 @@ function Boards(props:any) {
         </div>
 
       </div>
-    </Dialog>
+    </Modal>
     </>
   );
 };
