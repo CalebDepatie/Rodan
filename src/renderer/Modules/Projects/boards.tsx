@@ -1,18 +1,19 @@
-import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
-import { ipcRenderer } from 'electron';
+import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react'
+import { ipcRenderer } from 'electron'
 
-import { Button, InputText, Dropdown } from '../../Components';
-import { fieldGen, fieldValGen, statusItemTemplate, statusValueTemplate, findNodeByKey } from '../../Helpers';
-import { dateFormatter } from 'common';
+import { Button, InputText, Dropdown } from '../../Components'
+import { useCache } from '../../Hooks'
+import { fieldGen, fieldValGen, statusItemTemplate, statusValueTemplate, findNodeByKey } from '../../Helpers'
+import { dateFormatter } from 'common'
 
-import { toast } from 'react-toastify';
+import { toast } from 'react-toastify'
 
-import { TreeTable } from 'primereact/treetable';
-import TreeNode from 'primereact/treenode';
-import { Column } from 'primereact/column';
-import { ListBox } from 'primereact/listbox';
-import { Dialog } from 'primereact/dialog';
-import { InputSwitch } from 'primereact/inputswitch';
+import { TreeTable } from 'primereact/treetable'
+import TreeNode from 'primereact/treenode'
+import { Column } from 'primereact/column'
+import { ListBox } from 'primereact/listbox'
+import { Dialog } from 'primereact/dialog'
+import { InputSwitch } from 'primereact/inputswitch'
 
 function Boards(props:any) {
   const [ boardHeads, setBoardHeads ]  = useState<any[]>([]);
@@ -26,6 +27,8 @@ function Boards(props:any) {
   const [ selectedKey, setSelected ]   = useState<string>('');
   const [ workflowState, setWorkflow ] = useState<{icon:string,label:string,disabled?:boolean,onClick?:()=>void}>();
 
+  const [ boards_cache, boards_signal ] = useCache('boards-get', {})
+
   const handleShowHead  = () => setShowHead(true);
   const handleCloseHead = () => setShowHead(false);
 
@@ -33,17 +36,21 @@ function Boards(props:any) {
   const handleCloseFrag = () => setShowFrag(false);
 
   const refresh = async () => {
-    const res = await ipcRenderer.invoke('boards-get', {})
-    if (res.error != undefined) {
-      toast.error("Could not get boards: " + res.error)
-    }
-
-    setBoardHeads(res.body[0])
-    setIni(res.body[1])
-  };
+    await boards_signal()
+  }
 
   useEffect(() => {
-    refresh();
+    if (boards_cache.error != undefined) {
+      toast.error("Could not get boards: " + boards_cache.error)
+    }
+
+    boards_cache.body ??= [[], []]
+
+    setBoardHeads(boards_cache.body[0])
+    setIni(boards_cache.body[1])
+  }, [boards_cache])
+
+  useEffect(() => {
     setForm({...form, draft:true, template:false})
 
     const fn = async () => {

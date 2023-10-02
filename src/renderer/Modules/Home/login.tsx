@@ -1,18 +1,20 @@
 import React, { useState } from 'react'
 import { ipcRenderer } from 'electron'
+import { toast } from 'react-toastify'
 import { InputText, Button, Card } from '../../Components'
-import { useShortcut } from '../../Hooks'
-
-let submitted = false
+import { useShortcut, useMemoryStorage } from '../../Hooks'
 
 export function Login(props:{}) {
   const [ pass, setPass ] = useState<string>('')
-  const [ isSubmitted, setIsSubmitted ] = useState(submitted)
+  const { value: isSubmitted, write: setIsSubmitted } = useMemoryStorage("login", false)
 
   const submit = async () => {
-    const res = await ipcRenderer.invoke('ssh-open', {password:pass})
-    submitted = true
-    setIsSubmitted(submitted)
+    const res = await ipcRenderer.invoke('ssh-open', {password:pass});
+    if (res.error != null) {
+      toast.error("Could not connect: " + res.error.message)
+      return;
+    }
+    setIsSubmitted(true)
   }
 
   useShortcut(["Enter", "NumpadEnter"], submit, [pass])

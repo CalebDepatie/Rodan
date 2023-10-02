@@ -24,39 +24,73 @@ declare global {
 }
 
 function App() {
-  const routes = useMemo(() => [
-      {
-        path: '/',
-        element: <Home/>,
-        exact: true,
-      },
-      {
-        path:'/projects/raw',
-        element: <ProjectTable/>,
-        exact: true,
-      },
-      {
-        path:'/projects/boards',
-        element: <Boards/>,
-        exact: true,
-      },
-      {
-        path:'/projects/tasks',
-        element: <Tasks/>,
-        exact: true,
-      },
-      {
-	      path:'/finances/dashboard',
-	      element: <FinanceDashboard/>,
-	      exact: true,
-      },
-      {
-        path:'/documentation',
-        element: <PageContainer/>,
-        exact: true,
-      },
-  ], []);
 
+  // set up Modules
+  const modules = [
+    {
+      path: '/',
+      name: 'Home',
+      el: <Home/>,
+      display: false,
+    },
+    {
+      path:'/projects',
+      name: 'Projects',
+      el: <ProjectTable/>,
+      modules: [
+        {
+          name: 'Boards',
+          path: '/boards',
+          el: <Boards/>,
+        },
+        {
+          name: 'Tasks',
+          path: '/tasks',
+          el: <Tasks/>,
+        },
+      ]
+    },
+    {
+      name: 'Finances',
+      path:'/finances',
+      el: <FinanceDashboard/>,
+    },
+    {
+      name: 'Pages',
+      path:'/documentation',
+      el: <PageContainer/>,
+    },
+  ]
+
+  const moduleToRoute = (module: any) => {
+    return {
+      path: module.path,
+      element: module.el,
+      exact: module.exact ?? true,
+    }
+  }
+
+  // converts an array of modules to an array of routes
+  const linearize = (modules: any[]) => {
+    let routes: any[] = []
+
+    modules.forEach((module) => {
+        if (module.el) {
+          routes.push(moduleToRoute(module))
+        }
+
+        if (module.modules) {
+          const subroutes = linearize(module.modules)
+          subroutes.map(route => route.path = module.path + route.path)
+
+          routes = routes.concat(subroutes)          
+        }
+    })
+    
+    return routes
+  }
+
+  const routes = useMemo(() => linearize(modules), [])
 
   // Additional member functions
   if (!Array.prototype.groupBy) {
@@ -91,7 +125,7 @@ function App() {
   <>
 	<div className="App">
       <Router>
-        <Header />
+        <Header modules={modules} />
         <div className="r-content-window">
           <Routes>
             {routes.map((route, i) => (

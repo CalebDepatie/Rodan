@@ -4,8 +4,9 @@ import { app, BrowserWindow, session, ipcMain } from 'electron'
 import * as path from 'path'
 import { format as formatUrl } from 'url'
 import dotenv from "dotenv"
+import { mkdirSync } from 'node:fs'
 
-import {openSSH, closeSSH} from "./ssh.ts";
+import {openSSH, closeSSH} from "./home"
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -70,6 +71,10 @@ app.on('ready', () => {
   mainWindow = createMainWindow()
   dotenv.config();
 
+  // create directories for storage in appdata
+  const userData = app.getPath('userData')
+  mkdirSync(path.join(userData, "FileStorage"), { recursive: true })
+
   // setup content security policy
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
@@ -82,11 +87,13 @@ app.on('ready', () => {
 })
 
 ipcMain.handle("ssh-open", async (e, req) => {
-  await openSSH(req.password)
+  const res = await openSSH(req.password)
+  return res
 })
 
 // loading event handlers
-import "./statuses";
-import "./projects";
-import "./pages";
-import "./finances";
+import "./statuses"
+import "./projects"
+import "./pages"
+import "./finances"
+import "./fileStorage"
