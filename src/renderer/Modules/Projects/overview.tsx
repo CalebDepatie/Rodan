@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { ipcRenderer } from 'electron'
 
 import { statusItemTemplate, statusValueTemplate, fieldGen } from '../../Helpers'
-import { Button, InputText, Dropdown, Modal } from '../../Components'
+import { Button, InputText, Dropdown, Modal, InputTextArea } from '../../Components'
 import { useCache } from '../../Hooks'
 import { dateFormatter } from 'common'
 
@@ -11,7 +11,6 @@ import { toast } from 'react-toastify'
 import { TreeTable } from 'primereact/treetable'
 import TreeNode from 'primereact/treenode'
 import { Column } from 'primereact/column'
-import { InputTextarea } from 'primereact/inputtextarea'
 
 function ProjectTable(props: any) {
   const [ statuses, setStatuses ]    = useState([]);
@@ -115,7 +114,7 @@ function ProjectTable(props: any) {
     const id   = props.node.data.id;
     const proj = props.node.data.parent === 0;
     return (
-      <InputTextarea value={data} autoResize
+      <InputTextArea value={data}
         onChange={(e) => onEditorValueChange(props, 'description', e.target.value, proj, id)} />
     );
   };
