@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react'
 import { ipcRenderer } from 'electron'
 
-import { Button, InputText, Dropdown, Modal, List } from '../../Components'
+import { Button, InputText, Dropdown, Modal, List, InputSwitch } from '../../Components'
 import { useCache } from '../../Hooks'
 import { fieldGen, fieldValGen, statusItemTemplate, statusValueTemplate, findNodeByKey } from '../../Helpers'
 import { dateFormatter } from 'common'
@@ -11,7 +11,6 @@ import { toast } from 'react-toastify'
 import { TreeTable } from 'primereact/treetable'
 import TreeNode from 'primereact/treenode'
 import { Column } from 'primereact/column'
-import { InputSwitch } from 'primereact/inputswitch'
 
 function Boards(props:any) {
   const [ boardHeads, setBoardHeads ]  = useState<any[]>([]);

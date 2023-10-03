@@ -1,9 +1,8 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode } from 'react';
 
 import "./list.scss"
 
-import { TreeNode, Identifier } from '../core';
-import { Button } from '..';
+import { Identifier } from '../core';
 
 function ListItem(props:{id?:string, label:string, key:Identifier, selected:boolean,
 	setSelected:(e:any)=>void, className?:string, children?:ReactNode
