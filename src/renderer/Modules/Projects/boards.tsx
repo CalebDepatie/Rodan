@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react'
 import { ipcRenderer } from 'electron'
 
-import { Button, InputText, Dropdown, Modal } from '../../Components'
+import { Button, InputText, Dropdown, Modal, List } from '../../Components'
 import { useCache } from '../../Hooks'
 import { fieldGen, fieldValGen, statusItemTemplate, statusValueTemplate, findNodeByKey } from '../../Helpers'
 import { dateFormatter } from 'common'
@@ -11,7 +11,6 @@ import { toast } from 'react-toastify'
 import { TreeTable } from 'primereact/treetable'
 import TreeNode from 'primereact/treenode'
 import { Column } from 'primereact/column'
-import { ListBox } from 'primereact/listbox'
 import { InputSwitch } from 'primereact/inputswitch'
 
 function Boards(props:any) {
@@ -45,7 +44,7 @@ function Boards(props:any) {
 
     boards_cache.body ??= [[], []]
 
-    setBoardHeads(boards_cache.body[0])
+    setBoardHeads(boards_cache.body[0].map((board:any) => ({...board, icon:"fa " + board.icon})))
     setIni(boards_cache.body[1])
   }, [boards_cache])
 
@@ -87,15 +86,6 @@ function Boards(props:any) {
     {label:"C - Could Have", value:"Could Have"},
     {label:"W - Won't Have", value:"Wont Have"},
   ];
-
-  const groupTemplate = (option:any) => {
-    return (
-      <span>
-        <i className={"fa " + option.icon} style={{marginRight:"5px"}}/>
-        {option.label}
-      </span>
-    );
-  };
 
   const formText     = fieldGen(form, setForm);
   const formDropdown = fieldGen(form, setForm);
@@ -269,10 +259,9 @@ function Boards(props:any) {
           <Button onClick={handleShowFrag} label="Add Fragnet" />
         </span>
 
-        <ListBox value={activeBoard} options={boardHeads} optionLabel="title"
+        <List selectionKeys={activeBoard} value={boardHeads} optionLabel="title"
           optionValue="id" optionGroupLabel="label" optionGroupChildren="items"
-          optionGroupTemplate={groupTemplate}
-          onChange={(e) => setActiveBoard(e.value)} listStyle={{height:"calc(100vh - 144px)"}} style={{width:'100%'}} />
+          onChange={(e) => setActiveBoard(e.value)} style={{height:"calc(100vh - 144px)", width:"100%"}} />
 
           <Button {...workflowState} style={{width:"100%"}} />
 
