@@ -1,0 +1,70 @@
+@use '../../style.scss';
+@use 'sass:color';
+
+.r-treelist {
+  padding: 0.25rem;
+  transition: style.$standard-transition;
+  border-color: style.$colour-border;
+  background: transparent;
+  border-width: thin;
+  border-style: solid;
+  border-radius: 3px;
+  font-size: inherit;
+
+	& button {
+		padding: 0px;
+		margin-right: 0.65rem;
+		color: style.$colour-primary;
+		background-color:transparent;
+
+		&:hover {
+			background-color:transparent;
+			border-width: thin;
+  		border-style: solid;
+			border-radius: 3px;
+			border-color: style.$colour-tertiary;
+		}
+	}
+
+	& .r-treelist-icon {
+		padding-right: 0.35rem;
+		color: style.$colour-primary;
+	}
+
+	& .r-treelist-item {
+		cursor: pointer;
+		display:flex;
+		padding: 0.05rem;
+		
+		& div {
+			transition: style.$standard-transition;
+			border-width: thin;
+			border-style: solid;
+			border-radius: 3px;
+			border-color: transparent;
+			padding: 0.15rem;
+
+			&:hover {
+				border-color: style.$colour-tertiary;
+			}
+		}
+
+		& .selected {
+			border-color: style.$colour-border;
+			// color: style.$colour-primary-text;
+			// background: color.adjust(style.$colour-primary, $lightness: 25%);
+			border-width: thin;
+			border-style: solid;
+			border-radius: 3px;
+			font-size: inherit;
+		}	
+	}
+
+	& .r-treelist-group {
+		font-size: inherit;
+
+		& div {
+			font-size: inherit;
+		}
+	}
+}

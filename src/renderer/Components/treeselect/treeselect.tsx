@@ -1,20 +1,8 @@
 import React, { ReactNode } from 'react';
 
 import './treeselect.scss';
-import { Tree } from 'primereact/tree';
 
-class TreeNode {
-	label:string;
-	key:string;
-	data:any;
-	children:TreeNode[];
-
-	constructor(label:string, key:string, children:TreeNode[]) {
-		this.label = label;
-		this.key = key;
-		this.children = children;
-	}
-}
+import { TreeNode } from '../core';
 
 function TreeSelect(props:{id?:string, label?:string, className?:string,
 	options:TreeNode[], value:string, onChange?:(e:any)=>void,
