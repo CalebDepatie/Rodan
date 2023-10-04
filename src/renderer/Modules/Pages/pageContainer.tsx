@@ -4,10 +4,7 @@ import { ipcRenderer } from 'electron'
 import PageViewer from './pageViewer'
 
 import { toast } from 'react-toastify'
-import { Tree } from 'primereact/tree'
-import TreeNode from 'primereact/treenode'
-import { Dialog } from 'primereact/dialog'
-import { Button, InputText, IconPicker } from '../../Components'
+import { Button, InputText, IconPicker, Modal, TreeList } from '../../Components'
 import { useCache } from '../../Hooks'
 import { fieldGen, findNodeByKey } from '../../Helpers'
 
@@ -64,9 +61,9 @@ function PageContainer(props:{}) {
       <div style={{width:"300px", marginRight:"5px"}}>
         <Button label="Add Page" onClick={() => setShowForm(true)}/>
         <Button label={edit ? "Publish Page" : "Edit Page"} onClick={() => setEdit(!edit)} />
-        <Tree value={nodes} selectionMode="single" selectionKeys={selectedKey}
+        <TreeList value={nodes} selectionKeys={selectedKey}
           style={{height:"calc(100vh - 110px)", overflowY:'scroll'}}
-          onSelectionChange={(e:any) => setSelectedKey(e.value)} />
+          onChange={(e:any) => setSelectedKey(e.value)} />
       </div>
 
       <PageViewer page={nodes.reduce(flatten, [])
@@ -74,7 +71,7 @@ function PageContainer(props:{}) {
         edit={edit} onPublish={publish} className='r-pages' />
     </div>
 
-    <Dialog header="Create a Page" visible={showForm} onHide={()=>setShowForm(false)} position='center' modal style={{width: '70vw'}} footer={(
+    <Modal header="Create a Page" visible={showForm} onHide={()=>setShowForm(false)} style={{width: '70vw'}} footer={(
       <>
         <Button label='Submit' className='r-button-success' onClick={(e:any) => {
           ipcRenderer.invoke('pages-create', {...form, parent: selectedKey.split('~')[selectedKey.split('~').length-1]})
@@ -105,7 +102,7 @@ function PageContainer(props:{}) {
           <InputText id="parent" type="text" disabled={true} value={pageName}/>
         </div>
       </div>
-    </Dialog>
+    </Modal>
     </>
   );
 };

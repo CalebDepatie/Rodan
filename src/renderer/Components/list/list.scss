@@ -1,0 +1,54 @@
+@use '../../style.scss';
+
+.r-list {
+	padding: 0.25rem;
+  transition: style.$standard-transition;
+  border-color: style.$colour-border;
+  background: transparent;
+  border-width: thin;
+  border-style: solid;
+  border-radius: 3px;
+  font-size: inherit;
+
+	& .r-list-header {
+		font-weight: bold;
+		color: style.$colour-primary;
+		border: 0px;
+		padding-top: 5px;
+		border-bottom: thin;
+		border-style: solid;
+		border-color: style.$colour-border;
+
+		& span {
+			padding-right: 0.35rem;
+		}
+	}
+
+	& .r-list-item {
+		cursor: pointer;
+		padding: 0.05rem;
+		
+		& div {
+			transition: style.$standard-transition;
+			border-width: thin;
+			border-style: solid;
+			border-radius: 3px;
+			border-color: transparent;
+			padding: 0.15rem;
+
+			&:hover {
+				border-color: style.$colour-tertiary;
+			}
+		}
+
+		& .selected {
+			border-color: style.$colour-border;
+			// color: style.$colour-primary-text;
+			// background: color.adjust(style.$colour-primary, $lightness: 25%);
+			border-width: thin;
+			border-style: solid;
+			border-radius: 3px;
+			font-size: inherit;
+		}	
+	}
+}

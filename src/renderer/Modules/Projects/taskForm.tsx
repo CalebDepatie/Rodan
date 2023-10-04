@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 import { ipcRenderer } from 'electron';
 
-import { Button, InputText, Dropdown } from '../../Components';
+import { Button, InputText, Modal, TreeSelect } from '../../Components';
 import { fieldGen } from '../../Helpers';
 
 import { toast } from 'react-toastify';
-
-import { Dialog } from 'primereact/dialog';
-import { TreeSelect } from 'primereact/treeselect';
 
 function TaskForm(props:{show:boolean, handleClose:()=>void, onSubmit?:(f:any)=>void}) {
   const [ form, setForm ] = useState<{[key: string]: any}>({});
@@ -29,7 +26,7 @@ function TaskForm(props:{show:boolean, handleClose:()=>void, onSubmit?:(f:any)=>
 
   return (
     <>
-    <Dialog header="Create a Task" visible={props.show} onHide={props.handleClose} position='center' modal style={{width: '70vw'}} footer={(
+    <Modal header="Create a Task" visible={props.show} onHide={props.handleClose} style={{width: '70vw'}} footer={(
       <>
         <Button label='Submit' className='r-button-success' onClick={(e:any) => {
           ipcRenderer.invoke('tasks-create', form)
@@ -64,7 +61,7 @@ function TaskForm(props:{show:boolean, handleClose:()=>void, onSubmit?:(f:any)=>
       </div>
     </div>
 
-    </Dialog>
+    </Modal>
     </>
   );
 }
