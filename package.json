@@ -1,6 +1,6 @@
 {
 	"name": "Rodan",
-	"version": "1.2.8",
+	"version": "1.3.0",
 	"private": true,
 	"author": "Caleb Depatie",
 	"description": "Front End interface for SP",
@@ -54,8 +54,6 @@
 		"node-ssh-forward": "^0.7.2",
 		"path-browserify": "^1.0.1",
 		"primeflex": "^3.3.1",
-		"primeicons": "^5.0.0",
-		"primereact": "^8.3.0",
 		"react-chartjs-2": "^5.2.0",
 		"react-markdown": "^8.0.7",
 		"react-popper": "^2.3.0",
