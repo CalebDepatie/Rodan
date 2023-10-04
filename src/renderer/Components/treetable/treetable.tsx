@@ -9,12 +9,14 @@ import Cell from '../table/cell';
 import { relative } from 'path';
 
 
-function ExpandedableRow(props:{value:TreeNode, columns:Column[], width:string, level?:number}) {
+function ExpandedableRow(props:{value:TreeNode, columns:Column[], 
+	selectionKey?:Identifier, onSelectionChange?:(e:any) => void, width:string, level?:number}) {
 	const [expanded, setExpanded] = useState(false);
 	const buttonIcon = expanded ? "fa fa-angle-down" : "fa fa-angle-right"
 
 	return (<div className={"r-treetable-group" + (expanded ? " expanded" : "")}>
-		<Row key={props.value.key}>
+		<Row className={props.selectionKey === props.value.key ? "r-treetable-selected" : ""} key={props.value.key} 
+			onClick={(evt) => props.onSelectionChange?.({...evt, value: props.value.key})}>
 			{props.columns.map((col:Column, idx:number) => {
 				let body = (col.body != undefined) ? <col.body {...props.value} />
 											: props.value.data?.[col.field]
@@ -42,7 +44,8 @@ function ExpandedableRow(props:{value:TreeNode, columns:Column[], width:string, 
 		</Row>
 		{expanded && props.value.children?.map((child:TreeNode) => {
 			return <ExpandedableRow key={child.key} width={props.width} level={(props.level || 0) + 1}
-				value={child} columns={props.columns} />
+				value={child} columns={props.columns} onSelectionChange={props.onSelectionChange}
+				selectionKey={props.selectionKey} />
 			}
 		)}
 	</div>)
@@ -50,6 +53,7 @@ function ExpandedableRow(props:{value:TreeNode, columns:Column[], width:string, 
 
 function TreeTable(props:{id?:string,className?:string,
 	value:TreeNode[], columns:Column[], header:any,
+	selectionKey?:Identifier, onSelectionChange?:(e:any) => void,
 	style?:{[key:string]: string}, children?:ReactNode}) {
 	
 	const equalPercent = (100 / props.columns.length) + "%";
@@ -61,7 +65,8 @@ function TreeTable(props:{id?:string,className?:string,
 			<Ledger columns={props.columns.map((col:Column) => col.header)}>
         {
           props.value.map((row) => {
-            return <ExpandedableRow key={row.key} width={equalPercent}
+            return <ExpandedableRow key={row.key} width={equalPercent} onSelectionChange={props.onSelectionChange}
+							selectionKey={props.selectionKey}
 							value={row} columns={props.columns} />
 					}
           )}

@@ -97,12 +97,6 @@ function Boards(props:any) {
     
     // // update table data
     await refreshFrags()
-    // setFrags(curNodes => {
-    //   let editedNode = findNodeByKey(curNodes, props.key);
-    //   editedNode!.data[props.field] = value;
-
-    //   return JSON.parse(JSON.stringify(curNodes))
-    // });
   };
 
   const statusEditor = (props: any) => {
@@ -243,22 +237,6 @@ function Boards(props:any) {
     setForm({...form, parent: id});
   }, [selectedKey]);
 
-  const rowStyler = (row:any) => {
-    let style = {}
-
-    if (row.data.status == 9 || row.data.status == 8) {
-      style = {...style, "r-completed": true}
-    }
-
-    return style
-  }
-
-   {/*<Column field="title" header="Title" expander style={{width:"20rem"}} editor={titleEditor}/>
-          <Column field="status" header="Status" body={statusFormat} style={{width:"100px"}} editor={statusEditor}/>
-          <Column field="tasks" header="Tasks" body={tasksFormat} style={{width:"100px"}}/>
-          <Column field="moscow" header="MoSCoW" style={{width:"100px"}}/>
-  <Column field="tcd" header="TCD" body={dateFormat} style={{width:"110px"}}/>*/}
-
   const columns: Column[] = [
     {field:"title", header:"Title", editor: titleEditor},
     {field:"status", header:"Status", body:statusFormat, editor: statusEditor},
@@ -285,8 +263,7 @@ function Boards(props:any) {
       </div>
       <div style={{float: "left", width: "80%", height:"calc(100vh - 90px)", overflowY:"scroll"}}>
         <TreeTable value={frags} columns={columns} style={{paddingBottom:"30px"}}
-          selectionMode="single" rowClassName={rowStyler} 
-          selectionKeys={selectedKey} onSelectionChange={(e:any) => setSelected(e.value)}>
+          selectionKey={selectedKey} onSelectionChange={(e:any) => setSelected(e.value)}>
         </TreeTable>
       </div>
     </div>

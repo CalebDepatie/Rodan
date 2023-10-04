@@ -2,15 +2,12 @@ import React, { useState, useEffect, useRef } from 'react'
 import { ipcRenderer } from 'electron'
 
 import { statusItemTemplate, statusValueTemplate, fieldGen } from '../../Helpers'
-import { Button, InputText, Dropdown, Modal, InputTextArea } from '../../Components'
+import { Button, InputText, Dropdown, Modal, InputTextArea, TreeNode, TreeTable } from '../../Components'
+import { Column } from '../../Components/table/table'
 import { useCache } from '../../Hooks'
 import { dateFormatter } from 'common'
 
 import { toast } from 'react-toastify'
-
-import { TreeTable } from 'primereact/treetable'
-import TreeNode from 'primereact/treenode'
-import { Column } from 'primereact/column'
 
 function ProjectTable(props: any) {
   const [ statuses, setStatuses ]    = useState([]);
@@ -90,18 +87,13 @@ function ProjectTable(props: any) {
     }
 
     // update table data
-    setProjects(curProjects => { // deep copy
-      let editedNode = findNodeByKey(curProjects[2], props.node.key);
-      editedNode.data[props.field] = value;
-
-      return JSON.parse(JSON.stringify(curProjects));
-    });
+    await refresh()
   };
 
   const statusEditor = (props: any) => {
-    const data = props.node.data.status;
-    const id   = props.node.data.id;
-    const proj = props.node.data.parent === 0;
+    const data = props.data.status;
+    const id   = props.data.id;
+    const proj = props.data.parent === 0;
     return (
       <Dropdown value={data} onChange={(e: any) => onEditorValueChange(props, 'status', e.target.value, proj, id)}
                 options={statuses} optionValue='id' optionLabel='name'
@@ -110,14 +102,18 @@ function ProjectTable(props: any) {
   };
 
   const descripEditor = (props: any) => {
-    const data = props.node.data.descrip;
-    const id   = props.node.data.id;
-    const proj = props.node.data.parent === 0;
+    const data = props.data.descrip;
+    const id   = props.data.id;
+    const proj = props.data.parent === 0;
     return (
       <InputTextArea value={data}
         onChange={(e) => onEditorValueChange(props, 'description', e.target.value, proj, id)} />
     );
   };
+
+  const bigTextBody = (props: any) => {
+    return <div className="big-text">{props.data.descrip}</div>;
+  }
 
   const header = (
     <>
@@ -126,14 +122,22 @@ function ProjectTable(props: any) {
     </>
   );
 
-  return (
-    <>
-      <TreeTable value={projects[2]} header={header} tableClassName="proj-table" style={{paddingBottom:"30px"}}>
-        <Column field="name" header="Name" expander/>
+  /*<Column field="name" header="Name" expander/>
         <Column field="descrip" header="Description" editor={descripEditor} bodyClassName ="big-text"/>
         <Column field="status" header="Status" body={statusFormat} editor={statusEditor} style={{width:"100px"}} />
-        <Column field="created" header="Created" body={dateFormat} style={{width:"110px"}} />
-      </TreeTable>
+        <Column field="created" header="Created" body={dateFormat} style={{width:"110px"}} />*/
+
+  const columns:Column[] = [
+    { field: "name", header: "Name"},
+    { field: "descrip", header: "Description", editor: descripEditor, body: bigTextBody},
+    { field: "status", header: "Status", body: statusFormat, editor: statusEditor},
+    { field: "created", header: "Created", body: dateFormat }
+  ]
+
+  return (
+    <>
+      <TreeTable value={projects[2]} header={header} columns={columns} 
+        tableClassName="proj-table" style={{paddingBottom:"30px"}} />
 
       <Modal header="Create a Project" visible={show} onHide={handleClose} style={{width: '70vw'}} footer={(
         <>

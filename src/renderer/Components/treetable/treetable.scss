@@ -5,6 +5,10 @@
 	
 }
 
+.r-treetable-selected {
+	background-color: style.$colour-secondary-background;
+}
+
 .r-treetable-group.expanded {
 	border-style: dashed;
 	border-color: style.$colour-border;
