@@ -256,13 +256,14 @@ function Boards(props:any) {
 
         <List selectionKeys={activeBoard} value={boardHeads} optionLabel="title"
           optionValue="id" optionGroupLabel="label" optionGroupChildren="items"
-          onChange={(e) => setActiveBoard(e.value)} style={{height:"calc(100vh - 144px)", width:"100%"}} />
+          onChange={(e) => setActiveBoard(e.value)} 
+          style={{height:"calc(100vh - 154px)", width:"100%", marginLeft:"15px", overflowY:"scroll"}} />
 
           <Button {...workflowState} style={{width:"100%"}} />
 
       </div>
-      <div style={{float: "left", width: "80%", height:"calc(100vh - 90px)", overflowY:"scroll"}}>
-        <TreeTable value={frags} columns={columns} style={{paddingBottom:"30px"}}
+      <div style={{float: "left", width: "calc(80% - 0px)", height:"calc(100vh - 81px)", overflowY:"scroll"}}>
+        <TreeTable value={frags} columns={columns} style={{paddingBottom:"30px", marginLeft:"12px"}}
           selectionKey={selectedKey} onSelectionChange={(e:any) => setSelected(e.value)}>
         </TreeTable>
       </div>

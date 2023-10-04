@@ -22,6 +22,10 @@ $colour-border: #888B8D;
 
 $standard-transition: 0.4s;
 
+html {
+  overflow-x: hidden;
+}
+
 :root {
   font-family: $font-families;
   margin: 0;
