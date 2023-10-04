@@ -4,9 +4,18 @@ import './treeselect.scss';
 
 import { TreeNode } from '../core';
 
-function TreeSelect(props:{id?:string, label?:string, className?:string,
-	options:TreeNode[], value:string, onChange?:(e:any)=>void,
-	style?:{[key:string]: string}, children?:ReactNode}) {
+interface TreeSelectProps {
+	id?: string;
+	label?: string;
+	className?: string;
+	options: TreeNode[];
+	value: string;
+	onChange?: (e: any) => void;
+	style?: { [key: string]: string };
+	children?: ReactNode;
+}
+
+function TreeSelect(props: TreeSelectProps) {
 
 	const className = props.className ?? 'r-treeselect';
 

@@ -4,8 +4,16 @@ import { usePopper } from 'react-popper'
 
 import './tooltip.scss';
 
-function Tooltip(props:{id?:string, content:ReactNode,
-    children:ReactNode, className?:string, arrowClassName?:string, style?:{[key:string]: string}}) {
+interface TooltipProps {
+  id?: string;
+  content: ReactNode;
+  children: ReactNode;
+  className?: string;
+  arrowClassName?: string;
+  style?: { [key: string]: string };
+}
+
+function Tooltip(props: TooltipProps) {
 
   const refElement    = useRef<any>(null);
   const popperElement = useRef<any>(null);

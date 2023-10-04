@@ -1,9 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { ChangeEvent } from 'react';
 
 import "./dropdown.scss";
 
-function Dropdown<ItemType>(props:{id?: string, value:ItemType, options:ItemType[], optionValue?:string, optionLabel?:string, onChange?:(e:ChangeEvent)=>void,
-    disabled?:boolean, className?:string, style?:{[key:string]: string}}) {
+interface DropdownProps<ItemType> {
+  id?: string;
+  value: ItemType;
+  options: ItemType[];
+  optionValue?: string;
+  optionLabel?: string;
+  onChange?: (e: ChangeEvent) => void;
+  disabled?: boolean;
+  className?: string;
+  style?: { [key: string]: string };
+}
+
+function Dropdown<ItemType>(props: DropdownProps<ItemType>) {
 
   return (
     <select id={props.id} tabIndex={-1} className={props.className} value={props.value}

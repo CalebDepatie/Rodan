@@ -9,10 +9,18 @@ import Cell from '../table/cell';
 import { relative } from 'path';
 
 
-function ExpandedableRow(props:{value:TreeNode, columns:Column[], 
-	selectionKey?:Identifier, onSelectionChange?:(e:any) => void, width:string, level?:number}) {
+interface ExpandedableRowProps {
+	value: TreeNode;
+	columns: Column[];
+	selectionKey?: Identifier;
+	onSelectionChange?: (e: any) => void;
+	width: string;
+	level?: number;
+}
+
+function ExpandedableRow(props: ExpandedableRowProps) {
 	
-		const [expanded, setExpanded] = useState(false);
+	const [expanded, setExpanded] = useState(false);
 	const buttonIcon = expanded ? "fa fa-angle-down" : "fa fa-angle-right"
 
 	return (<div className={"r-treetable-group" + (expanded ? " expanded" : "")}>
@@ -58,10 +66,19 @@ function ExpandedableRow(props:{value:TreeNode, columns:Column[],
 	</div>)
 }
 
-function TreeTable(props:{id?:string,className?:string,
-	value:TreeNode[], columns:Column[], header:any,
-	selectionKey?:Identifier, onSelectionChange?:(e:any) => void,
-	style?:{[key:string]: string}, children?:ReactNode}) {
+interface TreeTableProps {
+	id?: string;
+	className?: string;
+	value: TreeNode[];
+	columns: Column[];
+	header: any;
+	selectionKey?: Identifier;
+	onSelectionChange?: (e: any) => void;
+	style?: { [key: string]: string };
+	children?: ReactNode;
+}
+
+function TreeTable(props: TreeTableProps) {
 	
 	const equalPercent = (100 / props.columns.length) + "%";
 

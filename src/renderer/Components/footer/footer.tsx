@@ -1,11 +1,13 @@
 import React from 'react';
 
 import { getVersion } from 'common';
-import { Tooltip } from '../tooltip';
 
 import "./footer.scss"
 
-export function Footer(props: {}) {
+
+interface FooterProps {}
+
+export function Footer(props: FooterProps) {
 	return (
     <footer className="r-footer">
       <p>

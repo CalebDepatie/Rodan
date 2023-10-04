@@ -1,9 +1,14 @@
 import React, { ReactNode, useState } from 'react'
 
-import TabPanel from './tabpanel'
 import './tabview.scss'
 
-function TabView(props:{children?:ReactNode, className?:string, style?:{[key:string]: string}}) {
+interface TabViewProps {
+  children?: ReactNode;
+  className?: string;
+  style?: { [key: string]: string };
+}
+
+function TabView(props: TabViewProps) {
   const [ activeTab, setActiveTab ] = useState(0)
 
   const createHeaders = () => {

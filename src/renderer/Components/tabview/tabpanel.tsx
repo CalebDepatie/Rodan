@@ -2,9 +2,15 @@ import React, { ReactNode } from 'react'
 
 import './tabview.scss'
 
-function TabPanel(props:{header:string, disabled?:boolean, children?:ReactNode,
-  className?:string, style?:{[key:string]: string}}) {
+interface TabPanelProps {
+  header: string;
+  disabled?: boolean;
+  children?: ReactNode;
+  className?: string;
+  style?: { [key: string]: string };
+}
 
+function TabPanel(props: TabPanelProps) {
   return (
     <div>
       {props.children}

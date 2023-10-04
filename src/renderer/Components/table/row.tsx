@@ -4,8 +4,15 @@ import Cell from './cell';
 
 import './table.scss';
 
-function Row<ItemType>(props:{data:ItemType[], onClick?:(e:MouseEvent)=>void,
-    style?:{[key:string]: string}, className?:string, children?:ReactNode}) {
+interface RowProps<ItemType> {
+  data: ItemType[];
+  onClick?: (e: MouseEvent) => void;
+  style?: { [key: string]: string };
+  className?: string;
+  children?: ReactNode;
+}
+
+function Row<ItemType>(props: RowProps<ItemType>) {
 
   const equalPercent = (100 / props.data.length) + "%";
 

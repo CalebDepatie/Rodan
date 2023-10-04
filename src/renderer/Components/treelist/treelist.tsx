@@ -5,9 +5,17 @@ import "./treelist.scss"
 import { TreeNode, Identifier } from '../core';
 import { Button } from '../';
 
-function TreeListItem(props:{id?:string, value:TreeNode, selected:boolean,
-	setSelected:(e:any)=>void, level?:number, className?:string, children?:ReactNode
-	}) {
+interface TreeListItemProps {
+	id?: string;
+	value: TreeNode;
+	selected: boolean;
+	setSelected: (e: any) => void;
+	level?: number;
+	className?: string;
+	children?: ReactNode;
+}
+
+function TreeListItem(props: TreeListItemProps) {
 	const [expanded, setExpanded] = useState(false);
 
 	const buttonIcon = expanded ? "fa fa-angle-down" : "fa fa-angle-right"

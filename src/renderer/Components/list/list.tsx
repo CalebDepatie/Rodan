@@ -3,28 +3,23 @@ import React, { ReactNode } from 'react';
 import "./list.scss"
 
 import { Identifier } from '../core';
+import ListItem from './listitem';
 
-function ListItem(props:{id?:string, label:string, key:Identifier, selected:boolean,
-	setSelected:(e:any)=>void, className?:string, children?:ReactNode
-	}) {
-
-	const className = props.className ?? "r-list-item"
-
-	return <>
-		<div id={props.id} key={props.key} className={className}>
-			<div className={props.selected ? "selected" : ""} onClick={props.setSelected}>
-				{props.label}
-			</div>
-		</div>
-	</>
+interface ListProps {
+	id?: string;
+	className?: string;
+	optionValue: Identifier;
+	optionLabel: Identifier;
+	optionGroupLabel: Identifier;
+	optionGroupChildren: Identifier;
+	value: any[];
+	onChange?: (e: any) => void;
+	selectionKeys?: (Identifier[] | Identifier);
+	style?: { [key: string]: string };
+	children?: ReactNode;
 }
 
-function List(props:{id?:string, className?:string, 
-	optionValue:Identifier, optionLabel:Identifier, optionGroupLabel:Identifier, optionGroupChildren:Identifier,
-	value:any[], onChange?:(e:any)=>void, selectionKeys?:Identifier[] | Identifier,
-	style?:{[key:string]: string}, children?:ReactNode}) {
-
-	const className = props.className ?? "r-list"
+function List(props: ListProps) {
 
 	const handleChange = (itm:Identifier) => {
 		return (evt:any) => {
@@ -34,7 +29,7 @@ function List(props:{id?:string, className?:string,
 		}
 	}
 
-	return <div className={className} style={props.style} >
+	return <div className={props.className} style={props.style} >
 		{props.value.map((itm:any) => <>
 			<div className='r-list-header'>
 				<span className={itm.icon} />
@@ -52,7 +47,7 @@ function List(props:{id?:string, className?:string,
 }
 
 List.defaultProps = {
-  
+  className: "r-list"
 }
 
 export default List;

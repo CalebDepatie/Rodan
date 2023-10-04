@@ -4,8 +4,18 @@ import './modal.scss';
 
 import { Button } from '../';
 
-function Modal(props:{id?:string, header?:any, visible:boolean, onHide:any,
-    footer?:any, children?:any, className?:string, style?:{[key:string]: string}}) {
+interface ModalProps {
+  id?: string;
+  header?: any;
+  visible: boolean;
+  onHide: any;
+  footer?: any;
+  children?: any;
+  className?: string;
+  style?: { [key: string]: string };
+}
+
+function Modal(props: ModalProps) {
 
   const dialog_ref = useRef(null);
 
