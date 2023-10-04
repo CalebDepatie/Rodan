@@ -16,6 +16,13 @@
 		margin-right: 0.65rem;
 		color: style.$colour-primary;
 		background-color:transparent;
+		border-width: thin;
+		border-radius: 3px;
+		border-color: transparent;
+
+		&.expanded {
+			margin-right: calc(0.65rem - 3.328px);
+		}
 
 		&:hover {
 			background-color:transparent;

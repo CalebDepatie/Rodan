@@ -17,8 +17,9 @@ function TreeListItem(props:{id?:string, value:TreeNode, selected:boolean,
 	}
 
 	const label = <>
-		<div className='r-treelist-item' style={{paddingLeft: `${(props.level || 0) * 20}px`}}>
-			{props.children && <Button icon={buttonIcon} onClick={handleClick} />}
+		<div className={'r-treelist-item'} style={{paddingLeft: `${(props.level || 0) * 20}px`}}>
+			{props.children && <Button className={(expanded ? "expanded" : "")} 
+			icon={buttonIcon} onClick={handleClick} />}
 			<div className={props.selected ? "selected" : ""} onClick={props.setSelected}>
 				<span className={"r-treelist-icon " + props.value.icon} />
 				{props.value.label}
