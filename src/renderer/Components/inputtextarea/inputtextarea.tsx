@@ -1,22 +1,21 @@
 import React, { ChangeEvent } from 'react';
 
-import "./inputtext.scss";
+import "./inputtextarea.scss";
 
-interface InputTextProps<ValueType> {
+
+interface InputTextAreaProps<ValueType> {
   value: ValueType;
   onChange?: (e: ChangeEvent) => void;
-  type?: string;
   id?: string;
   className?: string;
   disabled?: boolean;
   style?: { [key: string]: string };
 }
 
-function InputText<ValueType>(props: InputTextProps<ValueType>) {
+function InputTextArea<ValueType>(props: InputTextAreaProps<ValueType>) {
   return (
-    <input
+    <textarea
       value={props.value}
-      type={props.type}
       onChange={props.onChange}
       id={props.id}
       className={props.className}
@@ -26,11 +25,10 @@ function InputText<ValueType>(props: InputTextProps<ValueType>) {
   );
 }
 
-InputText.defaultProps = {
+InputTextArea.defaultProps = {
   disabled: false,
-  type: 'text',
   value: '',
-  className: 'r-inputtext'
+  className: 'r-inputtextarea'
 };
 
-export default InputText;
+export default InputTextArea;

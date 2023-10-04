@@ -1,6 +1,12 @@
 import React, { useState, ReactNode } from 'react';
 
-export default function HeaderNest(props: {header: ReactNode, children: ReactNode}) {
+
+interface HeaderNestProps {
+  header: ReactNode;
+  children: ReactNode;
+}
+
+function HeaderNest(props: HeaderNestProps) {
   const [show, setShow] = useState<boolean>(false)
 
   return <>
@@ -13,3 +19,8 @@ export default function HeaderNest(props: {header: ReactNode, children: ReactNod
     </span>
   </>
 }
+
+HeaderNest.defaultProps = {
+}
+
+export default HeaderNest

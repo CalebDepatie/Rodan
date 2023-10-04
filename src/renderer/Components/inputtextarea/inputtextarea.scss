@@ -1,0 +1,28 @@
+@use '../../style.scss';
+@use 'sass:color';
+
+.r-inputtextarea {
+  cursor: text;
+  padding: 0.25rem;
+  transition: style.$standard-transition;
+  border-color: style.$colour-border;
+  border-width: thin;
+  border-style: solid;
+  border-radius: 4px;
+  font-size: inherit;
+
+  &:hover {
+    border-color: style.$colour-tertiary;
+  }
+
+  &:focus {
+    border-color: style.$colour-tertiary;
+    border-width: 2px;
+    margin: -2px;
+  }
+
+  &[disabled] {
+    background-color: color.adjust(white, $lightness: -15%);;
+    cursor: not-allowed;
+  }
+}

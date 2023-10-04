@@ -14,8 +14,14 @@ interface Column {
   style?: {[key:string]: string};
 }
 
-function Table<ItemType>(props:{pk:string, columns:Column[], data:ItemType[],
-  style?:{[key:string]: string}}) {
+interface TableProps<ItemType> {
+  pk: string;
+  columns: Column[];
+  data: ItemType[];
+  style?: {[key:string]: string};
+}
+
+function Table<ItemType>(props: TableProps<ItemType>) {
 
   const equalPercent = (100 / props.columns.length) + "%";
 
@@ -35,8 +41,7 @@ function Table<ItemType>(props:{pk:string, columns:Column[], data:ItemType[],
                       : row?.[col.field]}
                 </Cell>
               )}
-            <
-            /Row>
+            </Row>
           )}
       </Ledger>
     </div>

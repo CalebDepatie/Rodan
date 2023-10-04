@@ -1,0 +1,31 @@
+@use '../../style.scss';
+
+.r-treeselect {
+	cursor: pointer;
+  padding: 0.25rem;
+  transition: style.$standard-transition;
+  border-color: style.$colour-border;
+  background: transparent;
+  border-width: thin;
+  border-style: solid;
+  border-radius: 4px;
+  font-size: inherit;
+
+  &:hover {
+    border-color: style.$colour-tertiary;
+  }
+
+  &:focus {
+    border-color: style.$colour-tertiary;
+    border-width: 2px;
+    margin: -2px;
+  }
+
+	& optgroup {
+		
+	}
+
+	& option {
+		
+	}
+}

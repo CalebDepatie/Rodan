@@ -2,8 +2,19 @@ import React, { MouseEvent, ReactNode } from 'react';
 
 import './button.scss';
 
-function Button(props:{id?:string, label?:string, icon?:string, className?:string, disabled?:boolean,
-    types?:string, onClick?:(e:MouseEvent)=>void, style?:{[key:string]: string}, children?:ReactNode}) {
+interface ButtonProps {
+  id?: string;
+  label?: string;
+  icon?: string;
+  className?: string;
+  disabled?: boolean;
+  types?: string;
+  onClick?: (e: MouseEvent) => void;
+  style?: { [key: string]: string };
+  children?: ReactNode;
+}
+
+function Button(props: ButtonProps) {
 
   const label = props.label ? <span>{props.label}</span> : null;
   const icon  = props.icon ? <span className={props.icon} /> : null;

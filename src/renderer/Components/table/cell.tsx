@@ -2,8 +2,14 @@ import React, { useState, ReactNode } from 'react';
 
 import './table.scss';
 
-function Cell(props:{className?:string, editor?:ReactNode,
-    style?:{[key:string]: string}, children?:ReactNode}) {
+interface CellProps {
+  className?: string;
+  editor?: ReactNode;
+  style?: { [key: string]: string };
+  children?: ReactNode;
+}
+
+function Cell(props: CellProps) {
 
   const [isActive, setActive] = useState(false);
 

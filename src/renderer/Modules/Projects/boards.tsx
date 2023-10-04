@@ -1,19 +1,13 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react'
 import { ipcRenderer } from 'electron'
 
-import { Button, InputText, Dropdown } from '../../Components'
+import { TreeTable, TreeNode, Button, InputText, Dropdown, Modal, List, InputSwitch } from '../../Components'
+import { Column } from '../../Components/table/table'
 import { useCache } from '../../Hooks'
 import { fieldGen, fieldValGen, statusItemTemplate, statusValueTemplate, findNodeByKey } from '../../Helpers'
 import { dateFormatter } from 'common'
 
 import { toast } from 'react-toastify'
-
-import { TreeTable } from 'primereact/treetable'
-import TreeNode from 'primereact/treenode'
-import { Column } from 'primereact/column'
-import { ListBox } from 'primereact/listbox'
-import { Dialog } from 'primereact/dialog'
-import { InputSwitch } from 'primereact/inputswitch'
 
 function Boards(props:any) {
   const [ boardHeads, setBoardHeads ]  = useState<any[]>([]);
@@ -46,7 +40,7 @@ function Boards(props:any) {
 
     boards_cache.body ??= [[], []]
 
-    setBoardHeads(boards_cache.body[0])
+    setBoardHeads(boards_cache.body[0].map((board:any) => ({...board, icon:"fa " + board.icon})))
     setIni(boards_cache.body[1])
   }, [boards_cache])
 
@@ -89,38 +83,28 @@ function Boards(props:any) {
     {label:"W - Won't Have", value:"Wont Have"},
   ];
 
-  const groupTemplate = (option:any) => {
-    return (
-      <span>
-        <i className={"fa " + option.icon} style={{marginRight:"5px"}}/>
-        {option.label}
-      </span>
-    );
-  };
-
   const formText     = fieldGen(form, setForm);
   const formDropdown = fieldGen(form, setForm);
   const formSwitch   = fieldValGen(form, setForm);
 
   const onEditorValueChange = async (props: any, field:string, value: string, id: string) => {
+    
     const res = await ipcRenderer.invoke('boards-frags-update', {updateCol: field, updateVal: value.toString(), fragID:id});
     if (res.error != undefined) {
       toast.error("Could not update fragnet: " + res.error.message)
       return
     }
-    // update table data
-    setFrags(curNodes => {
-      let editedNode = findNodeByKey(curNodes, props.node.key);
-      editedNode!.data[props.field] = value;
-
-      return JSON.parse(JSON.stringify(curNodes))
-    });
+    
+    // // update table data
+    await refreshFrags()
   };
 
   const statusEditor = (props: any) => {
-    const data = props.node.data.status;
-    const id   = props.node.data.id;
-    const proj = props.node.data.parent === 0;
+    const data = props.data.status;
+    const id   = props.data.id;
+    const proj = props.data.parent === 0;
+
+    props = {...props, key: props.kkey}
     return (
       <Dropdown value={data} onChange={(e) => onEditorValueChange(props, 'status', e.target.value, id)}
                 options={statuses} optionValue='id' optionLabel='name'
@@ -129,9 +113,11 @@ function Boards(props:any) {
   };
 
   const titleEditor = (props: any) => {
-    const data = props.node.data.title;
-    const id   = props.node.data.id;
-    const proj = props.node.data.parent === 0;
+    const data = props.data.title;
+    const id   = props.data.id;
+    const proj = props.data.parent === 0;
+
+    props = {...props, key: props.kkey}
     return (
       <InputText value={data}
         onChange={(e) => onEditorValueChange(props, 'title', e.target.value, id)} />
@@ -251,15 +237,13 @@ function Boards(props:any) {
     setForm({...form, parent: id});
   }, [selectedKey]);
 
-  const rowStyler = (row:any) => {
-    let style = {}
-
-    if (row.data.status == 9 || row.data.status == 8) {
-      style = {...style, "r-completed": true}
-    }
-
-    return style
-  }
+  const columns: Column[] = [
+    {field:"title", header:"Title", editor: titleEditor},
+    {field:"status", header:"Status", body:statusFormat, editor: statusEditor},
+    {field:"tasks", header:"Tasks", body:tasksFormat},
+    {field:"moscow", header:"MoSCoW" },
+    {field:"tcd", header:"TCD", body:dateFormat},
+  ]
 
   return (
     <>
@@ -270,27 +254,22 @@ function Boards(props:any) {
           <Button onClick={handleShowFrag} label="Add Fragnet" />
         </span>
 
-        <ListBox value={activeBoard} options={boardHeads} optionLabel="title"
+        <List selectionKeys={activeBoard} value={boardHeads} optionLabel="title"
           optionValue="id" optionGroupLabel="label" optionGroupChildren="items"
-          optionGroupTemplate={groupTemplate}
-          onChange={(e) => setActiveBoard(e.value)} listStyle={{height:"calc(100vh - 144px)"}} style={{width:'100%'}} />
+          onChange={(e) => setActiveBoard(e.value)} 
+          style={{height:"calc(100vh - 154px)", width:"100%", marginLeft:"15px", overflowY:"scroll"}} />
 
           <Button {...workflowState} style={{width:"100%"}} />
 
       </div>
-      <div style={{float: "left", width: "80%", height:"calc(100vh - 90px)", overflowY:"scroll"}}>
-        <TreeTable value={frags} selectionMode="single" rowClassName={rowStyler} style={{paddingBottom:"30px"}}
-          selectionKeys={selectedKey} onSelectionChange={(e:any) => setSelected(e.value)}>
-          <Column field="title" header="Title" expander style={{width:"20rem"}} editor={titleEditor}/>
-          <Column field="status" header="Status" body={statusFormat} style={{width:"100px"}} editor={statusEditor}/>
-          <Column field="tasks" header="Tasks" body={tasksFormat} style={{width:"100px"}}/>
-          <Column field="moscow" header="MoSCoW" style={{width:"100px"}}/>
-          <Column field="tcd" header="TCD" body={dateFormat} style={{width:"110px"}}/>
+      <div style={{float: "left", width: "calc(80% - 0px)", height:"calc(100vh - 81px)", overflowY:"scroll"}}>
+        <TreeTable value={frags} columns={columns} style={{paddingBottom:"30px", marginLeft:"12px"}}
+          selectionKey={selectedKey} onSelectionChange={(e:any) => setSelected(e.value)}>
         </TreeTable>
       </div>
     </div>
     {/* Board Frags */}
-    <Dialog header="Create a Fragnet" visible={showFrag} onHide={handleCloseFrag} position='center' modal style={{width: '70vw'}} footer={(
+    <Modal header="Create a Fragnet" visible={showFrag} onHide={handleCloseFrag} style={{width: '70vw'}} footer={(
       <>
         <Button label='Submit' className='r-button-success' onClick={(e:any) => {
           ipcRenderer.invoke('boards-frags-create', form)
@@ -332,10 +311,10 @@ function Boards(props:any) {
         </div>
 
       </div>
-    </Dialog>
+    </Modal>
 
     {/* Board Heads */}
-    <Dialog header="Create a Board" visible={showHead} onHide={handleCloseHead} position='center' modal style={{width: '70vw'}} footer={(
+    <Modal header="Create a Board" visible={showHead} onHide={handleCloseHead} style={{width: '70vw'}} footer={(
       <>
         <Button label='Submit' className='r-button-success' onClick={(e:any) => {
           ipcRenderer.invoke('boards-create', {...form, initiative: parseInt(form["initiative"])})
@@ -368,7 +347,7 @@ function Boards(props:any) {
         </div>
 
       </div>
-    </Dialog>
+    </Modal>
     </>
   );
 };

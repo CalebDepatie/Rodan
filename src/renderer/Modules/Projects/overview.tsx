@@ -2,17 +2,12 @@ import React, { useState, useEffect, useRef } from 'react'
 import { ipcRenderer } from 'electron'
 
 import { statusItemTemplate, statusValueTemplate, fieldGen } from '../../Helpers'
-import { Button, InputText, Dropdown } from '../../Components'
+import { Button, InputText, Dropdown, Modal, InputTextArea, TreeNode, TreeTable } from '../../Components'
+import { Column } from '../../Components/table/table'
 import { useCache } from '../../Hooks'
 import { dateFormatter } from 'common'
 
 import { toast } from 'react-toastify'
-
-import { TreeTable } from 'primereact/treetable'
-import { Dialog } from 'primereact/dialog'
-import TreeNode from 'primereact/treenode'
-import { Column } from 'primereact/column'
-import { InputTextarea } from 'primereact/inputtextarea'
 
 function ProjectTable(props: any) {
   const [ statuses, setStatuses ]    = useState([]);
@@ -92,18 +87,13 @@ function ProjectTable(props: any) {
     }
 
     // update table data
-    setProjects(curProjects => { // deep copy
-      let editedNode = findNodeByKey(curProjects[2], props.node.key);
-      editedNode.data[props.field] = value;
-
-      return JSON.parse(JSON.stringify(curProjects));
-    });
+    await refresh()
   };
 
   const statusEditor = (props: any) => {
-    const data = props.node.data.status;
-    const id   = props.node.data.id;
-    const proj = props.node.data.parent === 0;
+    const data = props.data.status;
+    const id   = props.data.id;
+    const proj = props.data.parent === 0;
     return (
       <Dropdown value={data} onChange={(e: any) => onEditorValueChange(props, 'status', e.target.value, proj, id)}
                 options={statuses} optionValue='id' optionLabel='name'
@@ -112,14 +102,18 @@ function ProjectTable(props: any) {
   };
 
   const descripEditor = (props: any) => {
-    const data = props.node.data.descrip;
-    const id   = props.node.data.id;
-    const proj = props.node.data.parent === 0;
+    const data = props.data.descrip;
+    const id   = props.data.id;
+    const proj = props.data.parent === 0;
     return (
-      <InputTextarea value={data} autoResize
+      <InputTextArea value={data}
         onChange={(e) => onEditorValueChange(props, 'description', e.target.value, proj, id)} />
     );
   };
+
+  const bigTextBody = (props: any) => {
+    return <div className="big-text">{props.data.descrip}</div>;
+  }
 
   const header = (
     <>
@@ -128,16 +122,24 @@ function ProjectTable(props: any) {
     </>
   );
 
-  return (
-    <>
-      <TreeTable value={projects[2]} header={header} tableClassName="proj-table" style={{paddingBottom:"30px"}}>
-        <Column field="name" header="Name" expander/>
+  /*<Column field="name" header="Name" expander/>
         <Column field="descrip" header="Description" editor={descripEditor} bodyClassName ="big-text"/>
         <Column field="status" header="Status" body={statusFormat} editor={statusEditor} style={{width:"100px"}} />
-        <Column field="created" header="Created" body={dateFormat} style={{width:"110px"}} />
-      </TreeTable>
+        <Column field="created" header="Created" body={dateFormat} style={{width:"110px"}} />*/
 
-      <Dialog header="Create a Project" visible={show} onHide={handleClose} style={{width: '70vw'}} footer={(
+  const columns:Column[] = [
+    { field: "name", header: "Name"},
+    { field: "descrip", header: "Description", editor: descripEditor, body: bigTextBody},
+    { field: "status", header: "Status", body: statusFormat, editor: statusEditor},
+    { field: "created", header: "Created", body: dateFormat }
+  ]
+
+  return (
+    <>
+      <TreeTable value={projects[2]} header={header} columns={columns} 
+        tableClassName="proj-table" style={{paddingBottom:"30px"}} />
+
+      <Modal header="Create a Project" visible={show} onHide={handleClose} style={{width: '70vw'}} footer={(
         <>
           <Button label='Submit' className='r-button-success' onClick={(e:any) => {
             ipcRenderer.invoke('projects-create', {...form})
@@ -168,9 +170,9 @@ function ProjectTable(props: any) {
             <Dropdown id="par" options={[{id: 0, name:"None"},...projects[0]]} optionValue='id' optionLabel='name' {...formDropdown('parent')}/>
           </div>
         </div>
-      </Dialog>
+      </Modal>
 
-      <Dialog header="Move Project" visible={showMove} onHide={handleCloseMove} style={{width: '70vw'}} footer={(
+      <Modal header="Move Project" visible={showMove} onHide={handleCloseMove} style={{width: '70vw'}} footer={(
         <>
           <Button label='Submit' className='r-button-success' onClick={async (e:any) => {
             const res = await ipcRenderer.invoke('projects-update', {
@@ -200,7 +202,7 @@ function ProjectTable(props: any) {
             <Dropdown id="par" options={projects[0]} optionValue='id' optionLabel='name' {...formDropdown('updateVal')}/>
           </div>
         </div>
-      </Dialog>
+      </Modal>
     </>
   );
 };
