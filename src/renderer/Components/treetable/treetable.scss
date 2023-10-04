@@ -1,0 +1,16 @@
+@use '../../style.scss';
+
+.r-treetable {
+
+	
+}
+
+.r-treetable-group.expanded {
+	border-style: dashed;
+	border-color: style.$colour-border;
+	border-bottom-width: 3px;
+	border-top-width: 3px;
+	// border: 5px solid style.$colour-border;
+	border-right: none;
+	border-left: none;
+}

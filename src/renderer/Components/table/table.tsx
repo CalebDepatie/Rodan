@@ -35,8 +35,7 @@ function Table<ItemType>(props:{pk:string, columns:Column[], data:ItemType[],
                       : row?.[col.field]}
                 </Cell>
               )}
-            <
-            /Row>
+            </Row>
           )}
       </Ledger>
     </div>

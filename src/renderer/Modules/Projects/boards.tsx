@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react'
 import { ipcRenderer } from 'electron'
 
-import { Button, InputText, Dropdown, Modal, List, InputSwitch } from '../../Components'
+import { TreeTable, TreeNode, Button, InputText, Dropdown, Modal, List, InputSwitch } from '../../Components'
+import { Column } from '../../Components/table/table'
 import { useCache } from '../../Hooks'
 import { fieldGen, fieldValGen, statusItemTemplate, statusValueTemplate, findNodeByKey } from '../../Helpers'
 import { dateFormatter } from 'common'
 
 import { toast } from 'react-toastify'
-
-import { TreeTable } from 'primereact/treetable'
-import TreeNode from 'primereact/treenode'
-import { Column } from 'primereact/column'
 
 function Boards(props:any) {
   const [ boardHeads, setBoardHeads ]  = useState<any[]>([]);
@@ -91,24 +88,29 @@ function Boards(props:any) {
   const formSwitch   = fieldValGen(form, setForm);
 
   const onEditorValueChange = async (props: any, field:string, value: string, id: string) => {
+    
     const res = await ipcRenderer.invoke('boards-frags-update', {updateCol: field, updateVal: value.toString(), fragID:id});
     if (res.error != undefined) {
       toast.error("Could not update fragnet: " + res.error.message)
       return
     }
-    // update table data
-    setFrags(curNodes => {
-      let editedNode = findNodeByKey(curNodes, props.node.key);
-      editedNode!.data[props.field] = value;
+    
+    // // update table data
+    await refreshFrags()
+    // setFrags(curNodes => {
+    //   let editedNode = findNodeByKey(curNodes, props.key);
+    //   editedNode!.data[props.field] = value;
 
-      return JSON.parse(JSON.stringify(curNodes))
-    });
+    //   return JSON.parse(JSON.stringify(curNodes))
+    // });
   };
 
   const statusEditor = (props: any) => {
-    const data = props.node.data.status;
-    const id   = props.node.data.id;
-    const proj = props.node.data.parent === 0;
+    const data = props.data.status;
+    const id   = props.data.id;
+    const proj = props.data.parent === 0;
+
+    props = {...props, key: props.kkey}
     return (
       <Dropdown value={data} onChange={(e) => onEditorValueChange(props, 'status', e.target.value, id)}
                 options={statuses} optionValue='id' optionLabel='name'
@@ -117,9 +119,11 @@ function Boards(props:any) {
   };
 
   const titleEditor = (props: any) => {
-    const data = props.node.data.title;
-    const id   = props.node.data.id;
-    const proj = props.node.data.parent === 0;
+    const data = props.data.title;
+    const id   = props.data.id;
+    const proj = props.data.parent === 0;
+
+    props = {...props, key: props.kkey}
     return (
       <InputText value={data}
         onChange={(e) => onEditorValueChange(props, 'title', e.target.value, id)} />
@@ -249,6 +253,20 @@ function Boards(props:any) {
     return style
   }
 
+   {/*<Column field="title" header="Title" expander style={{width:"20rem"}} editor={titleEditor}/>
+          <Column field="status" header="Status" body={statusFormat} style={{width:"100px"}} editor={statusEditor}/>
+          <Column field="tasks" header="Tasks" body={tasksFormat} style={{width:"100px"}}/>
+          <Column field="moscow" header="MoSCoW" style={{width:"100px"}}/>
+  <Column field="tcd" header="TCD" body={dateFormat} style={{width:"110px"}}/>*/}
+
+  const columns: Column[] = [
+    {field:"title", header:"Title", editor: titleEditor},
+    {field:"status", header:"Status", body:statusFormat, editor: statusEditor},
+    {field:"tasks", header:"Tasks", body:tasksFormat},
+    {field:"moscow", header:"MoSCoW" },
+    {field:"tcd", header:"TCD", body:dateFormat},
+  ]
+
   return (
     <>
     <div>
@@ -266,13 +284,9 @@ function Boards(props:any) {
 
       </div>
       <div style={{float: "left", width: "80%", height:"calc(100vh - 90px)", overflowY:"scroll"}}>
-        <TreeTable value={frags} selectionMode="single" rowClassName={rowStyler} style={{paddingBottom:"30px"}}
+        <TreeTable value={frags} columns={columns} style={{paddingBottom:"30px"}}
+          selectionMode="single" rowClassName={rowStyler} 
           selectionKeys={selectedKey} onSelectionChange={(e:any) => setSelected(e.value)}>
-          <Column field="title" header="Title" expander style={{width:"20rem"}} editor={titleEditor}/>
-          <Column field="status" header="Status" body={statusFormat} style={{width:"100px"}} editor={statusEditor}/>
-          <Column field="tasks" header="Tasks" body={tasksFormat} style={{width:"100px"}}/>
-          <Column field="moscow" header="MoSCoW" style={{width:"100px"}}/>
-          <Column field="tcd" header="TCD" body={dateFormat} style={{width:"110px"}}/>
         </TreeTable>
       </div>
     </div>

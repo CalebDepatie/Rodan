@@ -1,6 +1,6 @@
-import TreeNode from 'primereact/treenode';
+import { TreeNode } from '../Components';
 
-export const findNodeByKey = (nodes:TreeNode[], key:string, keyName:string='id'): TreeNode|null => {
+export const findNodeByKey = (nodes:TreeNode[], key:string, keyName:string='id'): TreeNode|null => {  
   const path:string[]    = key.split('~');
   let node:TreeNode|null = null;
 
