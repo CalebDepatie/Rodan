@@ -7,12 +7,14 @@ dayjs.extend(weekOfYear)
 
 import { toast } from 'react-toastify'
 
-import { InputText, Button, Row, Cell, Ledger } from '../../Components'
+import { InputText, Button, Row, Cell, Ledger, Modal } from '../../Components'
 import { dateFormatter, currencyFormatter } from 'common'
 
 export function Liquid(props:{}) {
   const [ financeData, setFinanceData ] = useState([[], []])
   const [ tempData, setTempData ] = useState({})
+  const [ modalOpen, setModalOpen ] = useState(false)
+  const [ newColumn, setNewColumn ] = useState("")
 
   const refresh = async () => {
     const res = await ipcRenderer.invoke('liquid-get', {})
@@ -37,6 +39,10 @@ export function Liquid(props:{}) {
     }
 
     refresh()
+  }
+
+  const addNewColumn = async () => {
+    setModalOpen(true)
   }
 
   // creates the top 'blank' row IIF the current calander week has no record
@@ -97,10 +103,36 @@ export function Liquid(props:{}) {
     });
   };
 
+  const addBlankColumn = () => {
+    setFinanceData(curState => {
+      if (curState[0].includes(newColumn))
+        return curState // for some reason this set state is getting run twice
+
+      const newFinanceData = [...curState]
+      newFinanceData[0].push(newColumn)
+      // newFinanceData[1].forEach((el:any) => el.accounts.push({name:newColumn, balance:0}))
+      return newFinanceData
+    })
+
+    setNewColumn("")
+    // setModalOpen(false)
+  }
+
+  const newColumnButton = <Button icon="fa fa-plus" label="Add New Account" onClick={addNewColumn} style={{backgroundColor:"transparent", color:"black"}}/>
+
   return <div className="r-dashboard-container">
     <Ledger columns={["Week Ending", ...financeData[0], "Total", "Net"]}>
       {createBlankRow()}
       {createRows()}
     </Ledger>
+    {newColumnButton}
+
+    <Modal header="Add New Account" style={{width:"60vw"}} visible={modalOpen} 
+      onHide={() => setModalOpen(false)} footer={(
+        <Button label="Submit" className="r-button-success" onClick={addBlankColumn} />
+      )}>
+      <label>Account Name</label>
+      <InputText value={newColumn} onChange={(e) => setNewColumn(e.target.value)} />
+    </Modal>
   </div>
 }
