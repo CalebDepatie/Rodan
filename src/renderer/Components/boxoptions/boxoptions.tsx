@@ -27,11 +27,14 @@ function Box(props: BoxProps) {
 }
 
 function BoxOptions(props: BoxOptionsProps) {
+
     const boxes = props.labels.map((label, index) => 
         {
-            const isActive = label.value === props.value;
-            const box = Box({labelBox:label, active:isActive});
-            const arrow = index < props.labels.length - 1 ? <span className="r-box-arrow fa fa-arrow-right" /> : null;
+            const isActive = label.value === props.value
+            const box = <Box key={"box-" + label.value} labelBox={label} active={isActive} />
+            const arrow = index < props.labels.length - 1 
+                ? <span key={"span-" + label.value} className="r-box-arrow fa fa-arrow-right" /> 
+                : null;
 
             return [box, arrow];
         }).flat();
