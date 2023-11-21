@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 
 import { useCache } from '../../Hooks'
 import { Button, List, Dropdown, BoxOptions, Modal, InputText } from '../../Components'
-import { fieldGen, fieldValGen } from '../../Helpers'
+import { fieldGen } from '../../Helpers'
 
 import EditorPane from './editorPane'
 
@@ -115,13 +115,22 @@ function ControlledDocuments(props:{}) {
         await refreshDocuments()
     }
 
-    const templateChanged = async (e: React.ChangeEvent) => {
-        await saveDocument()
-        setSelectedGroup(e.target.value)
-    }
+    // const templateChanged = async ( e: React.ChangeEvent) => {
+    //     await saveDocument()
+    //     console.log(e, e.value, e.target.value)
+    //     setSelectedGroup(e.target.value)
+    //     setSelectedDocument("")
+    // }
 
-    const documentChanged = async (e: React.ChangeEvent) => {
-        await saveDocument()
+
+    const templateChanged = ( e: React.ChangeEvent) => {
+        saveDocument()
+
+        setSelectedGroup(e.target.value)
+        setSelectedDocument("")
+    }
+    const documentChanged = (e: React.ChangeEvent) => {
+        saveDocument()
         setSelectedDocument(e.value)
     }
 
@@ -129,8 +138,8 @@ function ControlledDocuments(props:{}) {
         <div style={{display: "flex", height:"100%"}}>
             <div style={{width:"25%"}}>
                 <div>
-                    <Dropdown value={selectedGroup} 
-                        options={templates} onChange={templateChanged} />
+                    <Dropdown value={selectedGroup}
+                        options={templates} onChange={(e) => templateChanged(e)} />
                     <Button label="New Doc" onClick={() => setNewDocumentVisible(true)}/>
                     <Button label="Update Rev" onClick={updateRev}/>
                 </div>
@@ -161,7 +170,6 @@ interface NewDocumentProps {
 function NewDocumentForm(props: NewDocumentProps) {
     const [form, setForm] = useState<any>({doc_name:"", doc_type:""})
 
-    const fieldVal = fieldValGen(form, setForm)
     const field = fieldGen(form, setForm)
 
     return <>
