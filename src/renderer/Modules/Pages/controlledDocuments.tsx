@@ -4,21 +4,27 @@ import { ipcRenderer } from 'electron'
 import { toast } from 'react-toastify'
 
 import { useCache } from '../../Hooks'
-import { Button, List, Dropdown, BoxOptions } from '../../Components'
+import { Button, List, Dropdown, BoxOptions, Modal, InputText } from '../../Components'
+import { fieldGen, fieldValGen } from '../../Helpers'
 
 import EditorPane from './editorPane'
-import { stat } from 'fs'
 
 function ControlledDocuments(props:{}) {
     const [documents, refreshDocuments] = useCache("docs-get", {})
 
     const [selectedGroup, setSelectedGroup] = useState<string>("Template")
-
     const [selectedDocument, setSelectedDocument] = useState<string>("")
     const [content, setContent] = useState<string>("")
+    const [newDocumentVisible, setNewDocumentVisible] = useState<boolean>(false)
 
     useEffect(() => {
-        const doc = documents?.body?.controlled_docs?.find((doc: any) => doc.name === selectedDocument)
+        return () => {
+            saveDocument()
+        }
+    }, [])
+
+    useEffect(() => {
+        const doc = documents?.body?.controlled_docs?.find((doc: any) => doc.id === selectedDocument)
         
         if (doc) {
             setContent(doc.content)
@@ -41,15 +47,13 @@ function ControlledDocuments(props:{}) {
 
         const group_docs = documents!.body!.controlled_docs!.filter((doc: any) => doc.type === selectedGroup)
 
-        setSelectedDocument(group_docs[0].name)
-
         return group_docs;
     }, [documents, selectedGroup])
 
     const statuses = useMemo(() => {
         if (!documents?.body?.controlled_docs) return [];
 
-        const doc = documents?.body?.controlled_docs?.find((doc: any) => doc.name === selectedDocument)
+        const doc = documents?.body?.controlled_docs?.find((doc: any) => doc.id === selectedDocument)
 
         if (!doc) return [];
 
@@ -62,12 +66,43 @@ function ControlledDocuments(props:{}) {
 
     }, [documents, selectedDocument])
 
-    const newDocument = async (e: React.MouseEvent) => {
+    const newDocument = async (name: string, type: string) => {
         await saveDocument()
+
+        const template = documents!.body!.controlled_docs!.find(
+            (doc: any) => (doc.type === "Template") && (doc.name === type)
+        )
+
+        if (!template) {
+            toast.error("Failed to create document")
+            return;
+        }
+
+        const template_content = template.content
+        
+        const res = await ipcRenderer.invoke("docs-create", {
+            content: template_content,
+            name: name,
+            type: type
+        })
+
+        if (res.error) {
+            toast.error("Failed to create document " + res.error.message)
+            return;
+        }
+
+        await refreshDocuments()
     }
 
     const saveDocument = async () => {
+        if (content === group.find((doc: any) => doc.id === selectedDocument)?.content) return;
 
+        await ipcRenderer.invoke("docs-update-content", {
+            id: selectedDocument,
+            content: content
+        })
+
+        await refreshDocuments()
     }
 
     const updateRev = async (e: React.MouseEvent) => {
@@ -90,10 +125,10 @@ function ControlledDocuments(props:{}) {
                 <div>
                     <Dropdown value={selectedGroup} 
                         options={templates} onChange={templateChanged} />
-                    <Button label="New Document" onClick={newDocument}/>
+                    <Button label="New Document" onClick={() => setNewDocumentVisible(true)}/>
                 </div>
 
-                <List value={group} optionLabel="name" optionValue="name" 
+                <List value={group} optionLabel="name" optionValue="id" 
                     selectionKeys={selectedDocument} onChange={documentChanged}/>
             </div>
 
@@ -103,6 +138,43 @@ function ControlledDocuments(props:{}) {
                 <BoxOptions value="current" labels={statuses} />
             </div>
         </div>
+
+        <NewDocumentForm visible={newDocumentVisible} createDocument={newDocument}
+            onHide={() => setNewDocumentVisible(false)} documentTypes={templates}/>
+    </>
+}
+
+interface NewDocumentProps {
+    visible: boolean;
+    onHide: () => void;
+    createDocument: (name: string, type: string) => void; 
+    documentTypes: {value: string, label: string}[];
+}
+
+function NewDocumentForm(props: NewDocumentProps) {
+    const [form, setForm] = useState<any>({doc_name:"", doc_type:""})
+
+    const fieldVal = fieldValGen(form, setForm)
+    const field = fieldGen(form, setForm)
+
+    return <>
+        <Modal header="Create New Document " onHide={props.onHide} 
+            visible={props.visible} style={{width:"25%"}}
+            footer={<Button label="Create Document" 
+            onClick={() => props.createDocument(form["doc_name"], form["doc_type"])}/>}>
+
+                <div style={{display: "box", width:"100%"}}>
+                    <label htmlFor="doc_name">Document Name</label>
+                    <InputText id='doc_name' {...field("doc_name")} />
+                </div>
+
+                <div style={{display: "box", width:"100%"}}>
+                    <label htmlFor="doc_type">Document Type</label>
+                    <Dropdown id="doc_type" options={props.documentTypes} style={{width:"100%"}}
+                        {...field("doc_type")}/>
+                </div>
+
+        </Modal>
     </>
 }
 

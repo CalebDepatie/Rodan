@@ -41,6 +41,29 @@ ipcMain.handle("docs-update-content", async (e, req) => {
     }
 })
 
+ipcMain.handle("docs-create", async (e, req) => {
+    try {
+
+        const options = {
+            method: 'PUT',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({...req, revisions: []})
+        }
+
+        const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/create_page`, 
+            options);
+
+        return {}
+    
+    } catch (err) {
+        return {
+            error: err
+        }
+    }
+})
+
 ipcMain.handle("docs-update-rev", async (e, req) => {
     try {
 
