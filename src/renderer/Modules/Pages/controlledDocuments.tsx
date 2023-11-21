@@ -107,6 +107,12 @@ function ControlledDocuments(props:{}) {
 
     const updateRev = async (e: React.MouseEvent) => {
         await saveDocument()
+
+        const res = await ipcRenderer.invoke("docs-update-rev", {
+            id: selectedDocument
+        })
+
+        await refreshDocuments()
     }
 
     const templateChanged = async (e: React.ChangeEvent) => {
@@ -125,7 +131,8 @@ function ControlledDocuments(props:{}) {
                 <div>
                     <Dropdown value={selectedGroup} 
                         options={templates} onChange={templateChanged} />
-                    <Button label="New Document" onClick={() => setNewDocumentVisible(true)}/>
+                    <Button label="New Doc" onClick={() => setNewDocumentVisible(true)}/>
+                    <Button label="Update Rev" onClick={updateRev}/>
                 </div>
 
                 <List value={group} optionLabel="name" optionValue="id" 
