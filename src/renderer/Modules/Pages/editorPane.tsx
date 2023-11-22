@@ -1,8 +1,6 @@
 import React from 'react'
 
-import ReactMarkdown from 'react-markdown';
-
-import { InputTextArea } from '../../Components'
+import { InputTextArea, Markdown } from '../../Components'
 
 interface EditorPaneProps {
     value: string;
@@ -23,9 +21,9 @@ function EditorPane(props: EditorPaneProps) {
             <InputTextArea value={props.value} onChange={props.onChange} style={{width:"50%"}} />
 
             <div style={{width:"50%"}}>
-                <ReactMarkdown>
+                <Markdown>
                     {props.value}
-                </ReactMarkdown>
+                </Markdown>
             </div>
         </div>
     </>

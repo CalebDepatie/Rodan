@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import ReactMarkdown from 'react-markdown';
-import { InputTextArea } from '../../Components';
+import { InputTextArea, Markdown } from '../../Components';
 
 function PageViewer(props:{page:string, edit:boolean, onPublish:any, className:string}) {
   const [ editedText, setEditedText ] = useState(props.page);
@@ -23,7 +22,7 @@ function PageViewer(props:{page:string, edit:boolean, onPublish:any, className:s
   return ( <>
     { props.edit ? <InputTextArea value={editedText}
         onChange={(e:any) => setEditedText(e.target.value)} className={props.className} />
-      : <ReactMarkdown className={props.className}>{props.page}</ReactMarkdown>
+      : <Markdown className={props.className}>{props.page}</Markdown>
     } </>
   );
 
