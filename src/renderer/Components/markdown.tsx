@@ -1,6 +1,11 @@
 import React from 'react'
 
-import ReactMarkdown from 'react-markdown'
+import { Remark } from 'react-remark'
+
+import remarkGfm from 'remark-gfm';
+import rehypeMermaid from 'rehype-mermaid';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeSanitize from 'rehype-sanitize';
 
 interface MarkdownProps {
     children: string;
@@ -9,9 +14,21 @@ interface MarkdownProps {
 
 export function Markdown(props: MarkdownProps) {
 
-    return <>
-    <ReactMarkdown className={props.className}>
-        {props.children}
-    </ReactMarkdown>
-    </>
+    const remarkPlugins = [
+        // remarkGfm
+    ]
+
+    const rehypePlugins = [
+        rehypeSanitize,
+        rehypeMermaid,
+        rehypeHighlight
+    ]
+
+    return <div className={props.className}>
+        <Remark 
+            remarkPlugins={remarkPlugins}
+            rehypePlugins={rehypePlugins}>
+            {props.children}
+        </Remark>
+    </div>
 }
