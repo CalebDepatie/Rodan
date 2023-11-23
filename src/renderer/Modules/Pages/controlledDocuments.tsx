@@ -115,20 +115,13 @@ function ControlledDocuments(props:{}) {
         await refreshDocuments()
     }
 
-    // const templateChanged = async ( e: React.ChangeEvent) => {
-    //     await saveDocument()
-    //     console.log(e, e.value, e.target.value)
-    //     setSelectedGroup(e.target.value)
-    //     setSelectedDocument("")
-    // }
-
-
     const templateChanged = ( e: React.ChangeEvent) => {
         saveDocument()
 
         setSelectedGroup(e.target.value)
         setSelectedDocument("")
     }
+
     const documentChanged = (e: React.ChangeEvent) => {
         saveDocument()
         setSelectedDocument(e.value)
@@ -137,14 +130,17 @@ function ControlledDocuments(props:{}) {
     return <>
         <div style={{display: "flex", height:"100%"}}>
             <div style={{width:"25%"}}>
-                <div>
-                    <Dropdown value={selectedGroup}
+                <div style={{width:"100%", height:"62px"}}>
+                    <Dropdown style={{width:"100%"}} value={selectedGroup}
                         options={templates} onChange={(e) => templateChanged(e)} />
-                    <Button label="New Doc" onClick={() => setNewDocumentVisible(true)}/>
-                    <Button label="Update Rev" onClick={updateRev}/>
+
+                    <div style={{width:"100%"}}>
+                        <Button style={{width:"50%"}} label="New Doc" onClick={() => setNewDocumentVisible(true)}/>
+                        <Button style={{width:"50%"}} label="Update Rev" onClick={updateRev}/>
+                    </div>
                 </div>
 
-                <List value={group} optionLabel="name" optionValue="id" 
+                <List style={{height:"calc(100% - 73px)"}} value={group} optionLabel="name" optionValue="id" 
                     selectionKeys={selectedDocument} onChange={documentChanged}/>
             </div>
 
