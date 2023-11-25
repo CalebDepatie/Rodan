@@ -70,7 +70,7 @@ ipcMain.handle("pages-create", async (e, req) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(req)
+      body: JSON.stringify({...req, type:"markdown"})
     }
 
     const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/create_page`, options);

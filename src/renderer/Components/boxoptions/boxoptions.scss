@@ -1,0 +1,27 @@
+@use '../../style.scss';
+
+.r-boxoptions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.r-boxoption {
+    color: style.$colour-secondary-text;
+    background-color: style.$colour-primary-background;
+    border: 2px solid style.$colour-border;
+    border-radius: 3px;
+    margin: 2px;
+    padding: 2px;
+
+    cursor: default;
+
+    &.inactive {
+        background-color: darken(style.$colour-primary-background, 15%);
+        cursor: pointer;
+    }
+}
+
+.r-box-arrow {
+    color: style.$colour-secondary-text
+}

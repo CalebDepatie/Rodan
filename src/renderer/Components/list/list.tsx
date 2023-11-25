@@ -10,8 +10,8 @@ interface ListProps {
 	className?: string;
 	optionValue: Identifier;
 	optionLabel: Identifier;
-	optionGroupLabel: Identifier;
-	optionGroupChildren: Identifier;
+	optionGroupLabel?: Identifier;
+	optionGroupChildren?: Identifier;
 	value: any[];
 	onChange?: (e: any) => void;
 	selectionKeys?: (Identifier[] | Identifier);
@@ -29,20 +29,29 @@ function List(props: ListProps) {
 		}
 	}
 
-	return <div className={props.className} style={props.style} >
-		{props.value.map((itm:any) => <>
+	const renderItem = (itm:any) => {
+		const isSelected = props.selectionKeys?.includes(itm[props.optionValue]) ?? false
+		return <ListItem label={itm[props.optionLabel]} key={itm[props.optionValue]}
+			selected={isSelected} setSelected={handleChange(itm[props.optionValue])}  />
+	}
+
+	const renderList = () => {
+		if (!props.optionGroupLabel) {
+			return props.value.map(renderItem)
+		}
+
+		return props.value.map((itm:any) => <>
 			<div className='r-list-header'>
 				<span className={itm.icon} />
-				{itm[props.optionGroupLabel]}
+				{itm[props?.optionGroupLabel]}
 			</div>
 
-			{itm[props.optionGroupChildren].map((itm:any) => {
-				const isSelected = props.selectionKeys?.includes(itm[props.optionValue]) ?? false
-				return <ListItem label={itm[props.optionLabel]} key={itm[props.optionValue]}
-					selected={isSelected} setSelected={handleChange(itm[props.optionValue])}  />
-				}
-			)}
-		</>)}
+			{itm[props?.optionGroupChildren].map(renderItem)}
+		</>)
+	}
+
+	return <div className={props.className} style={props.style} >
+		{renderList()}
 	</div>
 }
 
