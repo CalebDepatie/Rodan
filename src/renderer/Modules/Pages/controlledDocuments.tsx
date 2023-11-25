@@ -14,6 +14,7 @@ function ControlledDocuments(props:{}) {
 
     const [selectedGroup, setSelectedGroup] = useState<string>("Template")
     const [selectedDocument, setSelectedDocument] = useState<string>("")
+    const [selectedRev, setSelectedRev] = useState<string>("current")
     const [content, setContent] = useState<string>("")
     const [newDocumentVisible, setNewDocumentVisible] = useState<boolean>(false)
 
@@ -30,6 +31,24 @@ function ControlledDocuments(props:{}) {
             setContent(doc.content)
         }
     }, [selectedDocument])
+
+    useEffect(() => {
+        const doc = documents?.body?.controlled_docs?.find((doc: any) => doc.id === selectedDocument)
+        
+        if (doc) {
+            if (selectedRev === "current") {
+                setContent(doc.content)
+                return;
+            }
+
+            const rev = doc.revisions.find((rev: any) => rev.version === selectedRev)
+
+            if (rev) {
+                setContent(rev.content)
+            }
+        }
+
+    }, [selectedRev])
 
     const templates = useMemo(() => {
         if (!documents?.body?.templates) return [];
@@ -127,6 +146,8 @@ function ControlledDocuments(props:{}) {
         setSelectedDocument(e.value)
     }
 
+    const editing = selectedRev === "current"
+
     return <>
         <div style={{display: "flex", height:"100%"}}>
             <div style={{width:"25%"}}>
@@ -136,7 +157,8 @@ function ControlledDocuments(props:{}) {
 
                     <div style={{width:"100%"}}>
                         <Button style={{width:"50%"}} label="New Doc" onClick={() => setNewDocumentVisible(true)}/>
-                        <Button style={{width:"50%"}} label="Update Rev" onClick={updateRev}/>
+                        <Button style={{width:"50%"}} disabled={!editing}
+                            label="Update Rev" onClick={updateRev}/>
                     </div>
                 </div>
 
@@ -147,7 +169,8 @@ function ControlledDocuments(props:{}) {
             <div style={{width:"75%"}}>
                 <EditorPane style={{height:"calc(100% - 36px)"}} value={content} onChange={(e) => setContent(e.target.value)} />
 
-                <BoxOptions value="current" labels={statuses} />
+                <BoxOptions value={selectedRev} labels={statuses}
+                    onClick={(e) => setSelectedRev(e.target.value)} />
             </div>
         </div>
 
