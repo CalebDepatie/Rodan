@@ -4,7 +4,6 @@ import { Identifier } from '../core';
 interface ListItemProps {
 	id?: string;
 	label: string;
-	key: Identifier;
 	selected: boolean;
 	setSelected: (e: any) => void;
 	className?: string;
@@ -14,7 +13,7 @@ interface ListItemProps {
 function ListItem(props: ListItemProps) {
 
 	return <>
-		<div id={props.id} key={props.key} className={props.className}>
+		<div id={props.id} className={props.className}>
 			<div className={props.selected ? "selected" : ""} onClick={props.setSelected}>
 				{props.label}
 			</div>

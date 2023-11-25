@@ -95,5 +95,6 @@ ipcMain.handle("ssh-open", async (e, req) => {
 import "./statuses"
 import "./projects"
 import "./pages"
+import "./docs"
 import "./finances"
 import "./fileStorage"
