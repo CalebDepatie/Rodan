@@ -5,8 +5,16 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 @import '~@fortawesome/fontawesome-free/scss/brands';
 @import '~@fortawesome/fontawesome-free/scss/regular';
 
+// -- custom font setup --
+@font-face {
+  font-family: "JetBrains Mono";
+  font-weight: normal;
+  font-style: normal;
+  src: url('/src/renderer/Style/fonts/JetBrainsMono/JetBrainsMono-Regular.woff2') format('woff2');
+}
+
 $font-families: Verdana, sans-serif;
-$font-families-monospace: monospace;
+$font-families-monospace: 'JetBrains Mono', monospace;
 
 $colour-primary: #546866;
 $colour-secondary: #E4DFDA;
