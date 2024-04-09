@@ -90,7 +90,7 @@
 		"sass": "^1.74.1",
 		"sass-loader": "^14.1.1",
 		"source-map-support": "^0.5.21",
-		"style-loader": "^3.3.3",
+		"style-loader": "^4.0.0",
 		"style-resources-loader": "^1.4.1",
 		"terser-webpack-plugin": "^5.3.6",
 		"ts-loader": "~9.4.4",
