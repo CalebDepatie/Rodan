@@ -87,7 +87,7 @@
 		"react": "^18.0.0",
 		"react-dom": "^18.0.0",
 		"react-scripts": "^5.0.1",
-		"sass": "^1.69.5",
+		"sass": "^1.74.1",
 		"sass-loader": "^14.1.1",
 		"source-map-support": "^0.5.21",
 		"style-loader": "^3.3.3",
