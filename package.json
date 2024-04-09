@@ -51,7 +51,7 @@
 		"dayjs": "^1.11.10",
 		"dotenv": "^16.0.3",
 		"electron-fetch": "^1.9.1",
-		"mermaid": "^10.6.1",
+		"mermaid": "^10.9.0",
 		"node-ssh-forward": "^0.7.2",
 		"path-browserify": "^1.0.1",
 		"primeflex": "^3.3.1",
