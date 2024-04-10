@@ -31,7 +31,7 @@ function ProjectTable(props: any) {
 
   useEffect(() => {
     if (projects_cache.error != undefined) {
-      toast.error('Could not load projects: ' + res.error.message)
+      toast.error('Could not load projects: ' + projects_cache.error.message)
     }
 
     setProjects(projects_cache.body ?? [[], [], []])
