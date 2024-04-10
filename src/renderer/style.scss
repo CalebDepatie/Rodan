@@ -20,7 +20,8 @@ $colour-primary: #546866;
 $colour-secondary: #E4DFDA;
 $colour-tertiary: #800080;
 
-$colour-primary-background: white;
+$colour-background: rgb(44, 41, 47);
+$colour-primary-background: rgb(23, 20, 26);
 $colour-secondary-background: #E6E6E3;
 
 $colour-primary-text: white;
@@ -30,6 +31,8 @@ $colour-success: #60993E;
 $colour-border: #888B8D;
 
 $standard-transition: 0.4s;
+
+$edge-primary: 15px;
 
 html {
   overflow-x: hidden;
@@ -48,10 +51,14 @@ body {
 }
 
 .r-content-window {
-  width: 100vw;
+  width: calc(100vw - (5px + 5px));
   height: calc(100vh - (46.5px + 30px));
   overflow-y: auto;
   overflow-x: auto;
+  background-color: $colour-background;
+  border-radius: $edge-primary;
+  margin-right: 5px;
+  margin-left: 5px;
 }
 
 .r-completed > td {
