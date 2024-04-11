@@ -16,19 +16,19 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 $font-families: Verdana, sans-serif;
 $font-families-monospace: 'JetBrains Mono', monospace;
 
-$colour-primary: #546866;
-$colour-secondary: #E4DFDA;
-$colour-tertiary: #800080;
+$colour-primary: #7796CB;
+$colour-secondary: #A88FAC;
+$colour-tertiary: #BC3908;
 
 $colour-background: rgb(44, 41, 47);
 $colour-primary-background: rgb(23, 20, 26);
-$colour-secondary-background: #E6E6E3;
+$colour-secondary-background: #FFFFFF;
 
 $colour-primary-text: white;
 $colour-secondary-text: grey;
 
-$colour-success: #60993E;
-$colour-border: #888B8D;
+$colour-success: #5A7D7C;
+$colour-border: #7796CB;
 
 $standard-transition: 0.4s;
 
@@ -53,12 +53,19 @@ body {
 .r-content-window {
   width: calc(100vw - (5px + 5px));
   height: calc(100vh - (46.5px + 30px));
-  overflow-y: auto;
-  overflow-x: auto;
+  overflow-y: hidden;
+  overflow-x: hidden;
   background-color: $colour-background;
   border-radius: $edge-primary;
   margin-right: 5px;
   margin-left: 5px;
+}
+
+.r-content-window-inner {
+  overflow-y: auto;
+  overflow-x: auto;
+  height: inherit;
+  width: inherit;
 }
 
 .r-completed > td {

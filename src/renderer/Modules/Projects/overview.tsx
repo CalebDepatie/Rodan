@@ -116,16 +116,11 @@ function ProjectTable(props: any) {
   }
 
   const header = (
-    <>
+    <div className="r-button-group">
       <Button icon="fa fa-plus" label="Add Project" onClick={handleShow} />
       <Button icon="fa fa-arrow-right" label="Move Initiative" onClick={handleShowMove} />
-    </>
+    </div>
   );
-
-  /*<Column field="name" header="Name" expander/>
-        <Column field="descrip" header="Description" editor={descripEditor} bodyClassName ="big-text"/>
-        <Column field="status" header="Status" body={statusFormat} editor={statusEditor} style={{width:"100px"}} />
-        <Column field="created" header="Created" body={dateFormat} style={{width:"110px"}} />*/
 
   const columns:Column[] = [
     { field: "name", header: "Name"},

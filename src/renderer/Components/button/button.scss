@@ -44,3 +44,13 @@
 .r-button-success {
   @include button(style.$colour-success, style.$colour-primary-text);
 }
+
+.r-button-group {
+  border-radius: 10px;
+  width: fit-content;
+  overflow: hidden;
+
+  & * {
+    border-radius: 0;
+  }
+}

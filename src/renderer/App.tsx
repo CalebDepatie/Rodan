@@ -130,11 +130,13 @@ function App() {
       <Router>
         <Header modules={modules} />
         <div className="r-content-window">
-          <Routes>
-            {routes.map((route, i) => (
-              <Route key={i} {...route} />
-            ))}
-          </Routes>
+          <div className='r-content-window-inner'>
+            <Routes>
+              {routes.map((route, i) => (
+                <Route key={i} {...route} />
+              ))}
+            </Routes>
+          </div>
         </div>
         <Footer />
 
