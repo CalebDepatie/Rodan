@@ -5,6 +5,8 @@
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  background: style.$colour-secondary-background;
+  border-radius: style.$edge-primary;
 
   & > .p-tabview > * > * > .p-tabview-nav {
     display: flex;

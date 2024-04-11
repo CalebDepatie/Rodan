@@ -249,7 +249,7 @@ function Boards(props:any) {
     <>
     <div>
       <div style={{float: "left", width: "20%", display:"flex", flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
-        <span className="p-buttonset">
+        <span className="p-buttonset r-button-group">
           <Button onClick={handleShowHead} label="Add Board" />
           <Button onClick={handleShowFrag} label="Add Fragnet" />
         </span>
