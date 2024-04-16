@@ -1,11 +1,11 @@
 @use '../../style.scss';
 
 .r-card {
-  border-width: 3px;
-  border-color: style.$colour-border;
+  // border-width: 3px;
+  // border-color: style.$colour-border;
   background-color: style.$colour-secondary-background;
-  border-style: solid;
-  border-radius: 5px;
+  // border-style: solid;
+  border-radius: style.$edge-primary;
   margin: 15px;
   padding: 5px;
 

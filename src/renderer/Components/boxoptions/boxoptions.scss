@@ -8,16 +8,16 @@
 
 .r-boxoption {
     color: style.$colour-secondary-text;
-    background-color: style.$colour-primary-background;
+    background-color: style.$colour-secondary-background;
     border: 2px solid style.$colour-border;
-    border-radius: 3px;
+    border-radius: style.$edge-primary;
     margin: 2px;
-    padding: 2px;
+    padding: 4px;
 
     cursor: default;
 
     &.inactive {
-        background-color: darken(style.$colour-primary-background, 15%);
+        background-color: darken(style.$colour-secondary-background, 18%);
         cursor: pointer;
     }
 }

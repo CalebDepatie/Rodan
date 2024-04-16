@@ -5,23 +5,39 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 @import '~@fortawesome/fontawesome-free/scss/brands';
 @import '~@fortawesome/fontawesome-free/scss/regular';
 
-$font-families: Verdana, sans-serif;
-$font-families-monospace: monospace;
+// -- custom font setup --
+@font-face {
+  font-family: "JetBrains Mono";
+  font-weight: normal;
+  font-style: normal;
+  src: url('/src/renderer/Style/fonts/JetBrainsMono/JetBrainsMono-Regular.woff2') format('woff2');
+}
 
-$colour-primary: #546866;
-$colour-secondary: #E4DFDA;
-$colour-tertiary: #800080;
+@font-face {
+  font-family: "Open Sans";
+  src: url('/src/renderer/Style/fonts/OpenSans/OpenSans-VariableFont_wdth\,wght.ttf') format('truetype');
+}
 
-$colour-primary-background: white;
-$colour-secondary-background: #E6E6E3;
+$font-families: 'Open Sans';
+$font-families-monospace: 'JetBrains Mono', monospace;
 
-$colour-primary-text: white;
-$colour-secondary-text: grey;
+$colour-primary: #7796CB;
+$colour-secondary: #A88FAC;
+$colour-tertiary: #BC3908;
 
-$colour-success: #60993E;
-$colour-border: #888B8D;
+$colour-background: #3D3941;
+$colour-primary-background: rgb(23, 20, 26);
+$colour-secondary-background: #F5F5F5;
+
+$colour-primary-text: $colour-secondary-background;
+$colour-secondary-text: $colour-primary-background;
+
+$colour-success: #5A7D7C;
+$colour-border: grey;
 
 $standard-transition: 0.4s;
+
+$edge-primary: 15px;
 
 html {
   overflow-x: hidden;
@@ -40,10 +56,21 @@ body {
 }
 
 .r-content-window {
-  width: 100vw;
+  width: calc(100vw - (5px + 5px));
   height: calc(100vh - (46.5px + 30px));
+  overflow-y: hidden;
+  overflow-x: hidden;
+  background-color: $colour-background;
+  border-radius: $edge-primary;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+.r-content-window-inner {
   overflow-y: auto;
   overflow-x: auto;
+  height: inherit;
+  width: inherit;
 }
 
 .r-completed > td {

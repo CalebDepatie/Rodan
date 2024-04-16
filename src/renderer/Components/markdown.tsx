@@ -25,7 +25,7 @@ export function Markdown(props: MarkdownProps) {
     ]
 
     return <div className={props.className}>
-        <Remark 
+        <Remark
             remarkPlugins={remarkPlugins}
             rehypePlugins={rehypePlugins}>
             {props.children}

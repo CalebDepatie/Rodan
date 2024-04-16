@@ -6,7 +6,7 @@ interface CardProps {
   title?: string;
   width?: string;
   height?: string;
-  style: { [key: string]: string };
+  style?: { [key: string]: string };
   children?: ReactNode;
 }
 

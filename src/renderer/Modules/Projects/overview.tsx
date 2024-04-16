@@ -31,7 +31,7 @@ function ProjectTable(props: any) {
 
   useEffect(() => {
     if (projects_cache.error != undefined) {
-      toast.error('Could not load projects: ' + res.error.message)
+      toast.error('Could not load projects: ' + projects_cache.error.message)
     }
 
     setProjects(projects_cache.body ?? [[], [], []])
@@ -116,16 +116,11 @@ function ProjectTable(props: any) {
   }
 
   const header = (
-    <>
+    <div className="r-button-group">
       <Button icon="fa fa-plus" label="Add Project" onClick={handleShow} />
       <Button icon="fa fa-arrow-right" label="Move Initiative" onClick={handleShowMove} />
-    </>
+    </div>
   );
-
-  /*<Column field="name" header="Name" expander/>
-        <Column field="descrip" header="Description" editor={descripEditor} bodyClassName ="big-text"/>
-        <Column field="status" header="Status" body={statusFormat} editor={statusEditor} style={{width:"100px"}} />
-        <Column field="created" header="Created" body={dateFormat} style={{width:"110px"}} />*/
 
   const columns:Column[] = [
     { field: "name", header: "Name"},
@@ -137,7 +132,7 @@ function ProjectTable(props: any) {
   return (
     <>
       <TreeTable value={projects[2]} header={header} columns={columns} 
-        tableClassName="proj-table" style={{paddingBottom:"30px"}} />
+        tableClassName="proj-table" />
 
       <Modal header="Create a Project" visible={show} onHide={handleClose} style={{width: '70vw'}} footer={(
         <>

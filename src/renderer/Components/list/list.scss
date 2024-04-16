@@ -4,7 +4,7 @@
 	padding: 0.25rem;
   transition: style.$standard-transition;
   border-color: style.$colour-border;
-  background: transparent;
+  background: style.$colour-secondary-background;
   border-width: thin;
   border-style: solid;
   border-radius: 3px;

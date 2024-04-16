@@ -10,7 +10,8 @@
   border-style: solid;
   border-radius: 4px;
   font-size: inherit;
-  font-family: inherit;
+  font-weight: normal;
+  font-family: style.$font-families-monospace;
 
   &:hover {
     border-color: style.$colour-tertiary;

@@ -26,8 +26,8 @@ export const Home = () => {
     
     <ClimateClock />
 
-    <Card>
-      <img src="assets/icon.png" style={{width:"230px", height:"230px"}}
+    <Card style={{padding:"0", margin:"20px"}}>
+      <img src="assets/icon.png" className="r-card" style={{padding:"0", width:"260px", height:"260px"}}
               onClick={() => {
                 radioWaveMonster.play()
               }}/>

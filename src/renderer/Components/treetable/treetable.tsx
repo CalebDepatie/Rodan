@@ -89,10 +89,13 @@ function TreeTable(props: TreeTableProps) {
 			<Ledger columns={props.columns.map((col:Column) => col.header)}>
         {
           props.value.map((row) => {
-            return <ExpandedableRow key={row.key} width={equalPercent} onSelectionChange={props.onSelectionChange}
+            return  <>
+				<ExpandedableRow key={row.key} width={equalPercent} onSelectionChange={props.onSelectionChange}
 							selectionKey={props.selectionKey}
 							value={row} columns={props.columns} />
-					}
+				<div className='r-table-fill' />
+				</>
+			}
           )}
       </Ledger>
 		</div>

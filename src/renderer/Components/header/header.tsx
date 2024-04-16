@@ -23,7 +23,9 @@ function Header(props: {modules: any[]}) {
         const subheader = generateHeaderRoutes(module.modules, prefix + module.path)
         
         if (module.display !== false) {
-          var header = <Link to={prefix + module.path}>{module.name}</Link>
+          var header = <Link key={prefix + module.path} to={prefix + module.path}>
+            {module.name}
+          </Link>
         }
 
         headerRoutes.push(
@@ -37,13 +39,15 @@ function Header(props: {modules: any[]}) {
     return headerRoutes
   }
 
+  const show_modules = loggedIn || process.env.NODE_ENV !== 'production';
+
 	return (
     <div className="r-header">
       <Link to="/" id="title" >Project Singular Point</Link>
 
       <div className="header-right">
       {
-        (loggedIn) ?
+        (show_modules) ?
           generateHeaderRoutes(props.modules)
         : null
       }

@@ -249,7 +249,7 @@ function Boards(props:any) {
     <>
     <div>
       <div style={{float: "left", width: "20%", display:"flex", flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
-        <span className="p-buttonset">
+        <span className="p-buttonset r-button-group">
           <Button onClick={handleShowHead} label="Add Board" />
           <Button onClick={handleShowFrag} label="Add Fragnet" />
         </span>
@@ -257,13 +257,13 @@ function Boards(props:any) {
         <List selectionKeys={activeBoard} value={boardHeads} optionLabel="title"
           optionValue="id" optionGroupLabel="label" optionGroupChildren="items"
           onChange={(e) => setActiveBoard(e.value)} 
-          style={{height:"calc(100vh - 154px)", width:"100%", marginLeft:"15px", overflowY:"scroll"}} />
+          style={{height:"calc(100vh - 160px)", width:"100%", marginLeft:"15px", overflowY:"scroll"}} />
 
           <Button {...workflowState} style={{width:"100%"}} />
 
       </div>
-      <div style={{float: "left", width: "calc(80% - 0px)", height:"calc(100vh - 81px)", overflowY:"scroll"}}>
-        <TreeTable value={frags} columns={columns} style={{paddingBottom:"30px", marginLeft:"12px"}}
+      <div style={{float: "left", width: "calc(80% - 0px)", height:"calc(100vh - 78px)", overflowY:"scroll"}}>
+        <TreeTable value={frags} columns={columns} style={{marginLeft:"12px"}}
           selectionKey={selectedKey} onSelectionChange={(e:any) => setSelected(e.value)}>
         </TreeTable>
       </div>
