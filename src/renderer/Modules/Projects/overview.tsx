@@ -132,7 +132,7 @@ function ProjectTable(props: any) {
   return (
     <>
       <TreeTable value={projects[2]} header={header} columns={columns} 
-        tableClassName="proj-table" style={{paddingBottom:"30px"}} />
+        tableClassName="proj-table" />
 
       <Modal header="Create a Project" visible={show} onHide={handleClose} style={{width: '70vw'}} footer={(
         <>

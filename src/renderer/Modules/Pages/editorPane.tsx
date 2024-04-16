@@ -20,7 +20,7 @@ function EditorPane(props: EditorPaneProps) {
         <div style={style}>
             <InputTextArea value={props.value} onChange={props.onChange} style={{width:"50%"}} />
 
-            <div style={{width:"50%", overflowY: "scroll"}}>
+            <div className="r-page-markdown" style={{width:"50%", overflowY: "scroll"}}>
                 <Markdown>
                     {props.value}
                 </Markdown>

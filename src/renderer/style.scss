@@ -13,19 +13,24 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
   src: url('/src/renderer/Style/fonts/JetBrainsMono/JetBrainsMono-Regular.woff2') format('woff2');
 }
 
-$font-families: Verdana, sans-serif;
+@font-face {
+  font-family: "Open Sans";
+  src: url('/src/renderer/Style/fonts/OpenSans/OpenSans-VariableFont_wdth\,wght.ttf') format('truetype');
+}
+
+$font-families: 'Open Sans';
 $font-families-monospace: 'JetBrains Mono', monospace;
 
 $colour-primary: #7796CB;
 $colour-secondary: #A88FAC;
 $colour-tertiary: #BC3908;
 
-$colour-background: rgb(44, 41, 47);
+$colour-background: #3D3941;
 $colour-primary-background: rgb(23, 20, 26);
-$colour-secondary-background: #FFFFFF;
+$colour-secondary-background: #F5F5F5;
 
-$colour-primary-text: white;
-$colour-secondary-text: grey;
+$colour-primary-text: $colour-secondary-background;
+$colour-secondary-text: $colour-primary-background;
 
 $colour-success: #5A7D7C;
 $colour-border: grey;
