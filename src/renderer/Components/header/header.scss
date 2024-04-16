@@ -4,9 +4,8 @@
 .r-header {
   width: 100vw;
   overflow: hidden;
-  background-color: style.$colour-primary;
+  background-color: style.$colour-primary-background;
   color: style.$colour-primary-text;
-  border-bottom: 1px solid style.$colour-border;
   padding: 10px 10px;
   font-size: inherit;
   display: flex;
@@ -32,7 +31,7 @@
   & .header-nest {
     margin-left: 5px;
     padding: 8px;
-    background-color: color.adjust(style.$colour-primary, $lightness: -15%);
+    background-color: color.adjust(style.$colour-primary-background, $lightness: 15%);
     border: none;
     border-radius: 10px;
 

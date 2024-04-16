@@ -6,6 +6,13 @@
   width: calc(100vw - 305px);
   font-size: 16px;
   font-family: style.$font-families-monospace;
+  background: style.$colour-secondary-background;
+  overflow: auto;
+  padding-left: 7px;
+}
+
+.r-page-markdown {
+  background: style.$colour-secondary-background;
 }
 
 .r-code {

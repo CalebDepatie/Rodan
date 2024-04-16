@@ -31,17 +31,20 @@ function Table<ItemType>(props: TableProps<ItemType>) {
       <Ledger columns={props.columns.map((col:Column) => col.header)}>
         {
           props.data.map((row:ItemType) =>
-            <Row key={row[props.pk]}>
+            <>
+              <Row key={row[props.pk]}>
 
-              {props.columns.map((col:Column) =>
-                <Cell key={row[props.pk] + "-" + col.field}
-                  style={{width: equalPercent, ...col.style}}
-                  editor={(col.editor != undefined) ? () => <col.editor {...row} /> : undefined}>
-                    {(col.body != undefined) ? <col.body {...row} />
-                      : row?.[col.field]}
-                </Cell>
-              )}
-            </Row>
+                {props.columns.map((col:Column) =>
+                  <Cell key={row[props.pk] + "-" + col.field}
+                    style={{width: equalPercent, ...col.style}}
+                    editor={(col.editor != undefined) ? () => <col.editor {...row} /> : undefined}>
+                      {(col.body != undefined) ? <col.body {...row} />
+                        : row?.[col.field]}
+                  </Cell>
+                )}
+              </Row>
+              <div className='r-table-fill' />
+            </>
           )}
       </Ledger>
     </div>

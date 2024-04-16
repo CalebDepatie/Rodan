@@ -24,7 +24,7 @@ export function Login(props:{}) {
 
       {!isSubmitted ? <>
         <InputText type="password" value={pass} onChange={(e) => setPass(e.target.value)} />
-        <Button type="submit" label="Submit" onClick={submit} />
+        <Button type="submit" label="Submit" onClick={submit} style={{marginTop:"5px"}} />
         </>
         : <>
           Logged In

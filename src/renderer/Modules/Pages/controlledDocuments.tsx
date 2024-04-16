@@ -155,7 +155,7 @@ function ControlledDocuments(props:{}) {
                     <Dropdown style={{width:"100%"}} value={selectedGroup}
                         options={templates} onChange={(e) => templateChanged(e)} />
 
-                    <div style={{width:"100%"}}>
+                    <div className='r-button-group' style={{width:"100%"}}>
                         <Button style={{width:"50%"}} label="New Doc" onClick={() => setNewDocumentVisible(true)}/>
                         <Button style={{width:"50%"}} disabled={!editing}
                             label="Update Rev" onClick={updateRev}/>
@@ -167,7 +167,7 @@ function ControlledDocuments(props:{}) {
             </div>
 
             <div style={{width:"75%"}}>
-                <EditorPane style={{height:"calc(100% - 36px)"}} value={content} onChange={(e) => setContent(e.target.value)} />
+                <EditorPane style={{height:"calc(100% - 42px)"}} value={content} onChange={(e) => setContent(e.target.value)} />
 
                 <BoxOptions value={selectedRev} labels={statuses}
                     onClick={(e) => setSelectedRev(e.target.value)} />

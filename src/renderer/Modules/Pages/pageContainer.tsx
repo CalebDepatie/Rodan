@@ -59,10 +59,12 @@ function PageContainer(props:{}) {
     <>
     <div style={{display:"flex"}}>
       <div style={{width:"300px", marginRight:"5px"}}>
-        <Button label="Add Page" onClick={() => setShowForm(true)}/>
-        <Button label={edit ? "Publish Page" : "Edit Page"} onClick={() => setEdit(!edit)} />
+        <div className='r-button-group'>
+          <Button label="Add Page" onClick={() => setShowForm(true)}/>
+          <Button label={edit ? "Publish Page" : "Edit Page"} onClick={() => setEdit(!edit)} />
+        </div>
         <TreeList value={nodes} selectionKeys={selectedKey}
-          style={{height:"calc(100vh - 110px)", overflowY:'scroll'}}
+          style={{height:"calc(100vh - 119px)", overflowY:'scroll'}}
           onChange={(e:any) => setSelectedKey(e.value)} />
       </div>
 
