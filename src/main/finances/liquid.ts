@@ -112,3 +112,20 @@ ipcMain.handle('finance-summary-get', async (e, req) => {
     }
   }
 });
+
+ipcMain.handle('accounts-get', async (e, req) => {
+  try {
+    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_accounts_by_month`);
+    const data = await res.json()
+
+    return {
+      body: {
+        monthly: data
+      }
+    }
+  } catch (err) {
+    return {
+      error: err
+    }
+  }
+});
