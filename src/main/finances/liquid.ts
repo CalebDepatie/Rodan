@@ -1,6 +1,10 @@
 import { ipcMain } from 'electron';
 import fetch from 'electron-fetch';
 
+import * as dayjs from 'dayjs';
+const customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat)
+
 ipcMain.handle('liquid-get', async (e, req) => {
   try {
     // pull raw data
@@ -93,6 +97,12 @@ ipcMain.handle('finance-summary-get', async (e, req) => {
     const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_finance_summary`);
     const data = await res.json()
 
+    data.sort((a, b) => {
+      const dateA = dayjs(`${('0' + a.month).slice(-2)}-${a.year}`, "MM-YYYY");
+      const dateB = dayjs(`${('0' + b.month).slice(-2)}-${b.year}`, "MM-YYYY");
+      return dateA - dateB;
+    });
+
     const monthly = data.map((el:any, idx:number) => {
       if (idx !== 0) {
         el = {...el, netVal: el.balance - data[idx-1].balance}
@@ -117,6 +127,12 @@ ipcMain.handle('accounts-get', async (e, req) => {
   try {
     const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_accounts_by_month`);
     const data = await res.json()
+
+    data.sort((a, b) => {
+      const dateA = dayjs(`${('0' + a.month).slice(-2)}-${a.year}`, "MM-YYYY");
+      const dateB = dayjs(`${('0' + b.month).slice(-2)}-${b.year}`, "MM-YYYY");
+      return dateA - dateB;
+    });
 
     return {
       body: {

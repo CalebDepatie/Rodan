@@ -74,7 +74,7 @@ export function FinanceDashboard(props:{}) {
           }
         }
 
-        const summary_data = summary.monthly.slice(1, summary.monthly.length)
+        const summary_data = summary.monthly.slice(1, summary.monthly.length);
 
         let datasets = [
           {
@@ -115,13 +115,20 @@ export function FinanceDashboard(props:{}) {
           const dataset_values = data.filter(el => el.name === account_name)
 
           // Pad the dataset with 0s if it's offset in the front of the back
-          // labels.forEach((el, idx) => {
-          //   const exists = dataset_values.find(e => dayjs(e.date).isSame(dayjs(el, "MMM-YY")))
-            
-          //   if (exists === undefined) {
-          //     dataset_values.splice(idx, 0, {date: el, netVal: 0})
-          //   }
-          // });
+          if (dataset_values.length < labels.length+1) {
+            const diff = labels.length - dataset_values.length+1;
+
+            // determine if this should be at the front or back
+            if (dayjs(`${('0' + dataset_values[0].month).slice(-2)}-${dataset_values[0].year}`, "MM-YYYY").format('MMM-YY') === labels[0]) {
+              for (let i = 0; i < diff; i++) {
+                dataset_values.push({netVal: null});
+              }
+            } else {
+              for (let i = 0; i < diff; i++) {
+                dataset_values.unshift({netVal: null});
+              }
+            }
+          }
 
           datasets.push({
             label: account_name,
@@ -130,8 +137,6 @@ export function FinanceDashboard(props:{}) {
             data: dataset_values.map(el => el.netVal).slice(1, dataset_values.length),
           })
         });
-
-        console.log(datasets)
 
         return ({
           labels: labels,
