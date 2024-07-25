@@ -23,6 +23,7 @@ function Cell(props: CellProps) {
 
   return (
     <div className={props.className ?? 'r-table-content'} style={props.style}
+      tabIndex={-1} // Add this line to make the div non-tabable
       onFocus={()=>setActive(true)} onBlur={handleBlur}>
       {(isActive && props.editor != undefined)
         ? <props.editor />
