@@ -1,0 +1,12 @@
+@use '../../style.scss';
+
+.status {
+  // background-color: $colour; // this should be set by the component
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  padding: .25rem .5rem;
+  margin: auto;
+  text-align: center;
+  width: 90px;
+}
