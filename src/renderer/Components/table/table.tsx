@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useDeferredValue } from 'react';
 
 import Ledger from './ledger';
 import Row from './row';
@@ -25,12 +25,14 @@ function Table<ItemType>(props: TableProps<ItemType>) {
 
   const equalPercent = (100 / props.columns.length) + "%";
 
+  const rows = useDeferredValue(props.data);
+
   return (
     <div className="r-table">
       <div className="r-table-top">{props.header}</div>
       <Ledger columns={props.columns.map((col:Column) => col.header)}>
         {
-          props.data.map((row:ItemType) =>
+          rows.map((row:ItemType) =>
             <>
               <Row key={row[props.pk]}>
 

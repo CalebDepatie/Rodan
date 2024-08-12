@@ -1,6 +1,8 @@
-import { useEffect } from 'react'
+import { useDebugValue, useEffect } from 'react'
 
 function useShortcut(codes:string[], callback:()=>void, depends:any[]) {
+  useDebugValue("Handling shortcut: " + codes.join(", "))
+  
   useEffect(() => {
 
     const listener = (evt:any) => {

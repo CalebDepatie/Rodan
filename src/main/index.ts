@@ -5,15 +5,16 @@ import * as path from 'path'
 import { format as formatUrl } from 'url'
 import dotenv from "dotenv"
 import { mkdirSync } from 'node:fs'
+import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 
 import {openSSH, closeSSH} from "./home"
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
-let mainWindow;
+let mainWindow: BrowserWindow | null;
 
-function createMainWindow() {
+function createMainWindow(): BrowserWindow {
   const window = new BrowserWindow({
     width: 1360,
     height: 800,
@@ -27,6 +28,15 @@ function createMainWindow() {
 
   if (isDevelopment) {
     window.loadURL( `http://localhost:${ 8182 }/index.html` )
+    
+    const forceDownload = !!process.env.UPGRADE_EXTENSIONS
+
+    installExtension(
+      REACT_DEVELOPER_TOOLS, 
+      {loadExtensionOptions: {allowFileAccess: true}, forceDownload: forceDownload}
+      ).then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log('An error occurred: ', err));
+
     window.webContents.openDevTools()
   } else {
     window.loadURL(formatUrl({
@@ -42,6 +52,7 @@ function createMainWindow() {
 
   window.webContents.on('devtools-opened', () => {
     window.focus()
+
     setImmediate(() => {
       window.focus()
     })

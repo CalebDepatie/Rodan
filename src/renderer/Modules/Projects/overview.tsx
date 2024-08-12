@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
 
 import { statusItemTemplate, statusValueTemplate, fieldGen } from '../../Helpers'
-import { Button, InputText, Dropdown, Modal, InputTextArea, TreeNode, TreeTable } from '../../Components'
+import { Button, InputText, Dropdown, Modal, InputTextArea, TreeNode, TreeTable, Status } from '../../Components'
 import { Column } from '../../Components/table/table'
 import { useCache } from '../../Hooks'
 import { dateFormatter } from 'common'
@@ -46,8 +46,8 @@ function ProjectTable(props: any) {
   }, [status_cache])
 
   const statusFormat = (node: TreeNode) => {
-    const status = statuses.filter((i:any) => parseInt(i.id) === parseInt(node.data.status))[0]?.["name"];
-    return <div className={`status-${node.data.status}`}>{status}</div>
+    const status = statuses.filter((i:any) => parseInt(i.id) === parseInt(node.data.status))[0]
+    return <Status {...status} />
   };
 
   const dateFormat = (node: TreeNode) => {
