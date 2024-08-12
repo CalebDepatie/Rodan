@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
 
-import { TreeTable, TreeNode, Button, InputText, Dropdown, Modal, List, InputSwitch } from '../../Components'
+import { TreeTable, TreeNode, Button, InputText, Dropdown, Modal, List, InputSwitch, Status } from '../../Components'
 import { Column } from '../../Components/table/table'
 import { useCache } from '../../Hooks'
 import { fieldGen, fieldValGen, statusItemTemplate, statusValueTemplate, findNodeByKey } from '../../Helpers'
@@ -125,8 +125,8 @@ function Boards(props:any) {
   };
 
   const statusFormat = (node: TreeNode) => {
-    const status = statuses.filter((i:any) => parseInt(i.id) === parseInt(node.data.status))[0]["name"];
-    return <div className={`status-${node.data.status}`}>{status}</div>
+    const status = statuses.filter((i:any) => parseInt(i.id) === parseInt(node.data.status))[0];
+    return <Status {...status} />
   };
 
   const dateFormat = (node: TreeNode) => {

@@ -1,18 +1,13 @@
-import './status.scss';
+import { Status } from "../Components";
 
-interface StatusOption {
-  id: string,
-  name: string,
-}
-
-function statusValueTemplate(option:StatusOption, props:any) {
+function statusValueTemplate(option:any, props:any) {
   if (option) {
-    return <div className={`status-${option.id}`} >{option.name}</div>
+    return <Status id={option.id} name={option.name} colour={option.colour} descrip={option.descrip}  />
   }
 };
 
-function statusItemTemplate(option:StatusOption) {
-  return <div className={`status-${option.id}`} >{option.name}</div>
+function statusItemTemplate(option:any) {
+  return <Status id={option.id} name={option.name} colour={option.colour} descrip={option.descrip}  />
 };
 
 export {statusValueTemplate, statusItemTemplate};

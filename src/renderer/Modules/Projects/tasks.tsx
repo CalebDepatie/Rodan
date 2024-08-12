@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
 
-import { Button, InputText, Dropdown, Table } from '../../Components'
-import { statusItemTemplate, statusValueTemplate } from '../../Helpers'
+import { Button, Dropdown, Table, Status } from '../../Components'
 import { useCache } from "../../Hooks"
 
 import TaskForm from './taskForm'
@@ -71,8 +70,8 @@ function Tasks(props:any) {
   };
 
   const statusFormat = (row: any) => {
-    const status = statuses.filter((i:any) => parseInt(i.id) === parseInt(row.status))[0]?.["name"];
-    return <div className={`status-${row.status}`}>{status}</div>
+    const status = statuses.filter((i:any) => parseInt(i.id) === parseInt(row.status))[0] ?? {};
+    return <Status {...status} />
   };
 
   const onSubmit = (f: any) => {
