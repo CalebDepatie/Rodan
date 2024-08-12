@@ -12,7 +12,7 @@ interface MarkdownProps {
     className?: string;
 }
 
-export function Markdown(props: MarkdownProps) {
+function Markdown(props: MarkdownProps) {
 
     const remarkPlugins = [
         // remarkGfm
@@ -32,3 +32,5 @@ export function Markdown(props: MarkdownProps) {
         </Remark>
     </div>
 }
+
+export default Markdown
