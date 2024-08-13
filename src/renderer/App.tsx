@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { HashRouter as Router, Route, Routes } from 'react-router-dom'
 import { Header, Footer } from './Components'
 import { ToastContainer } from 'react-toastify'
-import { Home, ProjectTable, Boards, Tasks, PageContainer, FinanceDashboard, ControlledDocuments } from './Modules'
+import { Home, ProjectTable, Boards, Tasks, PageContainer, FinanceDashboard, ControlledDocuments, Tracker } from './Modules'
 import { BrowserWindow } from 'electron'
 
 import 'primeflex/primeflex.css'
@@ -50,6 +50,11 @@ function App() {
       name: 'Finances',
       path:'/finances',
       el: <FinanceDashboard/>,
+    },
+    {
+      name: 'Activities',
+      path:'/tracker',
+      el: <Tracker/>,
     },
     {
       name: 'Pages',
