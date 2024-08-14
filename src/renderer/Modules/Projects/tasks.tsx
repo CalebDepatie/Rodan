@@ -78,6 +78,32 @@ function Tasks(props:any) {
     refresh()
   };
 
+  const priorityFormat = (row: any) => {
+    let flag   = "fa fa-flag";
+    let colour = "";
+
+    switch (parseInt(row.priority)) {
+      case 0:
+        colour = "grey";
+        flag   = "fa-regular fa-flag";
+        break;
+      case 1:
+        colour = "orange";
+        break;
+      case 2:
+        colour = "red";
+        break;
+    }
+
+    const onClick = async () => {
+      await onEditorValueChange({}, 'priority', `${(row.priority + 1) % 3}`, row.id)
+    };
+
+    return <span className={flag} 
+      style={{color: colour, fontSize:20, cursor:"pointer"}} 
+      onClick={onClick} />
+  };
+
   const header = (
     <>
       <Button icon="fa fa-plus" label="Add Task" onClick={handleShow} />
@@ -98,6 +124,11 @@ function Tasks(props:any) {
     header: "Status",
     body: statusFormat,
     editor: statusEditor,
+  },
+  {
+    field: "priority",
+    header: "Priority",
+    body: priorityFormat,
   },
   {
     field: "initiative",

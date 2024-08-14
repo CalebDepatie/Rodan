@@ -1,5 +1,7 @@
 import React, { ReactNode } from 'react';
 
+import { List } from 'react-window';
+
 import Row from "./row";
 
 import './table.scss';
