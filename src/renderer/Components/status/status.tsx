@@ -18,11 +18,11 @@ function Status(props: StatusProps) {
   const style = {...(props.style ?? {}), backgroundColor: `#${props.colour}`};
 
   return (
-    <Tooltip content={props.descrip}>
+    // <Tooltip content={props.descrip}>
       <div className={props.className} style={style}>
           {props.name}
       </div>
-    </Tooltip>
+    /* </Tooltip> */
   );
 };
 
