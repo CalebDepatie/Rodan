@@ -11,7 +11,7 @@ ipcMain.handle('statuses-get', async (e, req) => {
       body: JSON.stringify(req)
     }
 
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_statuses`, options);
+    const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/get_statuses`, options);
 
     const json = await res.json();
 

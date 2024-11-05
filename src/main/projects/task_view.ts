@@ -3,7 +3,7 @@ import fetch from 'electron-fetch';
 
 ipcMain.handle('tasks-get', async (e, req) => {
   try {
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_tasks`);
+    const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/get_tasks`);
     const json = await res.json();
 
     return {
@@ -28,7 +28,7 @@ ipcMain.handle('tasks-update', async (e, req) => {
       body: JSON.stringify(req)
     }
 
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/update_task`, options);
+    const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/update_task`, options);
 
     return {}
 
@@ -49,7 +49,7 @@ ipcMain.handle('tasks-create', async (e, req) => {
       body: JSON.stringify(req)
     }
 
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/create_task`, options);
+    const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/create_task`, options);
 
     return {}
 
@@ -62,7 +62,7 @@ ipcMain.handle('tasks-create', async (e, req) => {
 
 ipcMain.handle('tasks-form-boards', async (e, req) => {
   try {
-    const heads_res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_board_heads`);
+    const heads_res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/get_board_heads`);
     const heads_json = await heads_res.json()
 
     const heads = heads_json.filter((head:any) => head.state !== 0 && head.state !== 3)
@@ -78,7 +78,7 @@ ipcMain.handle('tasks-form-boards', async (e, req) => {
         body: JSON.stringify({board: head.id})
       }
 
-      const frags_res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_board`, options);
+      const frags_res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/get_board`, options);
       const frags_json = await frags_res.json()
 
       const create_children = (key:string, parent: string) => {

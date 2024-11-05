@@ -8,7 +8,7 @@ dayjs.extend(customParseFormat)
 ipcMain.handle('liquid-get', async (e, req) => {
   try {
     // pull raw data
-    const finance_res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_accounts`);
+    const finance_res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/get_accounts`);
     const finance_json = await finance_res.json()
 
     // convert to desired layout
@@ -79,7 +79,7 @@ ipcMain.handle('liquid-set', async (e, req) => {
         body: JSON.stringify({name: account, balance: value})
       }
 
-      const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/create_balance`, options);
+      const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/create_balance`, options);
     }
 
     return {
@@ -94,7 +94,7 @@ ipcMain.handle('liquid-set', async (e, req) => {
 
 ipcMain.handle('finance-summary-get', async (e, req) => {
   try {
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_finance_summary`);
+    const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/get_finance_summary`);
     const data = await res.json()
 
     data.sort((a, b) => {
@@ -125,7 +125,7 @@ ipcMain.handle('finance-summary-get', async (e, req) => {
 
 ipcMain.handle('accounts-get', async (e, req) => {
   try {
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_accounts_by_month`);
+    const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/get_accounts_by_month`);
     const data = await res.json()
 
     data.sort((a, b) => {

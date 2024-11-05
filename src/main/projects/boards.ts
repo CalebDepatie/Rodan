@@ -3,7 +3,7 @@ import fetch from 'electron-fetch';
 
 ipcMain.handle('boards-get', async (e, req) => {
   try {
-    const heads_res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_board_heads`);
+    const heads_res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/get_board_heads`);
     const heads_json = await heads_res.json()
 
     const grouped_heads = [
@@ -25,7 +25,7 @@ ipcMain.handle('boards-get', async (e, req) => {
       },
     ];
 
-    const proj_res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_projects`);
+    const proj_res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/get_projects`);
     const proj_json = await proj_res.json();
 
     const valid_inis = proj_json.filter((itm:any) => itm.parent !== 0) // filter for initiatives
@@ -57,7 +57,7 @@ ipcMain.handle('boards-frags', async (e, req) => {
       body: JSON.stringify(req)
     }
 
-    const frags_res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_board`, options);
+    const frags_res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/get_board`, options);
     const frags_json = await frags_res.json()
 
     const create_children = (key: string, parent: string) => {
@@ -100,7 +100,7 @@ ipcMain.handle("boards-update", async (e, req) => {
       body: JSON.stringify(req)
     }
 
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/update_board`, options);
+    const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/update_board`, options);
 
     return {}
 
@@ -121,7 +121,7 @@ ipcMain.handle("boards-frags-update", async (e, req) => {
       body: JSON.stringify(req)
     }
 
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/update_fragnet`, options);
+    const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/update_fragnet`, options);
 
     return {}
 
@@ -142,7 +142,7 @@ ipcMain.handle("boards-create", async (e, req) => {
       body: JSON.stringify(req)
     }
 
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/create_board`, options);
+    const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/create_board`, options);
 
     return {}
 
@@ -163,7 +163,7 @@ ipcMain.handle("boards-frags-create", async (e, req) => {
       body: JSON.stringify(req)
     }
 
-    const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/create_fragnet`, options);
+    const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/create_fragnet`, options);
 
     return {}
 

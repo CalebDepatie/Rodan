@@ -99,6 +99,7 @@ app.on('ready', () => {
 
 ipcMain.handle("ssh-open", async (e, req) => {
   const res = await openSSH(req.password)
+  console.log("test:: " + process.env.GATEWAY + " " + process.env.REMOTE_HOST)
   return res
 })
 

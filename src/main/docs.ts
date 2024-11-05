@@ -3,7 +3,7 @@ import fetch from 'electron-fetch';
 
 ipcMain.handle("docs-get", async (e, req) => {
     try {
-      const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/get_controlled_docs`);
+      const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/get_controlled_docs`);
       const json = await res.json();
   
       return {
@@ -29,7 +29,7 @@ ipcMain.handle("docs-update-content", async (e, req) => {
             body: JSON.stringify(req)
         }
 
-        const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/update_doc_working`, 
+        const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/update_doc_working`, 
             options);
 
         return {}
@@ -52,7 +52,7 @@ ipcMain.handle("docs-create", async (e, req) => {
             body: JSON.stringify({...req, revisions: []})
         }
 
-        const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/create_page`, 
+        const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/create_page`, 
             options);
 
         return {}
@@ -75,7 +75,7 @@ ipcMain.handle("docs-update-rev", async (e, req) => {
             body: JSON.stringify(req)
         }
 
-        const res = await fetch(`${process.env.HOSTNAME}:${process.env.PORT}/Gojira/update_doc_rev`, 
+        const res = await fetch(`${process.env.GATEWAY}:${process.env.PORT}/Gojira/update_doc_rev`, 
             options);
 
         return {}
